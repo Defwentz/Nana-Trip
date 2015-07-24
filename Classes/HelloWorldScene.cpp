@@ -64,7 +64,7 @@ HelloWorld::~HelloWorld()
 
 void HelloWorld::initPhysics()
 {
-    
+    //initWinSize();
     
     _world = new b2World(b2Vec2(0.0f, -11.0f));
     
@@ -84,8 +84,7 @@ void HelloWorld::initPhysics()
     //    flags += b2Draw::e_centerOfMassBit;
     //    flags += b2Draw::e_particleBit;
     _debugDraw->SetFlags(flags);
-    /*
-    {
+    /*{
         // Define the ground body.
         b2BodyDef groundBodyDef;
         groundBodyDef.position.Set(0, 0); // bottom-left corner
@@ -116,10 +115,15 @@ void HelloWorld::initPhysics()
         groundBody->CreateFixture(&groundBox,0);
     }*/
     
-    nanaSprite = NanaSprite::create();
-    this->addChild(nanaSprite);
-    nanaSprite->initPhysics(_world);
+    _terrain = TerrainSprite::create();
+    _terrain->initPhysics(_world);
+    this->addChild(_terrain);
     
+    _nana = NanaSprite::create();
+    _nana->initPhysics(_world);
+    this->addChild(_nana);
+    
+    /*
     terrain = TerrainNode::create();
     {
         b2BodyDef bd;
@@ -143,9 +147,9 @@ void HelloWorld::initPhysics()
         
         _body->SetLinearVelocity(b2Vec2(0, 5));
     }
-    this->addChild(terrain);
+    this->addChild(terrain);*/
     
-    auto follow = Follow::create(nanaSprite);
+    auto follow = Follow::create(_nana);
     this->runAction(follow);
     
     scheduleUpdate();
@@ -165,12 +169,9 @@ void HelloWorld::update(float dt)
     // Instruct the world to perform a single step of simulation. It is
     // generally best to keep the time step and iterations fixed.
     _world->Step(dt, velocityIterations, positionIterations);
-    //terrain->update();
-    //terrain->updateEdge(_world);
-    nanaSprite->gasUp();
-    nanaSprite->setPosition(nanaSprite->getPosition());
-    //terrain->runAction(MoveBy::create(1.0f, Vec2(0, 100)));
-    
+    _nana->gasUp();
+    _nana->setPosition(_nana->getPosition());
+    _terrain->update(_nana->getPosition().y);
     //m_world->Step(dt, 8, 1);
     /*for(b2Body *b = _world->GetBodyList(); b; b = b->GetNext())
     {
@@ -186,14 +187,6 @@ void HelloWorld::update(float dt)
         }
     }*/
 }
-/*
-b2Vec2 &HelloWorld::getNormal(b2Vec2 src) {
-    static int nscale = 20;
-    b2Vec2 dst = b2Vec2(src.y, -src.x);
-    dst.x *= nscale;
-    dst.y *= nscale;
-}*/
-
 bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 {
     //bounce();
@@ -206,18 +199,11 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 }
 void HelloWorld::onAcceleration(Acceleration *acc, Event *event)
 {
-    nanaSprite->ApplyForce(b2Vec2(acc->x * 2, 0));
+    _nana->ApplyForce(b2Vec2(acc->x * 4, 0));
     //nana->ApplyForce(b2Vec2(acc->x * 20, 0), nana->GetPosition(), true);
     //log("x = %f, y = %f", acc->x, acc->y);
     //_world->SetGravity();
 }
-
-/*void HelloWorld::bounce()
-{
-    b2Vec2 impulse = b2Vec2(-nana->GetMass() * 10, nana->GetMass() * 150);
-    b2Vec2 impulsePoint = nana->GetPosition();
-    nana->ApplyLinearImpulse(impulse, impulsePoint, true);
-}*/
 // Draw
 
 void HelloWorld::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)

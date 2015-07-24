@@ -6,7 +6,6 @@
 //
 //
 
-#include <vector>
 #include "NanaSprite.h"
 
 USING_NS_CC;
@@ -218,6 +217,7 @@ void NanaSprite::initPhysics(b2World *world)
                             //+ b2Vec2(0.4*cosf(next_theta - deltaAngle/2),
                                   // 0.4*sinf(next_theta - deltaAngle/2))
                             );
+        bodyDef.linearDamping = 0.1f;
         
         b2Body *body;
         body = world->CreateBody(&bodyDef);
@@ -283,10 +283,9 @@ void NanaSprite::initPhysics(b2World *world)
 
 Vec2 NanaSprite::getPosition()
 {
-    
     auto winSize = Director::getInstance()->getWinSize();
     b2Vec2 pos = _bodies[0]->GetPosition();
-    pos.x = winSize.width / 2;
+    pos.x = winSize.width/2;
     pos.y *= PTM_RATIO;
     return Vec2(pos.x, pos.y);
     /*

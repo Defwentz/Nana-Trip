@@ -2,9 +2,9 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "NanaTrip.h"
-#include "GLESDebugDraw.h"
 #include "NanaSprite.h"
-#include "Terrain.h"
+#include "TerrainSprite.h"
+#include "GLESDebugDraw.h"
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -16,8 +16,6 @@ public:
     virtual bool init();
     void initPhysics();
     void update(float dt);
-    //void bounce();
-    //b2Vec2 &getNormal(b2Vec2 src);
     
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);
@@ -33,10 +31,10 @@ protected:
     GLESDebugDraw *_debugDraw;
     
     b2World* _world;
-    NanaSprite* nanaSprite;
+    NanaSprite* _nana;
     //std::vector<b2Body *> bodies;
     
-    TerrainNode* terrain;
+    TerrainSprite* _terrain;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
