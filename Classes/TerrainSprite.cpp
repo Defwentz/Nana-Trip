@@ -51,6 +51,7 @@ void TerrainSprite::initPhysics(b2World *_world)
     lvertices.push_back(bl);
     //rvertices.push_back(tr);
     rvertices.push_back(br);
+    terrainTypes.push_back(TYPE_DOOR);
     
     // left
     border.Set(vToB2(bl), vToB2(tl));
@@ -66,54 +67,47 @@ void TerrainSprite::initPhysics(b2World *_world)
     
     lto = 1;rto = 1;
     spawnTerrain();
-
-    
-    /*
-    for(int i = 1; i < lvertices.size(); i++) {
-        Vec2 lp1, lp2;
-        lp1 = lvertices[i - 1];
-        lp2 = lvertices[i];
-        setEdge(lp1, lp2, _world);
-    }
-    for(int i = 1; i < rvertices.size(); i++) {
-        Vec2 rp1, rp2;
-        rp1 = rvertices[i - 1];
-        rp2 = rvertices[i];
-        setEdge(rp1, rp2, _world);
-    }
-        
-    _body->SetLinearVelocity(b2Vec2(0, 1));
-    */
 }
 
 
 //const int NOTHING = 0;//100;
 //const int BUMPS = 30;
-const int TUNNEL = 30,
-    GENERAL_MASK = TUNNEL;
+const int ODDS_TUNNEL = 30,
+    ODDS_BUMPS = 0,
+    ODDS_CHESSBORD = 30,
+    GENERAL_MASK = ODDS_TUNNEL + ODDS_CHESSBORD;
 int TerrainSprite::spawnTerrain()
 {
     int r = rand() % GENERAL_MASK;
-    if(r < TUNNEL) {
+    if(r < ODDS_TUNNEL) {
         this->spawnTunnel(r);
         return r;
     }
-    r -= TUNNEL;
+    r -= ODDS_TUNNEL;/*
+    if(r < ODDS_BUMPS) {
+        this->spawnBumps(r);
+        return r;
+    }
+    r -= ODDS_BUMPS;*/
+    if(r < ODDS_CHESSBORD) {
+        this->spawnChessbord(r);
+        return r;
+    }
+    r -= ODDS_CHESSBORD;
     return 0;
 }
 
-const int SUPER_NARROW = 10,
-    ONE_ROW = 0,
-    ROWS_FALLS_IN = 0,
-    ROWS_STICK_TO = 0,
+const int ODDS_SUPER_NARROW = 10,
+    ODDS_ONE_ROW = 0,
+    ODDS_TWO_ROWS = 10,
     TUNNEL_WIDTH_MASK =
-        SUPER_NARROW + ONE_ROW + ROWS_FALLS_IN + ROWS_STICK_TO;
+        ODDS_SUPER_NARROW + ODDS_ONE_ROW + ODDS_TWO_ROWS;
 
 const int TUNNEL_KEYPOINT = 5,
     TUNNEL_KP_DIST_IN_SCREEN = 3,
     X_IN_SCREEN = 5,
     NARROW_WIDTH = 45,                      // different than others
-    ROW_WIDTH = 10, ROW_WIDTH_ADDON = 50;   // different than others
+    ROW_WIDTH = 50, ROW_WIDTH_ADDON = 50;   // different than others
 void TerrainSprite::spawnTunnel(int _r)
 {
     auto winSize = Director::getInstance()->getWinSize();
@@ -124,8 +118,9 @@ void TerrainSprite::spawnTunnel(int _r)
         lastY = rvertices.back().y;
     
     int r = rand() % TUNNEL_WIDTH_MASK;
-    if(r < SUPER_NARROW) {
-        int n = randWithBase(TUNNEL_KEYPOINT, TUNNEL_KEYPOINT);
+    int n = randWithBase(TUNNEL_KEYPOINT, TUNNEL_KEYPOINT);
+    
+    if(r < ODDS_SUPER_NARROW) {
         for(int i = 0; i < n; i++) {
             int length = randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
                                   winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
@@ -135,51 +130,111 @@ void TerrainSprite::spawnTunnel(int _r)
             
             lvertices.push_back(Vec2(x, lastY));
             rvertices.push_back(Vec2(x + width, lastY));
+            terrainTypes.push_back(TYPE_TUNNEL_SUPER_NARROW);
         }
         lastY -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
                                   winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-        
         lvertices.push_back(Vec2(0, lastY));
         rvertices.push_back(Vec2(winSize.width, lastY));
+        terrainTypes.push_back(TYPE_DOOR);
         return;
     }
-    r -= SUPER_NARROW;
+    r -= ODDS_SUPER_NARROW;
     /*
-    if(r < ONE_ROW) {
-  
-        int n = randWithBase(TUNNEL_KEYPOINT, TUNNEL_KEYPOINT);
+    if(r < ODDS_ONE_ROW) {
         for(int i = 0; i < n; i++) {
             int length = randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
                                       winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-            int width = randWithBase(NARROW_WIDTH + ROW_WIDTH,
-                                     NARROW_WIDTH + ROW_WIDTH_ADDON);
-            int x = randWithBase(X_IN_SCREEN, X_IN_SCREEN);
-            y -= length;
+            int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
+            int x = randWithBase(winSize.width/X_IN_SCREEN, winSize.width*3/X_IN_SCREEN);
+            lastY -= length;
             
-            lnodes.push_back(TerrainNode(x, y));
-            rnodes.push_back(TerrainNode(x + width, y));
+            lvertices.push_back(Vec2(x, lastY));
+            rvertices.push_back(Vec2(x + width, lastY));
+            terrainTypes.push_back(TYPE_TUNNEL_ONE_ROW);
         }
-        y -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                          winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-        
-        lnodes.push_back(TerrainNode(0, y));
-        rnodes.push_back(TerrainNode(winSize.width, y));
-        
+        lastY -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
+                              winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
+        lvertices.push_back(Vec2(0, lastY));
+        rvertices.push_back(Vec2(winSize.width, lastY));
+        terrainTypes.push_back(TYPE_DOOR);
         return;
     }
-    r -= ONE_ROW;
-    if(r < ROWS_FALLS_IN) {
+    r -= ODDS_ONE_ROW;*/
+    if(r < ODDS_TWO_ROWS) {
+        for(int i = 0; i < n; i++) {
+            int length = randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
+                                      winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
+            int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
+            int x = randWithBase(winSize.width/X_IN_SCREEN, winSize.width*3/X_IN_SCREEN);
+            lastY -= length;
+            
+            lvertices.push_back(Vec2(x, lastY));
+            rvertices.push_back(Vec2(x + width, lastY));
+            terrainTypes.push_back(TYPE_TUNNEL_TWO_ROWS);
+        }
+        lastY -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
+                              winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
+        lvertices.push_back(Vec2(0, lastY));
+        rvertices.push_back(Vec2(winSize.width, lastY));
+        terrainTypes.push_back(TYPE_DOOR);
+        return;
         return;
     }
-    r -= ROWS_FALLS_IN;
-    if(r < ROWS_STICK_TO) {
-        return;
-    }
-    r -= ROWS_STICK_TO;
-*/
+    r -= ODDS_TWO_ROWS;
 }
 
-void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(cocos2d::Vec2, cocos2d::Vec2))
+void TerrainSprite::spawnBumps(int r)
+{
+    
+}
+
+const int MIN_COL = 3,
+    MAX_COL = 7;
+//int max_radius = winSize.width / (MIN_COL-1) - margin;
+//int min_radius = winSize.width / (MAX_COL-1) - margin;
+void TerrainSprite::spawnChessbord(int r)
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    float lastY;
+    if(lvertices.back().y < rvertices.back().y)
+        lastY = lvertices.back().y;
+    else
+        lastY = rvertices.back().y;
+    
+    int length = randWithBase(winSize.height/2,
+                              winSize.height*2);
+    lvertices.push_back(Vec2(0, lastY-length));
+    rvertices.push_back(Vec2(winSize.width, lastY-length));
+    terrainTypes.push_back(TYPE_DOOR);
+    int margin = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+    
+    int col = randWithBase(MIN_COL, MAX_COL-MIN_COL);
+    float max_radius = (winSize.width / (col-1) - margin)/2;
+    float min_radius = (winSize.width / (MAX_COL-1) - margin)/2;
+    int row = (margin + length) / (2*max_radius + margin);
+    
+    float odds = rand_0_1();
+    
+    lastY -= max_radius;
+    for(int i = 0; i < row; i++) {
+        float x = random(-max_radius/2, max_radius/2);
+        for(int j = 0; j < col; j++, x += (2*max_radius + margin)) {
+            if(rand_0_1() > odds)continue;
+            Vec2 pos = Vec2(x, lastY);
+            nonoVertices.push_back(pos);
+            
+            b2CircleShape ball;
+            ball.m_p = vToB2(pos);
+            ball.m_radius = random(min_radius, max_radius)/PTM_RATIO;
+            nonos.push_back(_body->CreateFixture(&ball, 0));
+        }
+        lastY -= (2*max_radius + margin);
+    }
+    
+}
+
+void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination))
 {
     float tdy = p1.y - p2.y;
     //////////////
@@ -220,11 +275,24 @@ cocos2d::Vec2 TerrainSprite::b2ToV(b2Vec2 b)
     return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
 }
 
+
 void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 {
     float tdy = p1.y - p2.y;
     //////////////
-    if(tdy == 0);
+    //if(tdy == 0);
+    /*
+    bool spawnLives = false;
+    switch (terrainTypes.front()) {
+        case TYPE_DOOR:
+        case TYPE_TUNNEL_SUPER_NARROW:
+            break;
+        case TYPE_TUNNEL_TWO_ROWS:
+            spawnLives = true;
+            break;
+        default:
+            break;
+    }*/
     //////////////
     
     int n = floorf(tdy/10);
@@ -243,14 +311,22 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         y+=dj;
         _p2.x = A*cosf(y) + B;
         
-        b2FixtureDef fd;
         b2EdgeShape border;
-        border.Set(vToB2(_p1), vToB2(_p2));
-        fd.shape = &border;
-        fd.density = 0;
-        fd.friction = 0;
+        b2Vec2 _bp1 = vToB2(_p1);
+        b2Vec2 _bp2 = vToB2(_p2);
+        border.Set(_bp1, _bp2);
         _fixtures.push_back(_body->CreateFixture(&border,0));
-        
+        /*
+        if(spawnLives) {
+            if(terrainTypes.front() == TYPE_TUNNEL_TWO_ROWS) {
+                nonoVertices.push_back(_p1);
+                
+                b2CircleShape ball;
+                ball.m_radius = (_bp2 - _bp1).Length()*3/8;
+                ball.m_p = _bp1;
+                nonos.push_back(_body->CreateFixture(&ball, 0));
+            }
+        }*/
         _p1 = _p2;
     }
     
@@ -266,16 +342,18 @@ void TerrainSprite::update(float nanaY)
     float topY = nanaY + winSize.height/2 + winSize.height/8;
     float bottomY = nanaY - winSize.height/2 - winSize.height/8;
     
-    if(lvertices.size() < 2) {
-        spawnTerrain();
-    }
-    else if (lvertices[1].y > topY) {
+    //if(lvertices.size() < 2) {
+       // spawnTerrain();
+    //}
+    //else
+        if (lvertices[1].y > topY) {
         lvertices.erase(lvertices.cbegin());
         std::vector<b2Fixture *> _fixtures = lfixtures.front();
         for(int i = 0; i < _fixtures.size(); i++) {
             _body->DestroyFixture(_fixtures[i]);
         }
         lfixtures.erase(lfixtures.cbegin());
+        terrainTypes.erase(terrainTypes.cbegin());
         lto--;
     }
     for(int i = lto; i < lvertices.size(); i++) {
@@ -287,12 +365,12 @@ void TerrainSprite::update(float nanaY)
     }
     if(lto == lvertices.size())
         spawnTerrain();
-    // 什么时候生成地形还有问题.
     
-    if(rvertices.size() < 2) {
-        spawnTerrain();
-    }
-    else if (rvertices[1].y > topY) {
+    //if(rvertices.size() < 2) {
+      //  spawnTerrain();
+    //}
+    //else
+        if (rvertices[1].y > topY) {
         rvertices.erase(rvertices.cbegin());
         std::vector<b2Fixture *> _fixtures = rfixtures.front();
         for(int i = 0; i < _fixtures.size(); i++) {
@@ -310,6 +388,16 @@ void TerrainSprite::update(float nanaY)
     }
     if(rto == rvertices.size())
         spawnTerrain();
+
+    for(std::vector<Vec2>::iterator i = nonoVertices.begin();
+        i != nonoVertices.end();) {
+        if(i->y > topY) {
+            i = nonoVertices.erase(i);
+            _body->DestroyFixture(nonos.front());
+            nonos.erase(nonos.cbegin());
+        }
+        else break;
+    }
 }
 
 // Draw
@@ -322,22 +410,31 @@ void TerrainSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transf
 }
 
 void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
-{/*
-    auto winSize = Director::getInstance()->getWinSize();
-    auto parent = (HelloWorld *)(this->getParent());
-    float sb = parent->getScreenY();
-    //float st = parent->getScreenY() + winSize.height;
-    
-    for(int i = 1; i < lvertices.size(); i++) {
+{
+    kmGLPushMatrix();
+    kmGLLoadMatrix(&transform);
+    glLineWidth( 5.0f );
+    ccDrawColor4F(1.0, 1.0, 1.0, 1.0);
+    for(int i = 1; i < lto; i++) {
+        
         Vec2 lp1, lp2;
         lp1 = lvertices[i - 1];
         lp2 = lvertices[i];
-        // might be buggy
-        if(lvertices[i + 1].y < sb)
-            break;
         
-        //drawSegment(lp1, lp2);
-    }*/
+        
+        doVertices(lp1, lp2, ccDrawLine);
+    }
+    for(int i = 1; i < rto; i++) {
+        
+        Vec2 rp1, rp2;
+        rp1 = rvertices[i - 1];
+        rp2 = rvertices[i];
+        
+        doVertices(rp1, rp2, ccDrawLine);
+    }
+    CHECK_GL_ERROR_DEBUG();
+    
+    kmGLPopMatrix();
 }
 
 void TerrainSprite::drawSegment(Vec2 p1, Vec2 p2)

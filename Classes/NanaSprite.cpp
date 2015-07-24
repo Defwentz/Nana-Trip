@@ -125,7 +125,7 @@ NanaSprite* NanaSprite::create()
 }
 
 NanaSprite::NanaSprite(){
-    hardness = 10;
+    hardness = 15;
     
     //_drawNode = DrawNode::create();
 }

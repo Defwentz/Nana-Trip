@@ -50,7 +50,6 @@ bool HelloWorld::init()
      //_world->SetGravity();
      });
      _eventDispatcher->addEventListenerWithSceneGraphPriority(accListener, this);
-     
      */
 
     return true;
@@ -66,7 +65,7 @@ void HelloWorld::initPhysics()
 {
     //initWinSize();
     
-    _world = new b2World(b2Vec2(0.0f, -11.0f));
+    _world = new b2World(b2Vec2(0.0f, -8.0f));
     
     // Do we want to let bodies sleep?
     _world->SetAllowSleeping(true);
@@ -199,10 +198,7 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 }
 void HelloWorld::onAcceleration(Acceleration *acc, Event *event)
 {
-    _nana->ApplyForce(b2Vec2(acc->x * 4, 0));
-    //nana->ApplyForce(b2Vec2(acc->x * 20, 0), nana->GetPosition(), true);
-    //log("x = %f, y = %f", acc->x, acc->y);
-    //_world->SetGravity();
+    _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
 }
 // Draw
 

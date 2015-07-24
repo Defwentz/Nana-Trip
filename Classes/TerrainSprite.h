@@ -13,6 +13,11 @@
 //#include "HelloWorldScene.h"
 //#include "TerrainNode.h"
 
+#define TYPE_DOOR                   99
+#define TYPE_TUNNEL_SUPER_NARROW    10
+//#define TYPE_TUNNEL_ONE_ROW         11
+#define TYPE_TUNNEL_TWO_ROWS        12
+
 class TerrainSprite : public cocos2d::Sprite
 {
 public:
@@ -23,9 +28,12 @@ public:
     void initPhysics(b2World *_world);
     int spawnTerrain();
     void spawnTunnel(int r);
+    void spawnBumps(int r);
+    void spawnChessbord(int r);
     
+    //void spawnLives(int type);
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
-    void doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(cocos2d::Vec2 p1, cocos2d::Vec2 p2));
+    void doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination));
     
     int randWithBase(int base, int addon);
     
@@ -43,8 +51,14 @@ protected:
     b2World *_world;
     b2Body *_body;
     
+    std::vector<int> terrainTypes;
+    
+    std::vector<b2Fixture *> nonos;
+    
     std::vector<std::vector<b2Fixture *>> lfixtures;
     std::vector<std::vector<b2Fixture *>> rfixtures;
+    
+    std::vector<cocos2d::Vec2> nonoVertices;
     
     std::vector<cocos2d::Vec2> lvertices;
     std::vector<cocos2d::Vec2> rvertices;
