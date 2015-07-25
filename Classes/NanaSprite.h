@@ -21,6 +21,7 @@ public:
     
     void initPhysics(b2World *world);
     cocos2d::Vec2 getPosition();
+    bool isNana(b2Body *body);
     void gasUp();
     void ApplyForce(b2Vec2 force);
     

@@ -8,6 +8,11 @@
 
 class HelloWorld : public cocos2d::Layer
 {
+    GLESDebugDraw *_debugDraw;
+    
+    b2World* _world;
+    NanaSprite* _nana;
+    TerrainSprite* _terrain;
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -17,24 +22,14 @@ public:
     void initPhysics();
     void update(float dt);
     
+    virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
+    override;
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
     
     ~HelloWorld();
-protected:
-    
-    virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
-        override;
-    
-    GLESDebugDraw *_debugDraw;
-    
-    b2World* _world;
-    NanaSprite* _nana;
-    //std::vector<b2Body *> bodies;
-    
-    TerrainSprite* _terrain;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

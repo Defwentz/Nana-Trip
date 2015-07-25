@@ -125,7 +125,7 @@ NanaSprite* NanaSprite::create()
 }
 
 NanaSprite::NanaSprite(){
-    hardness = 15;
+    hardness = 12;
     
     //_drawNode = DrawNode::create();
 }
@@ -153,8 +153,8 @@ void NanaSprite::initPhysics(b2World *world)
     float deltaAngle = (2.f * M_PI) / NUM_SEGMENTS;
     
     // Radius of the wheel
-    float radius = 1.5f;
-    float inner_radius = 1.2f;
+    float radius = 1.3f;
+    float inner_radius = 1.0f;
     
     // Need to store the bodies so that we can refer back
     // to it when we connect the joints
@@ -222,7 +222,7 @@ void NanaSprite::initPhysics(b2World *world)
         b2Body *body;
         body = world->CreateBody(&bodyDef);
         body->CreateFixture(&shell, 1.0f);
-        
+        body->SetUserData(new Entity(UD_NANA));
         bodies.push_back(body);
         
         ox = nox;
@@ -279,6 +279,15 @@ void NanaSprite::initPhysics(b2World *world)
     _bodies = bodies;
     
     //this->getParent()->addChild(_drawNode);
+}
+
+bool NanaSprite::isNana(b2Body *body)
+{
+    for(int i = 0; i < _bodies.size(); i++) {
+        if(body == _bodies[i])
+            return true;
+    }
+    return false;
 }
 
 Vec2 NanaSprite::getPosition()

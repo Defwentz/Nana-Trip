@@ -15,6 +15,19 @@
 
 #define PTM_RATIO 32
 
+//  User Data
+#define UD_FLOOR 0
+#define UD_NANA 1
+#define UD_BADGUY 2
+#define UD_MED 3
+
+class Entity
+{
+public:
+    Entity(int _t){type = _t;}
+    int type;
+};
+
 /*cocos2d::Size mwinSize;
 cocos2d::Vec2 midWin;
 

@@ -179,7 +179,6 @@ void TerrainSprite::spawnTunnel(int _r)
         rvertices.push_back(Vec2(winSize.width, lastY));
         terrainTypes.push_back(TYPE_DOOR);
         return;
-        return;
     }
     r -= ODDS_TWO_ROWS;
 }
@@ -221,13 +220,36 @@ void TerrainSprite::spawnChessbord(int r)
         float x = random(-max_radius/2, max_radius/2);
         for(int j = 0; j < col; j++, x += (2*max_radius + margin)) {
             if(rand_0_1() > odds)continue;
+            
+            bool isBadGuy = false;
+            if(rand_0_1() > 0.5)isBadGuy = true;
+            
+            BadGuySprite *bg;
             Vec2 pos = Vec2(x, lastY);
-            nonoVertices.push_back(pos);
+            if(isBadGuy) {
+                bg = BadGuySprite::create("red.png");
+                bg->setPosition(pos);
+                badguys.push_back(bg);
+            }
+            else nonoVertices.push_back(pos);
             
             b2CircleShape ball;
             ball.m_p = vToB2(pos);
             ball.m_radius = random(min_radius, max_radius)/PTM_RATIO;
-            nonos.push_back(_body->CreateFixture(&ball, 0));
+            
+            if(isBadGuy) {
+                bg->setScale(ball.m_radius*PTM_RATIO/36);
+                this->addChild(bg);
+                
+                b2BodyDef bd;
+                bd.position.SetZero();
+                bd.type = b2_staticBody;
+                b2Body *b = _world->CreateBody(&bd);
+                b->SetUserData(new Entity(UD_BADGUY));
+                b->CreateFixture(&ball, 0);
+                bg->_body = b;
+            }
+            else nonos.push_back(_body->CreateFixture(&ball, 0));
         }
         lastY -= (2*max_radius + margin);
     }
@@ -398,6 +420,16 @@ void TerrainSprite::update(float nanaY)
         }
         else break;
     }
+    
+    for(std::vector<BadGuySprite *>::iterator i = badguys.begin();
+        i != badguys.end();) {
+        if((*i)->getPosition().y > topY) {
+            _world->DestroyBody((*i)->_body);
+            (*i)->removeFromParent();
+            i = badguys.erase(i);
+        }
+        else break;
+    }
 }
 
 // Draw
@@ -415,6 +447,7 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
     kmGLLoadMatrix(&transform);
     glLineWidth( 5.0f );
     ccDrawColor4F(1.0, 1.0, 1.0, 1.0);
+    // left right curve floor
     for(int i = 1; i < lto; i++) {
         
         Vec2 lp1, lp2;
@@ -432,6 +465,13 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
         
         doVertices(rp1, rp2, ccDrawLine);
     }
+    
+    // bad guy
+    for(int i = 0; i < nonoVertices.size(); i++) {
+        ccDrawSolidCircle(nonoVertices[i],
+                          nonos[i]->GetShape()->m_radius * PTM_RATIO,
+                          CC_DEGREES_TO_RADIANS(360), 30);
+    }
     CHECK_GL_ERROR_DEBUG();
     
     kmGLPopMatrix();
@@ -439,4 +479,5 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
 
 void TerrainSprite::drawSegment(Vec2 p1, Vec2 p2)
 {
+    
 }

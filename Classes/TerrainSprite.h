@@ -10,6 +10,7 @@
 #define __nanatrip__TerrainSprite__
 
 #include "NanaTrip.h"
+#include "BadGuySprite.h"
 //#include "HelloWorldScene.h"
 //#include "TerrainNode.h"
 
@@ -63,6 +64,12 @@ protected:
     std::vector<cocos2d::Vec2> lvertices;
     std::vector<cocos2d::Vec2> rvertices;
     int lto, rto;
+    
+    std::vector<BadGuySprite *> badguys;
+    
+    //std::vector<cocos2d:: Sprite *> badguySprites;
+    //std::vector<b2Body *> badguys;
+    //std::vector<cocos2d::Vec2> badguyVertices;
     
     cocos2d::CustomCommand _customCommand;
 };

@@ -58,7 +58,7 @@ bool HelloWorld::init()
 HelloWorld::~HelloWorld()
 {
     delete _debugDraw;
-    delete _world;
+    CC_SAFE_DELETE(_world);
 }
 
 void HelloWorld::initPhysics()
@@ -76,7 +76,7 @@ void HelloWorld::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-    flags += b2Draw::e_shapeBit;
+    //flags += b2Draw::e_shapeBit;
     //flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
@@ -121,7 +121,6 @@ void HelloWorld::initPhysics()
     _nana = NanaSprite::create();
     _nana->initPhysics(_world);
     this->addChild(_nana);
-    
     /*
     terrain = TerrainNode::create();
     {
@@ -148,6 +147,9 @@ void HelloWorld::initPhysics()
     }
     this->addChild(terrain);*/
     
+    //_contactListener = new TripContactListener();
+    //_contactListener->setUp(this);
+    
     auto follow = Follow::create(_nana);
     this->runAction(follow);
     
@@ -171,6 +173,28 @@ void HelloWorld::update(float dt)
     _nana->gasUp();
     _nana->setPosition(_nana->getPosition());
     _terrain->update(_nana->getPosition().y);
+    
+    for(auto *contact = _world->GetContactList();contact; contact = contact->GetNext())
+    {
+        b2Body *bodyA = contact->GetFixtureA()->GetBody();
+        b2Body *bodyB = contact->GetFixtureB()->GetBody();
+        
+        auto udA = (Entity *) bodyA->GetUserData();
+        auto udB = (Entity *) bodyB->GetUserData();
+        
+        if(udA == NULL || udB == NULL)
+            return;
+        
+        if((udA->type == UD_NANA || udB->type == UD_NANA)
+           && (udA->type == UD_BADGUY || udB->type == UD_BADGUY)) {
+            CCLOG("%f-----hit", _nana->getPosition().y);
+            Director::getInstance()->pause();
+            this->initPhysics();
+            Director::getInstance()->resume();
+        }
+
+    }
+    
     //m_world->Step(dt, 8, 1);
     /*for(b2Body *b = _world->GetBodyList(); b; b = b->GetNext())
     {
