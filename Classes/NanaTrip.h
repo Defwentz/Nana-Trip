@@ -16,7 +16,7 @@
 #define PTM_RATIO 32
 
 //  User Data
-#define UD_FLOOR 0
+#define UD_FLOOR 0  // which will actually be NULL
 #define UD_NANA 1
 #define UD_BADGUY 2
 #define UD_MED 3

@@ -11,6 +11,7 @@
 
 #include "NanaTrip.h"
 
+// sprite with body
 class BadGuySprite : public cocos2d::Sprite
 {
 public:

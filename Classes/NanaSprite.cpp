@@ -125,8 +125,6 @@ NanaSprite* NanaSprite::create()
 }
 
 NanaSprite::NanaSprite(){
-    hardness = 12;
-    
     //_drawNode = DrawNode::create();
 }
 
@@ -134,8 +132,10 @@ void NanaSprite::initPhysics(b2World *world)
 {
     _world = world;
     
-    // Center is the position of circle that is in the center
-    b2Vec2 center = b2Vec2(200/PTM_RATIO, 520/PTM_RATIO);
+    auto winSize = Director::getInstance()->getWinSize();
+    
+    // Center of the circle.
+    b2Vec2 center = b2Vec2(winSize.width/2/PTM_RATIO, winSize.height/2/PTM_RATIO);
     
     /*b2CircleShape circleShape;
     circleShape.m_radius = 0.25f;
@@ -146,22 +146,16 @@ void NanaSprite::initPhysics(b2World *world)
     fixtureDef.restitution = 0.05;
     fixtureDef.friction = 1.0;*/
     
-    // The greater the number, the more springy
-    //float springiness = 4.0f;
-    
     // Delta angle to step by
     float deltaAngle = (2.f * M_PI) / NUM_SEGMENTS;
     
     // Radius of the wheel
-    float radius = 1.3f;
+    float radius = 1.2f;
     float inner_radius = 1.0f;
     
     // Need to store the bodies so that we can refer back
     // to it when we connect the joints
-    //std::vector<b2Body *> bodies;
-    
-    // Current angle
-    //float theta = 0;
+    std::vector<b2Body *> bodies;
     
     // Calcualte the x and y based on theta
     float ox = radius*cosf(0);
@@ -190,7 +184,6 @@ void NanaSprite::initPhysics(b2World *world)
     innerCircleBody->CreateFixture(&fixtureDef);
     */
     ////////////////////////////////////
-    std::vector<b2Body *> bodies;
     
     for(int i = 0; i < NUM_SEGMENTS; i++) {
         // Next angle
@@ -207,20 +200,19 @@ void NanaSprite::initPhysics(b2World *world)
         vertices[1].Set(ox, oy);
         vertices[2].Set(nox, noy);
         vertices[3].Set(nix, niy);
-        
         b2PolygonShape shell;
         shell.Set(vertices, 4);
         
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody;
-        bodyDef.position = (center
+        bodyDef.position = center;
                             //+ b2Vec2(0.4*cosf(next_theta - deltaAngle/2),
                                   // 0.4*sinf(next_theta - deltaAngle/2))
-                            );
+                            //);
+        // don't know exact effect
         bodyDef.linearDamping = 0.1f;
         
-        b2Body *body;
-        body = world->CreateBody(&bodyDef);
+        b2Body *body = world->CreateBody(&bodyDef);
         body->CreateFixture(&shell, 1.0f);
         body->SetUserData(new Entity(UD_NANA));
         bodies.push_back(body);
@@ -240,8 +232,8 @@ void NanaSprite::initPhysics(b2World *world)
         int neighborIndex = (i + 1) % NUM_SEGMENTS;
         
         // Get the current body and the neighbor
-        b2Body *currentBody = bodies.at(i);//(b2Body*)[[bodies objectAtIndex:i] pointerValue];
-        b2Body *neighborBody = bodies.at(neighborIndex);//(b2Body*)[[bodies objectAtIndex:neighborIndex] pointerValue];
+        b2Body *currentBody = bodies.at(i);
+        b2Body *neighborBody = bodies.at(neighborIndex);
         
         // Next angle
         next_theta += deltaAngle;
@@ -254,17 +246,17 @@ void NanaSprite::initPhysics(b2World *world)
         b2Vec2 outer_joint = center + b2Vec2(nox, noy);
         b2Vec2 inner_joint = center + b2Vec2(nix, niy);
         
-        // Connect the outer circles to each other
+        // Connect the outside
         rjointDef.Initialize(currentBody, neighborBody, outer_joint);
         world->CreateJoint(&rjointDef);
         
-        // Connect the inner circles to each other
+        // Connect the inside
         jointDef.Initialize(currentBody, neighborBody,
                             inner_joint,
                             inner_joint );
         jointDef.collideConnected = true;
-        jointDef.frequencyHz = 4.0f;//springiness;
-        jointDef.dampingRatio = 0.5f;//0.0001f;
+        jointDef.frequencyHz = 4.0f;
+        jointDef.dampingRatio = 0.5f;
         
         world->CreateJoint(&jointDef);
         /*
@@ -312,7 +304,7 @@ Vec2 NanaSprite::getPosition()
     return Vec2(x, y);*/
 }
 
-// Gas up the body, force with a scale -> hardness.
+// Gas up the body, apply force with a scale -> hardness.
 void NanaSprite::gasUp()
 {
     for(int i = 0; i < _bodies.size(); i++) {

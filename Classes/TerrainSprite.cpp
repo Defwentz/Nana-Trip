@@ -47,9 +47,7 @@ void TerrainSprite::initPhysics(b2World *_world)
     Vec2 tr = Vec2(s.width, s.height);
     Vec2 br = Vec2(s.width, 0);
     
-    //lvertices.push_back(tl);
     lvertices.push_back(bl);
-    //rvertices.push_back(tr);
     rvertices.push_back(br);
     terrainTypes.push_back(TYPE_DOOR);
     
@@ -338,17 +336,6 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         b2Vec2 _bp2 = vToB2(_p2);
         border.Set(_bp1, _bp2);
         _fixtures.push_back(_body->CreateFixture(&border,0));
-        /*
-        if(spawnLives) {
-            if(terrainTypes.front() == TYPE_TUNNEL_TWO_ROWS) {
-                nonoVertices.push_back(_p1);
-                
-                b2CircleShape ball;
-                ball.m_radius = (_bp2 - _bp1).Length()*3/8;
-                ball.m_p = _bp1;
-                nonos.push_back(_body->CreateFixture(&ball, 0));
-            }
-        }*/
         _p1 = _p2;
     }
     
@@ -466,7 +453,7 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
         doVertices(rp1, rp2, ccDrawLine);
     }
     
-    // bad guy
+    // draw obstacles
     for(int i = 0; i < nonoVertices.size(); i++) {
         ccDrawSolidCircle(nonoVertices[i],
                           nonos[i]->GetShape()->m_radius * PTM_RATIO,

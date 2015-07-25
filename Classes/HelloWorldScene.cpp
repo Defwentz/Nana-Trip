@@ -33,7 +33,6 @@ bool HelloWorld::init()
     }
     
     //auto rootNode = CSLoader::createNode("MainScene.csb");
-
     //addChild(rootNode);
     
     auto eventDispatcher = Director::getInstance()->getEventDispatcher();
@@ -43,14 +42,6 @@ bool HelloWorld::init()
     touchlistener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
     eventDispatcher->addEventListenerWithFixedPriority(touchlistener, 1);
     setAccelerometerEnabled(true);
-    /*
-     Device::setAccelerometerEnabled(true);
-     auto accListener = EventListenerAcceleration::create([](Acceleration *acc, Event *event){
-     log("x = %f, y = %f", acc->x, acc->y);
-     //_world->SetGravity();
-     });
-     _eventDispatcher->addEventListenerWithSceneGraphPriority(accListener, this);
-     */
 
     return true;
 }
@@ -66,10 +57,8 @@ void HelloWorld::initPhysics()
     //initWinSize();
     
     _world = new b2World(b2Vec2(0.0f, -8.0f));
-    
     // Do we want to let bodies sleep?
     _world->SetAllowSleeping(true);
-    
     _world->SetContinuousPhysics(true);
     
     _debugDraw = new GLESDebugDraw( PTM_RATIO );
@@ -121,34 +110,6 @@ void HelloWorld::initPhysics()
     _nana = NanaSprite::create();
     _nana->initPhysics(_world);
     this->addChild(_nana);
-    /*
-    terrain = TerrainNode::create();
-    {
-        b2BodyDef bd;
-        bd.position.SetZero();
-        bd.type = b2_staticBody;
-        b2Body *_body = _world->CreateBody(&bd);
-        terrain->_body = _body;
-        
-        for(int i = 1; i < terrain->lvertices.size(); i++) {
-            Vec2 lp1, lp2;
-            lp1 = terrain->lvertices[i - 1];
-            lp2 = terrain->lvertices[i];
-            terrain->setEdge(lp1, lp2, _world);
-        }
-        for(int i = 1; i < terrain->rvertices.size(); i++) {
-            Vec2 rp1, rp2;
-            rp1 = terrain->rvertices[i - 1];
-            rp2 = terrain->rvertices[i];
-            terrain->setEdge(rp1, rp2, _world);
-        }
-        
-        _body->SetLinearVelocity(b2Vec2(0, 5));
-    }
-    this->addChild(terrain);*/
-    
-    //_contactListener = new TripContactListener();
-    //_contactListener->setUp(this);
     
     auto follow = Follow::create(_nana);
     this->runAction(follow);
@@ -171,8 +132,11 @@ void HelloWorld::update(float dt)
     // generally best to keep the time step and iterations fixed.
     _world->Step(dt, velocityIterations, positionIterations);
     _nana->gasUp();
-    _nana->setPosition(_nana->getPosition());
-    _terrain->update(_nana->getPosition().y);
+    
+    Vec2 nanaPos = _nana->getPosition();
+    _nana->setPosition(nanaPos);
+    _terrain->update(nanaPos.y);
+    //scoreLabel->setString(StringUtils::format("%f", -nanaPos.y));
     
     for(auto *contact = _world->GetContactList();contact; contact = contact->GetNext())
     {
@@ -212,7 +176,6 @@ void HelloWorld::update(float dt)
 }
 bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 {
-    //bounce();
     //auto touchLocation = touch->getLocation();
     //auto nanaLoc = nana->GetCenter();
     //nana->ApplyLinearImpulse(b2Vec2(-(nanaLoc.x*32 - touchLocation.x)/2, -(nanaLoc.y*32 - touchLocation.y)/2)); //ApplyForce(b2Vec2(1, 1));

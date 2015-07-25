@@ -10,9 +10,12 @@ class HelloWorld : public cocos2d::Layer
 {
     GLESDebugDraw *_debugDraw;
     
-    b2World* _world;
-    NanaSprite* _nana;
-    TerrainSprite* _terrain;
+    b2World *_world;
+    NanaSprite *_nana;
+    TerrainSprite *_terrain;
+    
+    // currently score is -(y coordinate of nana's bodies[0])
+    //cocos2d::Label *scoreLabel;
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();

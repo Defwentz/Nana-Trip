@@ -20,21 +20,19 @@ public:
     NanaSprite();
     
     void initPhysics(b2World *world);
+    // the vec2 of _bodies[0]->getPosistion()
     cocos2d::Vec2 getPosition();
     bool isNana(b2Body *body);
     void gasUp();
     void ApplyForce(b2Vec2 force);
     
-    //void visit(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
-        //override;
-    
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
         override;
     void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
-    //static std::vector<b2Body *> createPhysicsObject_(b2World *world);
-    //void bounce();
 protected:
-    int hardness;
+    // scale for gasUp method, default 12
+    // 10 is ok, 20 is a bit much, get stuck sometime
+    int hardness = 12;
     
     b2World *_world;
     std::vector<b2Body *> _bodies;

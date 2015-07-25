@@ -32,7 +32,6 @@ public:
     void spawnBumps(int r);
     void spawnChessbord(int r);
     
-    //void spawnLives(int type);
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
     void doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination));
     
@@ -48,7 +47,6 @@ public:
     static b2Vec2 vToB2(cocos2d::Vec2 v);
     static cocos2d::Vec2 b2ToV(b2Vec2 b);
 protected:
-    //HelloWorld *_mparent;
     b2World *_world;
     b2Body *_body;
     
@@ -66,10 +64,6 @@ protected:
     int lto, rto;
     
     std::vector<BadGuySprite *> badguys;
-    
-    //std::vector<cocos2d:: Sprite *> badguySprites;
-    //std::vector<b2Body *> badguys;
-    //std::vector<cocos2d::Vec2> badguyVertices;
     
     cocos2d::CustomCommand _customCommand;
 };
