@@ -11,7 +11,7 @@
 
 #include "cocos2d.h"
 #include <Box2D/Box2D.h>
-#include <vector>
+#include "Randomer.h"
 
 #define PTM_RATIO 32
 

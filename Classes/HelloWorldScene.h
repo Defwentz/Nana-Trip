@@ -25,6 +25,8 @@ public:
     void initPhysics();
     void update(float dt);
     
+    void reset();
+    
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
     override;
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);

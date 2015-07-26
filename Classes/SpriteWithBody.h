@@ -11,12 +11,12 @@
 
 #include "NanaTrip.h"
 
-// sprite with body
-class BadGuySprite : public cocos2d::Sprite
+// sprite with b2Body
+class SpriteWithBody : public cocos2d::Sprite
 {
 public:
-    static BadGuySprite *create(const std::string& filename);
-    BadGuySprite();
+    static SpriteWithBody *create(const std::string& filename);
+    SpriteWithBody();
     
     b2Body *_body;
 };

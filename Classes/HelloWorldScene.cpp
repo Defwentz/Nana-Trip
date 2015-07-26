@@ -152,9 +152,6 @@ void HelloWorld::update(float dt)
         if((udA->type == UD_NANA || udB->type == UD_NANA)
            && (udA->type == UD_BADGUY || udB->type == UD_BADGUY)) {
             CCLOG("%f-----hit", _nana->getPosition().y);
-            Director::getInstance()->pause();
-            this->initPhysics();
-            Director::getInstance()->resume();
         }
 
     }
@@ -174,6 +171,18 @@ void HelloWorld::update(float dt)
         }
     }*/
 }
+
+void HelloWorld::reset()
+{
+    Director::getInstance()->pause();
+    // glClear并没有什么用
+    glClear(GL_COLOR_BUFFER_BIT);
+    delete _debugDraw;
+    CC_SAFE_DELETE(_world);
+    this->initPhysics();
+    Director::getInstance()->resume();
+}
+
 bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 {
     //auto touchLocation = touch->getLocation();

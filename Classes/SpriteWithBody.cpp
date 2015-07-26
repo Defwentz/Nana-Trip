@@ -1,16 +1,16 @@
 //
-//  BadGuySprite.cpp
+//  SpriteWithBody.cpp
 //  nanatrip
 //
 //  Created by Macbook Air on 7/25/15.
 //
 //
 
-#include "BadGuySprite.h"
+#include "SpriteWithBody.h"
 
-BadGuySprite* BadGuySprite::create(const std::string& filename)
+SpriteWithBody* SpriteWithBody::create(const std::string& filename)
 {
-    BadGuySprite *sprite = new (std::nothrow) BadGuySprite();
+    SpriteWithBody *sprite = new (std::nothrow) SpriteWithBody();
     if (sprite && sprite->initWithFile(filename))
     {
         sprite->autorelease();
@@ -19,4 +19,4 @@ BadGuySprite* BadGuySprite::create(const std::string& filename)
     CC_SAFE_DELETE(sprite);
     return nullptr;
 }
-BadGuySprite::BadGuySprite(){}
+SpriteWithBody::SpriteWithBody(){}

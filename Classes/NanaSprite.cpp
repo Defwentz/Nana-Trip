@@ -134,7 +134,7 @@ void NanaSprite::initPhysics(b2World *world)
     
     auto winSize = Director::getInstance()->getWinSize();
     
-    // Center of the circle.
+    // Center of the circle, set to the center of the screen.
     b2Vec2 center = b2Vec2(winSize.width/2/PTM_RATIO, winSize.height/2/PTM_RATIO);
     
     /*b2CircleShape circleShape;
@@ -305,6 +305,7 @@ Vec2 NanaSprite::getPosition()
 }
 
 // Gas up the body, apply force with a scale -> hardness.
+// currently only work when 12 segements. If change, need adjustment.
 void NanaSprite::gasUp()
 {
     for(int i = 0; i < _bodies.size(); i++) {
