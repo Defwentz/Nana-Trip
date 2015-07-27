@@ -33,6 +33,11 @@ TerrainSprite::TerrainSprite()
     terrainRdmr->add(ITEM_BUMPS, 30);
     terrainRdmr->add(ITEM_CHESSBOARD, 30);
     
+    // initalize the tunnel randomer
+    tnlRdmr = new Randomer();
+    tnlRdmr->add(ITEM_TUNNEL_NR, 10);
+    tnlRdmr->add(ITEM_TUNNEL_BRD, 10);
+    
     // initalize the bump randomer
     bumpRdmr = new Randomer();
     bumpRdmr->add(ITEM_BUMPS_1, 30);
@@ -42,10 +47,12 @@ TerrainSprite::TerrainSprite()
 TerrainSprite::~TerrainSprite()
 {
     delete terrainRdmr;
+    delete tnlRdmr;
     delete bumpRdmr;
 }
 
-float TerrainSprite::getLastY() {
+float TerrainSprite::getLastY()
+{
     // ignore the situation when l/rvertices might be empty.
     if(lvertices.back().y < rvertices.back().y)
         return lvertices.back().y;
@@ -64,12 +71,10 @@ void TerrainSprite::initPhysics(b2World *_world)
     // Define the ground box shape.
     b2EdgeShape border;
     
-    auto s = Director::getInstance()->getWinSize();
-    
     Vec2 bl = Vec2(0, 0);
-    Vec2 tl = Vec2(0, s.height);
-    Vec2 tr = Vec2(s.width, s.height);
-    Vec2 br = Vec2(s.width, 0);
+    Vec2 tl = Vec2(0, winSiz.height);
+    Vec2 tr = Vec2(winSiz.width, winSiz.height);
+    Vec2 br = Vec2(winSiz.width, 0);
     
     lvertices.push_back(bl);
     rvertices.push_back(br);
@@ -114,74 +119,47 @@ const int TUNNEL_KEYPOINT = 5,
     ROW_WIDTH = 50, ROW_WIDTH_ADDON = 50;   // different than others
 void TerrainSprite::spawnTunnel()
 {
-    auto winSize = Director::getInstance()->getWinSize();
     float lastY = getLastY();
+    if(lvertices.back().y > lastY)
+        lvertices.push_back(Vec2(0, lastY));
+    if(rvertices.back().y > lastY)
+        rvertices.push_back(Vec2(winSiz.width, lastY));
     
-    int r = rand() % TUNNEL_WIDTH_MASK;
     int n = randWithBase(TUNNEL_KEYPOINT, TUNNEL_KEYPOINT);
+    switch (tnlRdmr->getRandomItem()) {
+        case ITEM_TUNNEL_NR:
+            for(int i = 0; i < n; i++) {
+                int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
+                                          winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
+                int width = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+                int x = randWithBase(winSiz.width/X_IN_SCREEN, winSiz.width*3/X_IN_SCREEN);
+                lastY -= length;
+                
+                lvertices.push_back(Vec2(x - width/2, lastY));
+                rvertices.push_back(Vec2(x + width/2, lastY));
+            }
+            break;
+        case ITEM_TUNNEL_BRD:
+            for(int i = 0; i < n; i++) {
+                int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
+                                          winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
+                int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
+                int x = randWithBase(winSiz.width/X_IN_SCREEN, winSiz.width*3/X_IN_SCREEN);
+                lastY -= length;
+                
+                lvertices.push_back(Vec2(x - width/2, lastY));
+                rvertices.push_back(Vec2(x + width/2, lastY));
+            }
+            break;
+        default:
+            break;
+    }
     
-    if(r < ODDS_SUPER_NARROW) {
-        for(int i = 0; i < n; i++) {
-            int length = randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                                  winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-            int width = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
-            int x = randWithBase(winSize.width/X_IN_SCREEN, winSize.width*3/X_IN_SCREEN);
-            lastY -= length;
-            
-            lvertices.push_back(Vec2(x, lastY));
-            rvertices.push_back(Vec2(x + width, lastY));
-            //terrainTypes.push_back(TYPE_TUNNEL_SUPER_NARROW);
-        }
-        lastY -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                                  winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-        lvertices.push_back(Vec2(0, lastY));
-        rvertices.push_back(Vec2(winSize.width, lastY));
-        //terrainTypes.push_back(TYPE_DOOR);
-        return;
-    }
-    r -= ODDS_SUPER_NARROW;
-    /*
-    if(r < ODDS_ONE_ROW) {
-        for(int i = 0; i < n; i++) {
-            int length = randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                                      winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-            int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
-            int x = randWithBase(winSize.width/X_IN_SCREEN, winSize.width*3/X_IN_SCREEN);
-            lastY -= length;
-            
-            lvertices.push_back(Vec2(x, lastY));
-            rvertices.push_back(Vec2(x + width, lastY));
-            terrainTypes.push_back(TYPE_TUNNEL_ONE_ROW);
-        }
-        lastY -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                              winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-        lvertices.push_back(Vec2(0, lastY));
-        rvertices.push_back(Vec2(winSize.width, lastY));
-        terrainTypes.push_back(TYPE_DOOR);
-        return;
-    }
-    r -= ODDS_ONE_ROW;*/
-    if(r < ODDS_TWO_ROWS) {
-        for(int i = 0; i < n; i++) {
-            int length = randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                                      winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-            int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
-            int x = randWithBase(winSize.width/X_IN_SCREEN, winSize.width*3/X_IN_SCREEN);
-            lastY -= length;
-            
-            lvertices.push_back(Vec2(x, lastY));
-            rvertices.push_back(Vec2(x + width, lastY));
-            //terrainTypes.push_back(TYPE_TUNNEL_TWO_ROWS);
-        }
-        lastY -= randWithBase(winSize.height/TUNNEL_KP_DIST_IN_SCREEN,
-                              winSize.height/TUNNEL_KP_DIST_IN_SCREEN);
-        lvertices.push_back(Vec2(0, lastY));
-        rvertices.push_back(Vec2(winSize.width, lastY));
-        //terrainTypes.push_back(TYPE_DOOR);
-        return;
-    }
-    r -= ODDS_TWO_ROWS;
-}
+    lastY -= randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
+                          winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
+    lvertices.push_back(Vec2(0, lastY));
+    rvertices.push_back(Vec2(winSiz.width, lastY));
+  }
 
 
 // type 1   >
@@ -191,42 +169,46 @@ void TerrainSprite::spawnTunnel()
 //          >    <
 void TerrainSprite::spawnBumps()
 {
-    auto winSize = Director::getInstance()->getWinSize();
     float lastY = getLastY();
     
     switch (bumpRdmr->getRandomItem()) {
         case ITEM_BUMPS_1:
             int n = rand()%5;
             
-            float min_bump_length = winSize.height / 3;
-            float max_bump_length = winSize.height;
+            float min_bump_length = winSiz.height / 3;
+            float max_bump_length = winSiz.height;
             for(int i = 0; i < n; i++) {
                 // I think same total x,y difference will look better than different
                 int bump_length = random(min_bump_length, max_bump_length);
-                int bump_peak_tdy = random(bump_length/2, bump_length);
-                int bump_peak_tdx = random((float)NARROW_WIDTH, winSize.width - NARROW_WIDTH);
+                int bump_peak_tdy = random(bump_length/2, bump_length*2/3);
+                int bump_peak_tdx = random((float)NARROW_WIDTH, winSiz.width - NARROW_WIDTH);
                 int bump_peak_y_1 = lastY - bump_peak_tdy;
                 int bump_end_y_1 = lastY - bump_length;
                 
                 bool leftFirst = boolWithOdds(0.5);
                 if(leftFirst) {
+                    if(lvertices.back().y > lastY)
+                        lvertices.push_back(Vec2(0, lastY));
                     lvertices.push_back(Vec2(bump_peak_tdx, bump_peak_y_1));
                     lvertices.push_back(Vec2(0, bump_end_y_1));
                 }
                 else {
-                    rvertices.push_back(Vec2(winSize.width - bump_peak_tdx, bump_peak_y_1));
-                    rvertices.push_back(Vec2(winSize.width, bump_end_y_1));
+                    if(rvertices.back().y > lastY)
+                        rvertices.push_back(Vec2(winSiz.width, lastY));
+                    rvertices.push_back(Vec2(winSiz.width - bump_peak_tdx, bump_peak_y_1));
+                    rvertices.push_back(Vec2(winSiz.width, bump_end_y_1));
                 }
                 
+                lastY = bump_end_y_1;
                 int margin = random(0, bump_peak_tdy - bump_peak_tdy + NARROW_WIDTH);
                 int bump_begin_y_2 = bump_peak_y_1 - margin;
                 int bump_peak_y_2 = bump_begin_y_2 - bump_peak_tdy;
                 lastY = bump_begin_y_2 - bump_length;
                 // lastY now is still the frist bump's door y
                 if(leftFirst) {
-                    rvertices.push_back(Vec2(winSize.width, bump_begin_y_2));
-                    rvertices.push_back(Vec2(winSize.width - bump_peak_tdx, bump_peak_y_2));
-                    rvertices.push_back(Vec2(winSize.width, lastY));
+                    rvertices.push_back(Vec2(winSiz.width, bump_begin_y_2));
+                    rvertices.push_back(Vec2(winSiz.width - bump_peak_tdx, bump_peak_y_2));
+                    rvertices.push_back(Vec2(winSiz.width, lastY));
                 }
                 else {
                     lvertices.push_back(Vec2(0, bump_begin_y_2));
@@ -243,53 +225,97 @@ void TerrainSprite::spawnBumps()
     }
 }
 
+void TerrainSprite::spawnCurve()
+{
+    float lastY = getLastY();
+}
+
 const int MIN_COL = 3,
     MAX_COL = 7;
 //int max_radius = winSize.width / (MIN_COL-1) - margin;
 //int min_radius = winSize.width / (MAX_COL-1) - margin;
 void TerrainSprite::spawnChessboard()
 {
-    auto winSize = Director::getInstance()->getWinSize();
     float lastY = getLastY();
-    
-    int length = randWithBase(winSize.height/2,
-                              winSize.height*2);
+    int length = randWithBase(winMidY,
+                              winSiz.height*2);
     lvertices.push_back(Vec2(0, lastY-length));
-    rvertices.push_back(Vec2(winSize.width, lastY-length));
+    rvertices.push_back(Vec2(winSiz.width, lastY-length));
     //terrainTypes.push_back(TYPE_DOOR);
     int margin = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
     
     int col = randWithBase(MIN_COL, MAX_COL-MIN_COL);
-    float max_radius = (winSize.width / (col-1) - margin)/2;
-    float min_radius = (winSize.width / (MAX_COL-1) - margin)/2;
+    float max_radius = (winSiz.width / (col-1) - margin)/2;
+    float min_radius = (winSiz.width / (MAX_COL-1) - margin)/2;
     int row = (margin + length) / (2*max_radius + margin);
+    lastY -= max_radius;
     
     float odds = rand_0_1();
-    
-    lastY -= max_radius;
     for(int i = 0; i < row; i++) {
         float x = random(-max_radius/2, max_radius/2);
         for(int j = 0; j < col; j++, x += (2*max_radius + margin)) {
+            // decide whether to use the spot or not, with odds
             if(rand_0_1() < odds)continue;
             
-            bool isBadGuy = boolWithOdds(0.1);
+            float radius = random(min_radius, max_radius)/PTM_RATIO;
             
-            SpriteWithBody *bg;
+            // calculate position
             Vec2 pos = Vec2(x, lastY);
-            if(isBadGuy) {
-                bg = SpriteWithBody::create("red.png");
-                bg->setPosition(pos);
-                badguys.push_back(bg);
+            b2Vec2 bpos = vToB2(pos);
+            
+            if(rand_0_1() < 0.3) {
+                b2BodyDef bd;
+                bd.position = bpos;
+                bd.type = b2_dynamicBody;
+                b2Body *mover = _world->CreateBody(&bd);
+                
+                b2PolygonShape stick_1;
+                float round_edge_radius = 10.0/PTM_RATIO;
+                b2Vec2 vertices[4];
+                vertices[0] = b2Vec2(-round_edge_radius, round_edge_radius - radius);
+                vertices[1] = b2Vec2(-round_edge_radius, radius - round_edge_radius);
+                vertices[2] = b2Vec2(round_edge_radius, radius - round_edge_radius);
+                vertices[3] = b2Vec2(round_edge_radius, round_edge_radius - radius);
+                stick_1.Set(vertices, 4);
+                mover->CreateFixture(&stick_1, 0.2f);   // trying something
+                {
+                    b2CircleShape round_edge;
+                    round_edge.m_p.Set(0, radius - round_edge_radius);
+                    round_edge.m_radius = round_edge_radius;
+                    mover->CreateFixture(&round_edge, 0.2f);
+                }
+                {
+                    b2CircleShape round_edge;
+                    round_edge.m_p.Set(0, - radius + round_edge_radius);
+                    round_edge.m_radius = round_edge_radius;
+                    mover->CreateFixture(&round_edge, 0.2f);
+                }
+                b2RevoluteJointDef jd;
+                jd.Initialize(_body, mover, bpos);
+                _world->CreateJoint(&jd);
+                continue;
             }
-            else nonoVertices.push_back(pos);
+            
+            bool isBadGuy = boolWithOdds(0.1);
+            SpriteWithBody *guy;
+            if(isBadGuy) {
+                guy = SpriteWithBody::create("red.png");
+                guy->setPosition(pos);
+                badguys.push_back(guy);
+            }
+            else {
+                guy = SpriteWithBody::create("black.png");
+                guy->setPosition(pos);
+                obstacles.push_back(guy);
+            }
             
             b2CircleShape ball;
-            ball.m_p = vToB2(pos);
-            ball.m_radius = random(min_radius, max_radius)/PTM_RATIO;
+            ball.m_p = bpos;
+            ball.m_radius = radius;
             
             if(isBadGuy) {
-                bg->setScale(ball.m_radius*PTM_RATIO/36);
-                this->addChild(bg);
+                guy->setScale(ball.m_radius*PTM_RATIO/36);
+                this->addChild(guy);
                 
                 b2BodyDef bd;
                 bd.position.SetZero();
@@ -297,13 +323,24 @@ void TerrainSprite::spawnChessboard()
                 b2Body *b = _world->CreateBody(&bd);
                 b->SetUserData(new Entity(UD_BADGUY));
                 b->CreateFixture(&ball, 0);
-                bg->_body = b;
+                guy->_body = b;
+                
+                guy->runAction(RepeatForever::create(RotateBy::create(8, 360)));
             }
-            else nonos.push_back(_body->CreateFixture(&ball, 0));
+            else {
+                guy->setScale(ball.m_radius*PTM_RATIO/36);
+                this->addChild(guy);
+                
+                b2BodyDef bd;
+                bd.position.SetZero();
+                bd.type = b2_staticBody;
+                b2Body *b = _world->CreateBody(&bd);
+                b->CreateFixture(&ball, 0);
+                guy->_body = b;
+            }
         }
         lastY -= (2*max_radius + margin);
     }
-    
 }
 
 void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination))
@@ -326,7 +363,7 @@ void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(
         _p2.y = _p1.y - dy;
         y+=dj;
         _p2.x = A*cosf(y) + B;
-        
+
         func(_p1, _p2);
         _p1 = _p2;
     }
@@ -343,17 +380,6 @@ bool TerrainSprite::boolWithOdds(float odds)
     else
         return false;
 }
-
-b2Vec2 TerrainSprite::vToB2(cocos2d::Vec2 v)
-{
-    return b2Vec2(v.x/PTM_RATIO, v.y/PTM_RATIO);
-}
-
-cocos2d::Vec2 TerrainSprite::b2ToV(b2Vec2 b)
-{
-    return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
-}
-
 
 void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 {
@@ -394,9 +420,8 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 
 void TerrainSprite::update(float nanaY)
 {
-    auto winSize = Director::getInstance()->getWinSize();
-    float topY = nanaY + winSize.height/2 + winSize.height/8;
-    float bottomY = nanaY - winSize.height/2 - winSize.height/8;
+    float topY = nanaY + winMidY + winSiz.height/8;
+    float bottomY = nanaY - winMidY - winSiz.height/8;
     
     //if(lvertices.size() < 2) {
        // spawnTerrain();
@@ -445,12 +470,12 @@ void TerrainSprite::update(float nanaY)
     if(rto == rvertices.size())
         spawnTerrain();
 
-    for(std::vector<Vec2>::iterator i = nonoVertices.begin();
-        i != nonoVertices.end();) {
-        if(i->y > topY) {
-            i = nonoVertices.erase(i);
-            _body->DestroyFixture(nonos.front());
-            nonos.erase(nonos.cbegin());
+    for(std::vector<SpriteWithBody *>::iterator i = obstacles.begin();
+        i != obstacles.end();) {
+        if((*i)->getPosition().y > topY) {
+            _world->DestroyBody((*i)->_body);
+            (*i)->removeFromParent();
+            i = obstacles.erase(i);
         }
         else break;
     }
@@ -475,6 +500,8 @@ void TerrainSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transf
     renderer->addCommand(&_customCommand);
 }
 
+// drawing the same spot over and over again, bad idea.
+// TODO: fix this
 void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
 {
     kmGLPushMatrix();
@@ -501,11 +528,11 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
     }
     
     // draw obstacles
-    for(int i = 0; i < nonoVertices.size(); i++) {
-        ccDrawSolidCircle(nonoVertices[i],
-                          nonos[i]->GetShape()->m_radius * PTM_RATIO,
-                          CC_DEGREES_TO_RADIANS(360), 30);
-    }
+//    for(int i = 0; i < nonoVertices.size(); i++) {
+//        ccDrawSolidCircle(nonoVertices[i],
+//                          nonos[i]->GetShape()->m_radius * PTM_RATIO,
+//                          CC_DEGREES_TO_RADIANS(360), 30);
+//    }
     CHECK_GL_ERROR_DEBUG();
     kmGLPopMatrix();
 }

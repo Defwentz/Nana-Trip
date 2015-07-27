@@ -22,6 +22,7 @@ private:
 public:
     Randomer();
     void add(int item, int odds);
+    void updateOdds(int item, int newOdds);
     int getRandomItem();
 };
 

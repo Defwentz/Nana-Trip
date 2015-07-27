@@ -1,0 +1,25 @@
+//
+//  NanaTrip.cpp
+//  nanatrip
+//
+//  Created by Macbook Air on 7/27/15.
+//
+//
+
+#include "NanaTrip.h"
+
+cocos2d::Size winSiz;
+float winMidX;
+float winMidY;
+
+int score;
+
+b2Vec2 vToB2(cocos2d::Vec2 v)
+{
+    return b2Vec2(v.x/PTM_RATIO, v.y/PTM_RATIO);
+}
+
+cocos2d::Vec2 b2ToV(b2Vec2 b)
+{
+    return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
+}

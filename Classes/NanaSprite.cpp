@@ -132,10 +132,8 @@ void NanaSprite::initPhysics(b2World *world)
 {
     _world = world;
     
-    auto winSize = Director::getInstance()->getWinSize();
-    
     // Center of the circle, set to the center of the screen.
-    b2Vec2 center = b2Vec2(winSize.width/2/PTM_RATIO, winSize.height/2/PTM_RATIO);
+    b2Vec2 center = b2Vec2(winMidX/PTM_RATIO, winMidY/PTM_RATIO);
     
     /*b2CircleShape circleShape;
     circleShape.m_radius = 0.25f;
@@ -284,9 +282,8 @@ bool NanaSprite::isNana(b2Body *body)
 
 Vec2 NanaSprite::getPosition()
 {
-    auto winSize = Director::getInstance()->getWinSize();
     b2Vec2 pos = _bodies[0]->GetPosition();
-    pos.x = winSize.width/2;
+    pos.x = winMidX;
     pos.y *= PTM_RATIO;
     return Vec2(pos.x, pos.y);
     /*

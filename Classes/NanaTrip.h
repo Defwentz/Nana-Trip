@@ -28,6 +28,15 @@ public:
     int type;
 };
 
+b2Vec2 vToB2(cocos2d::Vec2 v);
+cocos2d::Vec2 b2ToV(b2Vec2 b);
+
+extern cocos2d::Size winSiz;
+extern float winMidX;
+extern float winMidY;
+
+extern int score;
+
 /*cocos2d::Size mwinSize;
 cocos2d::Vec2 midWin;
 

@@ -20,6 +20,19 @@ void Randomer::add(int item, int odds)
     odds_mask += odds;
 }
 
+void Randomer::updateOdds(int item, int newOdds)
+{
+    for(int i = 0; i < _item.size(); i++)
+    {
+        if(_item[i] == item) {
+            odds_mask -= _odds[i];
+            _odds[i] = newOdds;
+            odds_mask += newOdds;
+            return;
+        }
+    }
+}
+
 int Randomer::getRandomItem()
 {
     //if(odds_mask == 0)return 0;

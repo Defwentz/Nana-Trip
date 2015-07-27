@@ -6,8 +6,18 @@ USING_NS_CC;
 
 using namespace cocostudio::timeline;
 
+// needed
+void HelloWorld::initWinSiz()
+{
+    winSiz = Director::getInstance()->getWinSize();
+    winMidX = winSiz.width/2;
+    winMidY = winSiz.height/2;
+}
+
 Scene* HelloWorld::createScene()
 {
+    initWinSiz();
+    
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
@@ -15,8 +25,14 @@ Scene* HelloWorld::createScene()
     auto layer = HelloWorld::create();
     layer->initPhysics();
     
+    // also needed
+    score = 0;
+    
     // add layer as a child to scene
-    scene->addChild(layer);
+    scene->addChild(layer, 5);
+    
+    auto infoLayer = InfoLayer::create();
+    scene->addChild(infoLayer, 4);
 
     // return the scene
     return scene;
@@ -48,13 +64,15 @@ bool HelloWorld::init()
 
 HelloWorld::~HelloWorld()
 {
+    delete _terrain;
+    delete _nana;
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
 }
 
 void HelloWorld::initPhysics()
 {
-    //initWinSize();
+    //b2_velocityThreshold = 0.1f;
     
     _world = new b2World(b2Vec2(0.0f, -8.0f));
     // Do we want to let bodies sleep?
@@ -65,7 +83,7 @@ void HelloWorld::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-    //flags += b2Draw::e_shapeBit;
+    flags += b2Draw::e_shapeBit;
     //flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
@@ -134,9 +152,10 @@ void HelloWorld::update(float dt)
     _nana->gasUp();
     
     Vec2 nanaPos = _nana->getPosition();
+    // update score
+    score = -nanaPos.y;
     _nana->setPosition(nanaPos);
     _terrain->update(nanaPos.y);
-    //scoreLabel->setString(StringUtils::format("%f", -nanaPos.y));
     
     for(auto *contact = _world->GetContactList();contact; contact = contact->GetNext())
     {
@@ -151,6 +170,7 @@ void HelloWorld::update(float dt)
         
         if((udA->type == UD_NANA || udB->type == UD_NANA)
            && (udA->type == UD_BADGUY || udB->type == UD_BADGUY)) {
+            //reset();
             CCLOG("%f-----hit", _nana->getPosition().y);
         }
 
@@ -172,11 +192,14 @@ void HelloWorld::update(float dt)
     }*/
 }
 
+// problematic
 void HelloWorld::reset()
 {
     Director::getInstance()->pause();
     // glClear并没有什么用
     glClear(GL_COLOR_BUFFER_BIT);
+    delete _terrain;
+    delete _nana;
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
     this->initPhysics();

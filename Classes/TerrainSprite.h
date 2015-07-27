@@ -11,22 +11,23 @@
 
 #include "NanaTrip.h"
 #include "SpriteWithBody.h"
-//#include "HelloWorldScene.h"
-//#include "TerrainNode.h"
 
-#define TYPE_DOOR                   99
-#define TYPE_TUNNEL_SUPER_NARROW    10
-//#define TYPE_TUNNEL_ONE_ROW         11
-#define TYPE_TUNNEL_TWO_ROWS        12
+//#define TYPE_DOOR                   99
+//#define TYPE_TUNNEL_SUPER_NARROW    10
+////#define TYPE_TUNNEL_ONE_ROW         11
+//#define TYPE_TUNNEL_TWO_ROWS        12
 
 // for general terrain randomer
-#define ITEM_TUNNEL     1
-#define ITEM_BUMPS      2
-#define ITEM_CHESSBOARD 3
+#define ITEM_TUNNEL         0
+#define ITEM_BUMPS          1
+#define ITEM_CHESSBOARD     2
 
-#define ITEM_BUMPS_1    21
-#define ITEM_BUMPS_2    22
-#define ITEM_BUMPS_3    23
+#define ITEM_TUNNEL_NR      10
+#define ITEM_TUNNEL_BRD     11
+
+#define ITEM_BUMPS_1        20
+#define ITEM_BUMPS_2        21
+#define ITEM_BUMPS_3        22
 
 class TerrainSprite : public cocos2d::Sprite
 {
@@ -40,33 +41,26 @@ public:
     void spawnTerrain();
     void spawnTunnel();
     void spawnBumps();
+    void spawnCurve();
     void spawnChessboard();
+    void update(float nanaY);
     
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
     void doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination));
-    
-    int randWithBase(int base, int addon);
-    
-    // the default bool is false, when rand_0_1() < odds, bool switch to true
-    bool boolWithOdds(float odds);
-    
-    void update(float nanaY);
     
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
     override;
     void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
     void drawSegment(cocos2d::Vec2 p1, cocos2d::Vec2 p2);
     
-    static b2Vec2 vToB2(cocos2d::Vec2 v);
-    static cocos2d::Vec2 b2ToV(b2Vec2 b);
+    int randWithBase(int base, int addon);
+    // the default bool is false, when rand_0_1() < odds, bool switch to true
+    bool boolWithOdds(float odds);
 protected:
     b2World *_world;
     b2Body *_body;
     
     //std::vector<int> terrainTypes;
-    
-    std::vector<b2Fixture *> nonos;
-    std::vector<cocos2d::Vec2> nonoVertices;
 
     std::vector<std::vector<b2Fixture *>> lfixtures;
     std::vector<std::vector<b2Fixture *>> rfixtures;
@@ -74,14 +68,13 @@ protected:
     std::vector<cocos2d::Vec2> rvertices;
     int lto, rto;
     float getLastY();
-    
-    // TODO
+
     std::vector<SpriteWithBody *> obstacles;
     std::vector<SpriteWithBody *> badguys;
     
-    // general terrain randomer
-    Randomer *terrainRdmr;
-    Randomer *bumpRdmr;
+    Randomer *terrainRdmr;  // general terrain randomer
+    Randomer *tnlRdmr;
+    Randomer *bumpRdmr;     
     
     cocos2d::CustomCommand _customCommand;
 };
