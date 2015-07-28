@@ -15,11 +15,20 @@
 
 #define PTM_RATIO 32
 
+#define DNA_B2RADIUS 36/PTM_RATIO
+
 //  User Data
 #define UD_FLOOR 0  // which will actually be NULL
 #define UD_NANA 1
 #define UD_BADGUY 2
-#define UD_MED 3
+#define UD_DNA 3
+#define UD_DESTROYED 99
+
+// for example, this is a row on the screen [ xxx ]
+// when minium colums it would be     [ O O O ]
+// maxium colums would be            [.......]
+#define MAX_COL 6
+#define MIN_COL 3
 
 class Entity
 {
@@ -27,6 +36,10 @@ public:
     Entity(int _t){type = _t;}
     int type;
 };
+
+int getDNA();
+void initStatistic();
+void initWinSiz();
 
 b2Vec2 vToB2(cocos2d::Vec2 v);
 cocos2d::Vec2 b2ToV(b2Vec2 b);
@@ -36,24 +49,6 @@ extern float winMidX;
 extern float winMidY;
 
 extern int score;
-
-/*cocos2d::Size mwinSize;
-cocos2d::Vec2 midWin;
-
-void initWinSize() {
-    mwinSize = cocos2d::Director::getInstance()->getWinSize();
-    midWin.x = mwinSize.width/2;
-    midWin.y = mwinSize.height/2;
-}*/
-/*
-b2Vec2 vToB2(cocos2d::Vec2 v)
-{
-    return b2Vec2(v.x/PTM_RATIO, v.y/PTM_RATIO);
-}
-
-cocos2d::Vec2 b2ToV(b2Vec2 b)
-{
-    return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
-}*/
+extern int dna;
 
 #endif

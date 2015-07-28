@@ -109,9 +109,9 @@ b2Body *NanaSprite::createPhysicsObject(b2World *world) {
 }
 */
 
-NanaSprite* NanaSprite::create()
+NanaSprite* NanaSprite::create(b2World *world)
 {
-    NanaSprite* pRet = new NanaSprite();
+    NanaSprite* pRet = new NanaSprite(world);
     if (pRet && pRet->init())
     {
         pRet->autorelease();
@@ -124,8 +124,9 @@ NanaSprite* NanaSprite::create()
     return pRet;
 }
 
-NanaSprite::NanaSprite(){
-    //_drawNode = DrawNode::create();
+NanaSprite::NanaSprite(b2World *world){
+    ud = UD_NANA;
+    initPhysics(world);
 }
 
 void NanaSprite::initPhysics(b2World *world)
@@ -302,7 +303,7 @@ Vec2 NanaSprite::getPosition()
 }
 
 // Gas up the body, apply force with a scale -> hardness.
-// currently only work when 12 segements. If change, need adjustment.
+// currently only work when 12 segments. If change, need adjustment.
 void NanaSprite::gasUp()
 {
     for(int i = 0; i < _bodies.size(); i++) {
@@ -385,7 +386,7 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     //DrawPrimitives::drawRect(Vec2(400, 400), Vec2(500, 700));
     //DrawPrimitives::drawCircle(Vec2(500, 500), 40, 100, 2, true);
     //DrawPrimitives::drawPoly(vertices, NUM_SEGMENTS, true);
-    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(1, 1, 1, 1));
+    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(0, 1, 1, 1));
     CHECK_GL_ERROR_DEBUG();
     
     kmGLPopMatrix();

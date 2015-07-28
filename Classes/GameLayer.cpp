@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+#include "GameLayer.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
@@ -6,63 +6,52 @@ USING_NS_CC;
 
 using namespace cocostudio::timeline;
 
-// needed
-void HelloWorld::initWinSiz()
+Scene* GameLayer::createScene()
 {
-    winSiz = Director::getInstance()->getWinSize();
-    winMidX = winSiz.width/2;
-    winMidY = winSiz.height/2;
-}
-
-Scene* HelloWorld::createScene()
-{
+    // initalize the global stuff in NanaTrip.h
     initWinSiz();
+    initStatistic();
     
-    // 'scene' is an autorelease object
     auto scene = Scene::create();
     
-    // 'layer' is an autorelease object
-    auto layer = HelloWorld::create();
-    layer->initPhysics();
-    
-    // also needed
-    score = 0;
-    
-    // add layer as a child to scene
+    auto layer = GameLayer::create();
     scene->addChild(layer, 5);
     
     auto infoLayer = InfoLayer::create();
     scene->addChild(infoLayer, 4);
 
-    // return the scene
     return scene;
 }
 
-// on "init" you need to initialize your instance
-bool HelloWorld::init()
+GameLayer *GameLayer::create()
 {
-    //////////////////////////////
-    // 1. super init first
-    if ( !Layer::init() )
+    GameLayer *ret = new (std::nothrow) GameLayer();
+    if (ret && ret->init())
     {
-        return false;
+        ret->autorelease();
+        return ret;
     }
-    
-    //auto rootNode = CSLoader::createNode("MainScene.csb");
-    //addChild(rootNode);
-    
+    else
+    {
+        CC_SAFE_DELETE(ret);
+        return nullptr;
+    }
+}
+
+GameLayer::GameLayer()
+{
     auto eventDispatcher = Director::getInstance()->getEventDispatcher();
     
     auto touchlistener = EventListenerTouchOneByOne::create();
     touchlistener->setSwallowTouches(true);
-    touchlistener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+    touchlistener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
     eventDispatcher->addEventListenerWithFixedPriority(touchlistener, 1);
     setAccelerometerEnabled(true);
-
-    return true;
+    
+    initPhysics();
 }
 
-HelloWorld::~HelloWorld()
+GameLayer::~GameLayer()
 {
     delete _terrain;
     delete _nana;
@@ -70,7 +59,7 @@ HelloWorld::~HelloWorld()
     CC_SAFE_DELETE(_world);
 }
 
-void HelloWorld::initPhysics()
+void GameLayer::initPhysics()
 {
     //b2_velocityThreshold = 0.1f;
     
@@ -83,7 +72,7 @@ void HelloWorld::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-    flags += b2Draw::e_shapeBit;
+    //flags += b2Draw::e_shapeBit;
     //flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
@@ -121,22 +110,19 @@ void HelloWorld::initPhysics()
         groundBody->CreateFixture(&groundBox,0);
     }*/
     
-    _terrain = TerrainSprite::create();
-    _terrain->initPhysics(_world);
+    _terrain = TerrainSprite::create(_world);
     this->addChild(_terrain);
     
-    _nana = NanaSprite::create();
-    _nana->initPhysics(_world);
+    _nana = NanaSprite::create(_world);
     this->addChild(_nana);
     
     auto follow = Follow::create(_nana);
     this->runAction(follow);
     
     scheduleUpdate();
-    
 }
 
-void HelloWorld::update(float dt)
+void GameLayer::update(float dt)
 {
     //It is recommended that a fixed time step is used with Box2D for stability
     //of the simulation, however, we are using a variable time step here.
@@ -153,7 +139,7 @@ void HelloWorld::update(float dt)
     
     Vec2 nanaPos = _nana->getPosition();
     // update score
-    score = -nanaPos.y;
+    score = (-nanaPos.y + winMidY)/400;
     _nana->setPosition(nanaPos);
     _terrain->update(nanaPos.y);
     
@@ -167,11 +153,23 @@ void HelloWorld::update(float dt)
         
         if(udA == NULL || udB == NULL)
             return;
+        if(udA->type == UD_NANA && udB->type == UD_NANA)
+            return;
         
-        if((udA->type == UD_NANA || udB->type == UD_NANA)
-           && (udA->type == UD_BADGUY || udB->type == UD_BADGUY)) {
-            //reset();
-            CCLOG("%f-----hit", _nana->getPosition().y);
+        
+        if(udA->type == UD_NANA || udB->type == UD_NANA) {
+            if(udA->type == UD_BADGUY || udB->type == UD_BADGUY) {
+                //reset();
+                CCLOG("%f-----hit", _nana->getPosition().y);
+            }
+            if(udA->type == UD_DNA) {
+                udA->type = UD_DESTROYED;
+                dna++;
+            }
+            else {
+                udB->type = UD_DESTROYED;
+                dna++;
+            }
         }
 
     }
@@ -192,8 +190,8 @@ void HelloWorld::update(float dt)
     }*/
 }
 
-// problematic
-void HelloWorld::reset()
+// problematic, TODO
+void GameLayer::reset()
 {
     Director::getInstance()->pause();
     // glClear并没有什么用
@@ -206,22 +204,32 @@ void HelloWorld::reset()
     Director::getInstance()->resume();
 }
 
-bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
+bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 {
-    //auto touchLocation = touch->getLocation();
+    
+    auto touchLocation = touch->getLocation();
+    
+    if(touchLocation.y < winMidY - 50) {
+        _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
+                                 (touchLocation.y - winMidY)/20));
+    }
+    else if(touchLocation.y > winMidY + 50) {
+        _nana->ApplyForce(b2Vec2(0, 7));
+    }
     //auto nanaLoc = nana->GetCenter();
     //nana->ApplyLinearImpulse(b2Vec2(-(nanaLoc.x*32 - touchLocation.x)/2, -(nanaLoc.y*32 - touchLocation.y)/2)); //ApplyForce(b2Vec2(1, 1));
     //auto nodePosition = convertToNodeSpace( touchLocation );
-    //log("Box2DView::onTouchBegan, pos: %f,%f, \n%f, %f", touchLocation.x, touchLocation.y, nanaLoc.x, nanaLoc.y);//, nodePosition.x, nodePosition.y);
+    //log("Box2DView::onTouchBegan, pos: %f,%f", touchLocation.x, touchLocation.y);//, nodePosition.x, nodePosition.y);
     return true;
 }
-void HelloWorld::onAcceleration(Acceleration *acc, Event *event)
+
+void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
     _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
 }
 // Draw
 
-void HelloWorld::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
+void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
 {
     Layer::draw(renderer, transform, transformFlags);
     kmGLPushMatrix();

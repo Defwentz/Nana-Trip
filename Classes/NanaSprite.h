@@ -13,23 +13,6 @@
 
 class NanaSprite : public cocos2d::Sprite
 {
-public:
-    static NanaSprite *create();
-    
-    //static b2Body *createPhysicsObject(b2World *world);
-    NanaSprite();
-    
-    void initPhysics(b2World *world);
-    // the vec2 of _bodies[0]->getPosistion()
-    cocos2d::Vec2 getPosition();
-    bool isNana(b2Body *body);
-    void gasUp();
-    void ApplyForce(b2Vec2 force);
-    
-    virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
-        override;
-    void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
-protected:
     // scale for gasUp method, default 12
     // 10 is ok, 20 is a bit much, get stuck sometime
     int hardness = 12;
@@ -39,6 +22,24 @@ protected:
     
     //cocos2d::DrawNode *_drawNode;
     cocos2d::CustomCommand _customCommand;
+public:
+    // the vec2 of _bodies[0]->getPosistion()
+    cocos2d::Vec2 getPosition();
+    bool isNana(b2Body *body);
+    void gasUp();
+    void ApplyForce(b2Vec2 force);
+    
+    virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
+        override;
+    void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
+    
+    static NanaSprite *create(b2World *world);
+    
+    //static b2Body *createPhysicsObject(b2World *world);
+    NanaSprite(b2World *world);
+    void initPhysics(b2World *world);
+    
+    int ud;
 };
 
 #endif /* defined(__nanatrip__NanaSprite__) */

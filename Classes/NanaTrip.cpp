@@ -13,6 +13,25 @@ float winMidX;
 float winMidY;
 
 int score;
+int dna;
+
+int getDNA()
+{
+    return 0;
+}
+
+void initStatistic()
+{
+    score = 0;
+    dna = 0;
+}
+
+void initWinSiz()
+{
+    winSiz = cocos2d::Director::getInstance()->getWinSize();
+    winMidX = winSiz.width/2;
+    winMidY = winSiz.height/2;
+}
 
 b2Vec2 vToB2(cocos2d::Vec2 v)
 {

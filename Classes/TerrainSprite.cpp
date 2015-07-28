@@ -10,9 +10,9 @@
 
 USING_NS_CC;
 
-TerrainSprite* TerrainSprite::create()
+TerrainSprite* TerrainSprite::create(b2World *world)
 {
-    TerrainSprite* pRet = new TerrainSprite();
+    TerrainSprite* pRet = new TerrainSprite(world);
     if (pRet && pRet->init())
     {
         pRet->autorelease();
@@ -25,13 +25,14 @@ TerrainSprite* TerrainSprite::create()
     return pRet;
 }
 
-TerrainSprite::TerrainSprite()
+TerrainSprite::TerrainSprite(b2World *world)
 {
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
-    terrainRdmr->add(ITEM_TUNNEL, 30);
+    terrainRdmr->add(ITEM_TUNNEL, 20);
     terrainRdmr->add(ITEM_BUMPS, 30);
-    terrainRdmr->add(ITEM_CHESSBOARD, 30);
+    terrainRdmr->add(ITEM_CHESSBOARD, 10);
+    terrainRdmr->add(ITEM_BELT, 80);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();
@@ -43,12 +44,21 @@ TerrainSprite::TerrainSprite()
     bumpRdmr->add(ITEM_BUMPS_1, 30);
     bumpRdmr->add(ITEM_BUMPS_2, 0);
     bumpRdmr->add(ITEM_BUMPS_3, 0);
+    
+    crvRdmr = new Randomer();
+    crvRdmr->add(ITEM_CURVE_BL, 10);
+    crvRdmr->add(ITEM_CURVE_BR, 10);
+    crvRdmr->add(ITEM_CURVE_TL, 10);
+    crvRdmr->add(ITEM_CURVE_TR, 10);
+    
+    initPhysics(world);
 }
 TerrainSprite::~TerrainSprite()
 {
     delete terrainRdmr;
     delete tnlRdmr;
     delete bumpRdmr;
+    delete crvRdmr;
 }
 
 float TerrainSprite::getLastY()
@@ -102,15 +112,30 @@ void TerrainSprite::spawnTerrain()
         case ITEM_TUNNEL:       spawnTunnel();break;
         case ITEM_BUMPS:        spawnBumps();break;
         case ITEM_CHESSBOARD:   spawnChessboard();break;
+        case ITEM_BELT:         spawnBelt();break;
         default:break;
     }
 }
 
-const int ODDS_SUPER_NARROW = 10,
-    ODDS_ONE_ROW = 0,
-    ODDS_TWO_ROWS = 10,
-    TUNNEL_WIDTH_MASK =
-        ODDS_SUPER_NARROW + ODDS_ONE_ROW + ODDS_TWO_ROWS;
+void TerrainSprite::spawnBelt()
+{
+    float lastY = getLastY();
+    int half_length = random(winMidX/20, winMidX);
+    lastY -= half_length;
+    // the border vertices
+    lvertices.push_back(Vec2(0, lastY-half_length));
+    rvertices.push_back(Vec2(winSiz.width, lastY-half_length));
+    
+    // calculate position
+    Vec2 pos = Vec2(winMidX, lastY);
+    b2Vec2 bpos = vToB2(pos);
+    
+    b2CircleShape ball;
+    ball.m_p = bpos;
+    ball.m_radius = half_length/PTM_RATIO - DNA_B2RADIUS*2;
+    
+    createBallObstacle(pos, &ball, true);
+}
 
 const int TUNNEL_KEYPOINT = 5,
     TUNNEL_KP_DIST_IN_SCREEN = 3,
@@ -166,7 +191,7 @@ void TerrainSprite::spawnTunnel()
 //            <
 // type 2   > <
 // type 3   >    <
-//          >    <
+//          >    <  like little hills on a mountain
 void TerrainSprite::spawnBumps()
 {
     float lastY = getLastY();
@@ -225,26 +250,22 @@ void TerrainSprite::spawnBumps()
     }
 }
 
-void TerrainSprite::spawnCurve()
-{
-    float lastY = getLastY();
-}
-
-const int MIN_COL = 3,
-    MAX_COL = 7;
 //int max_radius = winSize.width / (MIN_COL-1) - margin;
 //int min_radius = winSize.width / (MAX_COL-1) - margin;
+// TODO: bug fix: some sort of empty space
 void TerrainSprite::spawnChessboard()
 {
     float lastY = getLastY();
     int length = randWithBase(winMidY,
                               winSiz.height*2);
+    // the border vertices
     lvertices.push_back(Vec2(0, lastY-length));
     rvertices.push_back(Vec2(winSiz.width, lastY-length));
+    
     //terrainTypes.push_back(TYPE_DOOR);
     int margin = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
     
-    int col = randWithBase(MIN_COL, MAX_COL-MIN_COL);
+    int col = random(MIN_COL, MAX_COL);
     float max_radius = (winSiz.width / (col-1) - margin)/2;
     float min_radius = (winSiz.width / (MAX_COL-1) - margin)/2;
     int row = (margin + length) / (2*max_radius + margin);
@@ -263,6 +284,18 @@ void TerrainSprite::spawnChessboard()
             Vec2 pos = Vec2(x, lastY);
             b2Vec2 bpos = vToB2(pos);
             
+            b2CircleShape ball;
+            ball.m_p = bpos;
+            ball.m_radius = radius;
+            
+            
+            if(boolWithOdds(0.1)) {
+                createBadGuy(pos, &ball);
+            }
+            else {
+                createBallObstacle(pos, &ball, false);
+            }
+            /*
             if(rand_0_1() < 0.3) {
                 b2BodyDef bd;
                 bd.position = bpos;
@@ -294,60 +327,121 @@ void TerrainSprite::spawnChessboard()
                 jd.Initialize(_body, mover, bpos);
                 _world->CreateJoint(&jd);
                 continue;
-            }
-            
-            bool isBadGuy = boolWithOdds(0.1);
-            SpriteWithBody *guy;
-            if(isBadGuy) {
-                guy = SpriteWithBody::create("red.png");
-                guy->setPosition(pos);
-                badguys.push_back(guy);
-            }
-            else {
-                guy = SpriteWithBody::create("black.png");
-                guy->setPosition(pos);
-                obstacles.push_back(guy);
-            }
-            
-            b2CircleShape ball;
-            ball.m_p = bpos;
-            ball.m_radius = radius;
-            
-            if(isBadGuy) {
-                guy->setScale(ball.m_radius*PTM_RATIO/36);
-                this->addChild(guy);
-                
-                b2BodyDef bd;
-                bd.position.SetZero();
-                bd.type = b2_staticBody;
-                b2Body *b = _world->CreateBody(&bd);
-                b->SetUserData(new Entity(UD_BADGUY));
-                b->CreateFixture(&ball, 0);
-                guy->_body = b;
-                
-                guy->runAction(RepeatForever::create(RotateBy::create(8, 360)));
-            }
-            else {
-                guy->setScale(ball.m_radius*PTM_RATIO/36);
-                this->addChild(guy);
-                
-                b2BodyDef bd;
-                bd.position.SetZero();
-                bd.type = b2_staticBody;
-                b2Body *b = _world->CreateBody(&bd);
-                b->CreateFixture(&ball, 0);
-                guy->_body = b;
-            }
+            }*/
         }
         lastY -= (2*max_radius + margin);
     }
 }
 
-void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination))
+// using circle
+// type bottom left    \
+//             right   /
+//      top left       /
+//          right      \
+
+void TerrainSprite::spawnCurve()
+{
+    float lastY = getLastY();
+    int length = randWithBase(winMidY,
+                              winSiz.height);
+    // the border vertices
+    lvertices.push_back(Vec2(0, lastY-length));
+    rvertices.push_back(Vec2(winSiz.width, lastY-length));
+    
+    int margin_x = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+    int big_radius = random(winMidX - margin_x*2, winSiz.width - margin_x*2);
+    
+    switch (crvRdmr->getRandomItem()) {
+        case ITEM_CURVE_BR:
+            //Vec2 origin = Vec2(winSiz.width - , float yy);
+            break;
+        case ITEM_CURVE_BL:
+            break;
+        case ITEM_CURVE_TR:
+            break;
+        case ITEM_CURVE_TL:
+            break;
+        default:break;
+    }
+    
+}
+
+void TerrainSprite::createDNA(cocos2d::Vec2 vpos)
+{
+    SpriteWithBody *guy = SpriteWithBody::create("greenguy.png");
+    guy->setPosition(vpos);
+    dnas.push_back(guy);
+    this->addChild(guy);
+    
+    b2Vec2 bpos = vToB2(vpos);
+    b2CircleShape ball;
+    ball.m_p = bpos;
+    ball.m_radius = DNA_B2RADIUS;
+    
+    b2BodyDef bd;
+    bd.position.SetZero();
+    bd.type = b2_staticBody;
+    b2Body *b = _world->CreateBody(&bd);
+    b->SetUserData(new Entity(UD_DNA));
+    b->CreateFixture(&ball, 0);
+    guy->_body = b;
+}
+
+void TerrainSprite::createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape)
+{
+    SpriteWithBody *guy = SpriteWithBody::create("red.png");
+    guy->setPosition(vpos);
+    badguys.push_back(guy);
+    
+    guy->setScale(shape->m_radius*PTM_RATIO/36);
+    this->addChild(guy);
+    
+    b2BodyDef bd;
+    bd.position.SetZero();
+    bd.type = b2_staticBody;
+    b2Body *b = _world->CreateBody(&bd);
+    b->SetUserData(new Entity(UD_BADGUY));
+    b->CreateFixture(shape, 0);
+    guy->_body = b;
+    
+    guy->runAction(RepeatForever::create(RotateBy::create(7, 360)));
+}
+
+void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA)
+{
+    SpriteWithBody *guy = SpriteWithBody::create("black.png");
+    guy->setPosition(vpos);
+    obstacles.push_back(guy);
+    
+    guy->setScale(shape->m_radius*PTM_RATIO/36);
+    this->addChild(guy);
+    
+    b2BodyDef bd;
+    bd.position.SetZero();
+    bd.type = b2_staticBody;
+    b2Body *b = _world->CreateBody(&bd);
+    b->CreateFixture(shape, 0);
+    guy->_body = b;
+    
+    if(withDNA) {
+        float vr = (shape->m_radius + DNA_B2RADIUS) * PTM_RATIO;
+        float dtheta = 2*asin((DNA_B2RADIUS + 0.1) / shape->m_radius);
+        int segment = (2.f * M_PI) / dtheta;
+        float theta = 0;
+        for(int i = 0; i < segment; i++, theta += dtheta) {
+            createDNA(vpos + Vec2(vr*cosf(theta), vr*sinf(theta)));
+        }
+    }
+}
+
+void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2,
+                               void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination))
 {
     float tdy = p1.y - p2.y;
     //////////////
-    if(tdy == 0);
+    if(tdy == 0) {
+        func(p1, p2);
+    }
     //////////////
     
     int n = floorf(tdy/10);
@@ -384,8 +478,19 @@ bool TerrainSprite::boolWithOdds(float odds)
 void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 {
     float tdy = p1.y - p2.y;
+    std::vector<b2Fixture *> _fixtures;
     //////////////
-    //if(tdy == 0);
+    if(tdy == 0) {
+        b2EdgeShape border;
+        b2Vec2 _bp1 = vToB2(p1);
+        b2Vec2 _bp2 = vToB2(p2);
+        border.Set(_bp1, _bp2);
+        _fixtures.push_back(_body->CreateFixture(&border,0));
+        if(isLeft)
+            lfixtures.push_back(_fixtures);
+        else
+            rfixtures.push_back(_fixtures);
+    };
     //////////////
     
     int n = floorf(tdy/10);
@@ -396,7 +501,6 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
     // x = A*cos(wy)+B
     
     Vec2 _p1 = p1, _p2;
-    std::vector<b2Fixture *> _fixtures;
     
     float y = 0;
     for(int j = 1; j <= n; j++) {
@@ -420,8 +524,8 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 
 void TerrainSprite::update(float nanaY)
 {
-    float topY = nanaY + winMidY + winSiz.height/8;
-    float bottomY = nanaY - winMidY - winSiz.height/8;
+    float topY = nanaY + winMidY + winSiz.height/4;
+    float bottomY = nanaY - winMidY - winSiz.height/4;
     
     //if(lvertices.size() < 2) {
        // spawnTerrain();
@@ -470,22 +574,33 @@ void TerrainSprite::update(float nanaY)
     if(rto == rvertices.size())
         spawnTerrain();
 
-    for(std::vector<SpriteWithBody *>::iterator i = obstacles.begin();
-        i != obstacles.end();) {
-        if((*i)->getPosition().y > topY) {
-            _world->DestroyBody((*i)->_body);
-            (*i)->removeFromParent();
-            i = obstacles.erase(i);
-        }
-        else break;
-    }
+    // check if there are sprites with b2body out of sight
+    // if so, delete
+    spriteCheck(obstacles, topY);
+    spriteCheck(badguys, topY);
     
-    for(std::vector<SpriteWithBody *>::iterator i = badguys.begin();
-        i != badguys.end();) {
+    for(std::vector<SpriteWithBody *>::iterator i = dnas.begin();
+        i != dnas.end();) {
+        auto ud = (Entity *) (*i)->_body->GetUserData();
+        if((*i)->getPosition().y > topY || ud->type == UD_DESTROYED) {
+            _world->DestroyBody((*i)->_body);
+            (*i)->removeFromParent();
+            i = dnas.erase(i);
+        }
+        else
+            ++i;
+    }
+    //spriteCheck(dnas, topY);
+}
+
+void TerrainSprite::spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY)
+{
+    for(std::vector<SpriteWithBody *>::iterator i = sprites.begin();
+        i != sprites.end();) {
         if((*i)->getPosition().y > topY) {
             _world->DestroyBody((*i)->_body);
             (*i)->removeFromParent();
-            i = badguys.erase(i);
+            i = sprites.erase(i);
         }
         else break;
     }
