@@ -8,6 +8,8 @@
 
 #include "NanaTrip.h"
 
+int gameStatus;
+
 cocos2d::Size winSiz;
 float winMidX;
 float winMidY;

@@ -11,6 +11,7 @@ Scene* GameLayer::createScene()
     // initalize the global stuff in NanaTrip.h
     initWinSiz();
     initStatistic();
+    gameStatus = GAME_PLAY;
     
     auto scene = Scene::create();
     
@@ -124,6 +125,9 @@ void GameLayer::initPhysics()
 
 void GameLayer::update(float dt)
 {
+    if(gameStatus == GAME_PAUSE || gameStatus == GAME_OVER) return;
+    
+    
     //It is recommended that a fixed time step is used with Box2D for stability
     //of the simulation, however, we are using a variable time step here.
     //You need to make an informed choice, the following URL is useful
@@ -159,8 +163,10 @@ void GameLayer::update(float dt)
         
         if(udA->type == UD_NANA || udB->type == UD_NANA) {
             if(udA->type == UD_BADGUY || udB->type == UD_BADGUY) {
-                //reset();
                 CCLOG("%f-----hit", _nana->getPosition().y);
+                gameStatus = GAME_OVER;
+                reset();
+                return;
             }
             if(udA->type == UD_DNA) {
                 udA->type = UD_DESTROYED;
@@ -193,22 +199,30 @@ void GameLayer::update(float dt)
 // problematic, TODO
 void GameLayer::reset()
 {
-    Director::getInstance()->pause();
-    // glClear并没有什么用
-    glClear(GL_COLOR_BUFFER_BIT);
-    delete _terrain;
-    delete _nana;
+    //Director::getInstance()->pause();
+    // 好像并没有什么用
+    //glClear(GL_COLOR_BUFFER_BIT);
+    _terrain->removeFromParent();
+    //delete _terrain;
+    _nana->removeFromParent();
+    //delete _nana;
+    delete _world;
     delete _debugDraw;
-    CC_SAFE_DELETE(_world);
+    //delete _nana;
+    //delete _debugDraw;
+    //CC_SAFE_DELETE(_world);
     this->initPhysics();
-    Director::getInstance()->resume();
+    //Director::getInstance()->resume();
+    gameStatus = GAME_PLAY;
 }
 
 bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 {
+    if (gameStatus == GAME_PAUSE) {
+        gameStatus = GAME_PLAY;
+    }
     
     auto touchLocation = touch->getLocation();
-    
     if(touchLocation.y < winMidY - 50) {
         _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
                                  (touchLocation.y - winMidY)/20));
@@ -216,10 +230,6 @@ bool GameLayer::onTouchBegan(Touch* touch, Event* event)
     else if(touchLocation.y > winMidY + 50) {
         _nana->ApplyForce(b2Vec2(0, 7));
     }
-    //auto nanaLoc = nana->GetCenter();
-    //nana->ApplyLinearImpulse(b2Vec2(-(nanaLoc.x*32 - touchLocation.x)/2, -(nanaLoc.y*32 - touchLocation.y)/2)); //ApplyForce(b2Vec2(1, 1));
-    //auto nodePosition = convertToNodeSpace( touchLocation );
-    //log("Box2DView::onTouchBegan, pos: %f,%f", touchLocation.x, touchLocation.y);//, nodePosition.x, nodePosition.y);
     return true;
 }
 

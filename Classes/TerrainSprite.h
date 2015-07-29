@@ -71,6 +71,7 @@ public:
     void createDNA(cocos2d::Vec2 vpos);
     void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
     void createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA);
+    void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     
     void update(float nanaY);
     

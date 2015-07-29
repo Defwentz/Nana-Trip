@@ -17,6 +17,12 @@
 
 #define DNA_B2RADIUS 36/PTM_RATIO
 
+#define GAME_PLAY 1
+#define GAME_PAUSE 2
+#define GAME_OVER 3
+
+extern int gameStatus;
+
 //  User Data
 #define UD_FLOOR 0  // which will actually be NULL
 #define UD_NANA 1

@@ -32,7 +32,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     terrainRdmr->add(ITEM_TUNNEL, 20);
     terrainRdmr->add(ITEM_BUMPS, 30);
     terrainRdmr->add(ITEM_CHESSBOARD, 10);
-    terrainRdmr->add(ITEM_BELT, 80);
+    terrainRdmr->add(ITEM_BELT, 40);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();
@@ -169,7 +169,7 @@ void TerrainSprite::spawnTunnel()
                 int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
                 int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
-                int x = randWithBase(winSiz.width/X_IN_SCREEN, winSiz.width*3/X_IN_SCREEN);
+                int x = random(winSiz.width/5, winSiz.width*4/5);
                 lastY -= length;
                 
                 lvertices.push_back(Vec2(x - width/2, lastY));
@@ -179,9 +179,15 @@ void TerrainSprite::spawnTunnel()
         default:
             break;
     }
-    
     lastY -= randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
+    
+    Vec2 badguyPos = Vec2((lvertices.back().x + 0)/2, (lvertices.back().y + lastY)/2) + Vec2(NARROW_WIDTH, -NARROW_WIDTH);
+    b2CircleShape ball;
+    ball.m_p = vToB2(badguyPos);
+    ball.m_radius = DNA_B2RADIUS;
+    createBadGuy(badguyPos, &ball);
+    
     lvertices.push_back(Vec2(0, lastY));
     rvertices.push_back(Vec2(winSiz.width, lastY));
   }
@@ -295,39 +301,6 @@ void TerrainSprite::spawnChessboard()
             else {
                 createBallObstacle(pos, &ball, false);
             }
-            /*
-            if(rand_0_1() < 0.3) {
-                b2BodyDef bd;
-                bd.position = bpos;
-                bd.type = b2_dynamicBody;
-                b2Body *mover = _world->CreateBody(&bd);
-                
-                b2PolygonShape stick_1;
-                float round_edge_radius = 10.0/PTM_RATIO;
-                b2Vec2 vertices[4];
-                vertices[0] = b2Vec2(-round_edge_radius, round_edge_radius - radius);
-                vertices[1] = b2Vec2(-round_edge_radius, radius - round_edge_radius);
-                vertices[2] = b2Vec2(round_edge_radius, radius - round_edge_radius);
-                vertices[3] = b2Vec2(round_edge_radius, round_edge_radius - radius);
-                stick_1.Set(vertices, 4);
-                mover->CreateFixture(&stick_1, 0.2f);   // trying something
-                {
-                    b2CircleShape round_edge;
-                    round_edge.m_p.Set(0, radius - round_edge_radius);
-                    round_edge.m_radius = round_edge_radius;
-                    mover->CreateFixture(&round_edge, 0.2f);
-                }
-                {
-                    b2CircleShape round_edge;
-                    round_edge.m_p.Set(0, - radius + round_edge_radius);
-                    round_edge.m_radius = round_edge_radius;
-                    mover->CreateFixture(&round_edge, 0.2f);
-                }
-                b2RevoluteJointDef jd;
-                jd.Initialize(_body, mover, bpos);
-                _world->CreateJoint(&jd);
-                continue;
-            }*/
         }
         lastY -= (2*max_radius + margin);
     }
@@ -432,6 +405,39 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
             createDNA(vpos + Vec2(vr*cosf(theta), vr*sinf(theta)));
         }
     }
+}
+
+void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
+{
+    b2BodyDef bd;
+    bd.position = vToB2(vpos);
+    bd.type = b2_dynamicBody;
+    b2Body *mover = _world->CreateBody(&bd);
+    
+    b2PolygonShape stick_1;
+    float round_edge_radius = 10.0/PTM_RATIO;
+    b2Vec2 vertices[4];
+    vertices[0] = b2Vec2(-round_edge_radius, round_edge_radius - radius);
+    vertices[1] = b2Vec2(-round_edge_radius, radius - round_edge_radius);
+    vertices[2] = b2Vec2(round_edge_radius, radius - round_edge_radius);
+    vertices[3] = b2Vec2(round_edge_radius, round_edge_radius - radius);
+    stick_1.Set(vertices, 4);
+    mover->CreateFixture(&stick_1, 0.2f);   // trying something
+    {
+        b2CircleShape round_edge;
+        round_edge.m_p.Set(0, radius - round_edge_radius);
+        round_edge.m_radius = round_edge_radius;
+        mover->CreateFixture(&round_edge, 0.2f);
+    }
+    {
+        b2CircleShape round_edge;
+        round_edge.m_p.Set(0, - radius + round_edge_radius);
+        round_edge.m_radius = round_edge_radius;
+        mover->CreateFixture(&round_edge, 0.2f);
+    }
+    b2RevoluteJointDef jd;
+    jd.Initialize(_body, mover, vToB2(vpos));
+    _world->CreateJoint(&jd);
 }
 
 void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2,
@@ -582,7 +588,7 @@ void TerrainSprite::update(float nanaY)
     for(std::vector<SpriteWithBody *>::iterator i = dnas.begin();
         i != dnas.end();) {
         auto ud = (Entity *) (*i)->_body->GetUserData();
-        if((*i)->getPosition().y > topY || ud->type == UD_DESTROYED) {
+        if(ud->type == UD_DESTROYED || (*i)->getPosition().y > topY) {
             _world->DestroyBody((*i)->_body);
             (*i)->removeFromParent();
             i = dnas.erase(i);
