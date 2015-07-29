@@ -23,6 +23,7 @@
 #define ITEM_CURVE          2
 #define ITEM_CHESSBOARD     3
 #define ITEM_BELT           4
+#define ITEM_METEOR         5
 
 #define ITEM_TUNNEL_NR      10
 #define ITEM_TUNNEL_BRD     11
@@ -50,6 +51,7 @@ class TerrainSprite : public cocos2d::Sprite
     int lto, rto;
     float getLastY();
     
+    std::vector<b2Body *> littleguys;
     std::vector<SpriteWithBody *> obstacles;
     std::vector<SpriteWithBody *> badguys;
     std::vector<SpriteWithBody *> dnas;
@@ -62,6 +64,7 @@ class TerrainSprite : public cocos2d::Sprite
     cocos2d::CustomCommand _customCommand;
 public:
     void spawnTerrain();
+    void spawnMeteor();
     void spawnBelt();
     void spawnTunnel();
     void spawnBumps();
@@ -69,6 +72,7 @@ public:
     void spawnChessboard();
     
     void createDNA(cocos2d::Vec2 vpos);
+    void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
     void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
     void createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);

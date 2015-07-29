@@ -66,7 +66,7 @@ void GameLayer::initPhysics()
     
     _world = new b2World(b2Vec2(0.0f, -8.0f));
     // Do we want to let bodies sleep?
-    _world->SetAllowSleeping(true);
+    _world->SetAllowSleeping(false);
     _world->SetContinuousPhysics(true);
     
     _debugDraw = new GLESDebugDraw( PTM_RATIO );
@@ -121,12 +121,12 @@ void GameLayer::initPhysics()
     this->runAction(follow);
     
     scheduleUpdate();
+//    this->schedule(schedule_selector(GameLayer::update), 1/60.0f);
 }
 
 void GameLayer::update(float dt)
 {
     if(gameStatus == GAME_PAUSE || gameStatus == GAME_OVER) return;
-    
     
     //It is recommended that a fixed time step is used with Box2D for stability
     //of the simulation, however, we are using a variable time step here.
@@ -143,7 +143,7 @@ void GameLayer::update(float dt)
     
     Vec2 nanaPos = _nana->getPosition();
     // update score
-    score = (-nanaPos.y + winMidY)/400;
+    pos_score = (-nanaPos.y + winMidY)/400;
     _nana->setPosition(nanaPos);
     _terrain->update(nanaPos.y);
     
@@ -169,11 +169,15 @@ void GameLayer::update(float dt)
                 return;
             }
             if(udA->type == UD_DNA) {
+                CCLOG("%f-----DNA match", _nana->getPosition().y);
                 udA->type = UD_DESTROYED;
+                eat_score += 10;
                 dna++;
             }
             else {
+                CCLOG("%f-----DNA match", _nana->getPosition().y);
                 udB->type = UD_DESTROYED;
+                eat_score += 10;
                 dna++;
             }
         }
@@ -223,6 +227,9 @@ bool GameLayer::onTouchBegan(Touch* touch, Event* event)
     }
     
     auto touchLocation = touch->getLocation();
+    
+    if(touchLocation.x > 610 && touchLocation.y > 930)
+        gameStatus = GAME_PAUSE;
     if(touchLocation.y < winMidY - 50) {
         _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
                                  (touchLocation.y - winMidY)/20));

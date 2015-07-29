@@ -14,7 +14,8 @@ cocos2d::Size winSiz;
 float winMidX;
 float winMidY;
 
-int score;
+int pos_score;
+int eat_score;
 int dna;
 
 int getDNA()
@@ -24,7 +25,8 @@ int getDNA()
 
 void initStatistic()
 {
-    score = 0;
+    pos_score = 0;
+    eat_score = 0;
     dna = 0;
 }
 

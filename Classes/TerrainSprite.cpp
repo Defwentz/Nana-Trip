@@ -30,9 +30,10 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 20);
-    terrainRdmr->add(ITEM_BUMPS, 30);
-    terrainRdmr->add(ITEM_CHESSBOARD, 10);
-    terrainRdmr->add(ITEM_BELT, 40);
+    terrainRdmr->add(ITEM_BUMPS, 20);
+    terrainRdmr->add(ITEM_CHESSBOARD, 5);
+    terrainRdmr->add(ITEM_BELT, 10);
+    terrainRdmr->add(ITEM_METEOR, 50);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();
@@ -110,10 +111,38 @@ void TerrainSprite::spawnTerrain()
 {
     switch (terrainRdmr->getRandomItem()) {
         case ITEM_TUNNEL:       spawnTunnel();break;
-        case ITEM_BUMPS:        spawnBumps();break;
+        case ITEM_BUMPS:        spawnBumps();spawnMeteor();break;
         case ITEM_CHESSBOARD:   spawnChessboard();break;
         case ITEM_BELT:         spawnBelt();break;
+        case ITEM_METEOR:       spawnMeteor();break;
         default:break;
+    }
+}
+
+void TerrainSprite::spawnMeteor()
+{
+    float lastY = getLastY() - winMidY/8;
+    // the border vertices
+    lvertices.push_back(Vec2(0, lastY));
+    rvertices.push_back(Vec2(winSiz.width, lastY));
+    
+    {
+        b2CircleShape ball;
+        ball.m_radius = DNA_B2RADIUS + 1;
+        Vec2 fp = Vec2(winMidX, lastY);
+        createMovingLittleGuy(fp, &ball);
+    }
+    {
+        b2CircleShape ball;
+        ball.m_radius = DNA_B2RADIUS + 1;
+        Vec2 fp = Vec2(winMidX*3/2, lastY);
+        createMovingLittleGuy(fp, &ball);
+    }
+    {
+        b2CircleShape ball;
+        ball.m_radius = DNA_B2RADIUS + 1;
+        Vec2 fp = Vec2(winMidX/2, lastY);
+        createMovingLittleGuy(fp, &ball);
     }
 }
 
@@ -341,9 +370,10 @@ void TerrainSprite::spawnCurve()
 
 void TerrainSprite::createDNA(cocos2d::Vec2 vpos)
 {
-    SpriteWithBody *guy = SpriteWithBody::create("greenguy.png");
+    SpriteWithBody *guy = SpriteWithBody::create("gold.png");
     guy->setPosition(vpos);
     dnas.push_back(guy);
+    guy->setScale(36/142.0);
     this->addChild(guy);
     
     b2Vec2 bpos = vToB2(vpos);
@@ -358,6 +388,17 @@ void TerrainSprite::createDNA(cocos2d::Vec2 vpos)
     b->SetUserData(new Entity(UD_DNA));
     b->CreateFixture(&ball, 0);
     guy->_body = b;
+}
+
+void TerrainSprite::createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape)
+{
+    b2BodyDef bd;
+    bd.position.Set(vpos.x/PTM_RATIO, vpos.y/PTM_RATIO);
+    bd.type = b2_dynamicBody;
+    b2Body *b = _world->CreateBody(&bd);
+    b->CreateFixture(shape, 0);
+    b->ApplyForce(b2Vec2(0, 16.0f), b->GetWorldCenter(), true);
+    littleguys.push_back(b);
 }
 
 void TerrainSprite::createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape)
@@ -382,11 +423,11 @@ void TerrainSprite::createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape)
 
 void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA)
 {
-    SpriteWithBody *guy = SpriteWithBody::create("black.png");
+    SpriteWithBody *guy = SpriteWithBody::create("block.png");
     guy->setPosition(vpos);
     obstacles.push_back(guy);
     
-    guy->setScale(shape->m_radius*PTM_RATIO/36);
+    guy->setScale(shape->m_radius*PTM_RATIO/145);
     this->addChild(guy);
     
     b2BodyDef bd;
@@ -597,6 +638,19 @@ void TerrainSprite::update(float nanaY)
             ++i;
     }
     //spriteCheck(dnas, topY);
+    
+    for(std::vector<b2Body *>::iterator i = littleguys.begin();
+        i != littleguys.end();) {
+        Vec2 p = b2ToV((*i)->GetPosition());
+        if((*i)->GetPosition().y*PTM_RATIO > topY) {
+            _world->DestroyBody((*i));
+            i = littleguys.erase(i);
+        }
+        else {
+            (*i)->ApplyForce(b2Vec2(0, 16.0f), (*i)->GetWorldCenter(), true);
+            ++i;
+        }
+    }
 }
 
 void TerrainSprite::spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY)
@@ -654,6 +708,13 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
 //                          nonos[i]->GetShape()->m_radius * PTM_RATIO,
 //                          CC_DEGREES_TO_RADIANS(360), 30);
 //    }
+    ccDrawColor4F(0.9, 0.83, 0.62, 1.0);
+    for(int i = 0; i < littleguys.size(); i++) {
+        Vec2 pos = b2ToV(littleguys[i]->GetPosition());
+        ccDrawSolidCircle(b2ToV(littleguys[i]->GetPosition()),
+                          littleguys[i]->GetFixtureList()->GetShape()->m_radius * PTM_RATIO,
+                          CC_DEGREES_TO_RADIANS(360), 30);
+    }
     CHECK_GL_ERROR_DEBUG();
     kmGLPopMatrix();
 }

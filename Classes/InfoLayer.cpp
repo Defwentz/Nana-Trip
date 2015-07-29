@@ -23,7 +23,7 @@ bool InfoLayer::init()
     scoreLabel->setScale(10);
     this->addChild(scoreLabel);
     
-    old_score = score;
+    score = old_pos_score = 0;
     
     scheduleUpdate();
     return true;
@@ -31,9 +31,15 @@ bool InfoLayer::init()
 
 void InfoLayer::update(float dt)
 {
-    if(score > old_score) {
+    if(gameStatus == GAME_OVER) {
+        old_pos_score = 0;
+        score = 0;
+        return;
+    }
+    if(pos_score > old_pos_score) {
+        score = pos_score + eat_score;
         scoreLabel->setString(StringUtils::format("%d", score));
-        old_score = score;
+        old_pos_score = pos_score;
     }
     
 }

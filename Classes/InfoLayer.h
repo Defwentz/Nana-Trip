@@ -13,7 +13,8 @@
 
 class InfoLayer : public cocos2d::Layer
 {
-    int old_score;
+    int old_pos_score;
+    int score;
     cocos2d::Label *scoreLabel;
 public:
     virtual bool init();

@@ -54,7 +54,9 @@ extern cocos2d::Size winSiz;
 extern float winMidX;
 extern float winMidY;
 
-extern int score;
+// TODO: change
+extern int pos_score;
+extern int eat_score;
 extern int dna;
 
 #endif
