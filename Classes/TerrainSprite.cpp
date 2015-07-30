@@ -33,7 +33,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     terrainRdmr->add(ITEM_BUMPS, 20);
     terrainRdmr->add(ITEM_CHESSBOARD, 5);
     terrainRdmr->add(ITEM_BELT, 10);
-    terrainRdmr->add(ITEM_METEOR, 50);
+    terrainRdmr->add(ITEM_METEOR, 10);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();

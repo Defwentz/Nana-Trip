@@ -66,14 +66,14 @@ void GameLayer::initPhysics()
     
     _world = new b2World(b2Vec2(0.0f, -8.0f));
     // Do we want to let bodies sleep?
-    _world->SetAllowSleeping(false);
+    _world->SetAllowSleeping(true);
     _world->SetContinuousPhysics(true);
     
     _debugDraw = new GLESDebugDraw( PTM_RATIO );
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-    //flags += b2Draw::e_shapeBit;
+    flags += b2Draw::e_shapeBit;
     //flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
@@ -147,8 +147,10 @@ void GameLayer::update(float dt)
     _nana->setPosition(nanaPos);
     _terrain->update(nanaPos.y);
     
+    int count = 0;
     for(auto *contact = _world->GetContactList();contact; contact = contact->GetNext())
     {
+        log("count: %d - %f", ++count, nanaPos.y);
         b2Body *bodyA = contact->GetFixtureA()->GetBody();
         b2Body *bodyB = contact->GetFixtureB()->GetBody();
         

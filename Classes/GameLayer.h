@@ -15,7 +15,6 @@ class GameLayer : public cocos2d::Layer
     NanaSprite *_nana;
     TerrainSprite *_terrain;
 public:
-    // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
     
     void initPhysics();
