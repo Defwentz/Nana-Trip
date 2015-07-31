@@ -30,7 +30,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 20);
-    terrainRdmr->add(ITEM_BUMPS, 20);
+    terrainRdmr->add(ITEM_BUMPS, 70);
     terrainRdmr->add(ITEM_CHESSBOARD, 5);
     terrainRdmr->add(ITEM_BELT, 10);
     terrainRdmr->add(ITEM_METEOR, 10);
@@ -43,7 +43,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the bump randomer
     bumpRdmr = new Randomer();
     bumpRdmr->add(ITEM_BUMPS_1, 30);
-    bumpRdmr->add(ITEM_BUMPS_2, 0);
+    bumpRdmr->add(ITEM_BUMPS_2, 50);
     bumpRdmr->add(ITEM_BUMPS_3, 0);
     
     crvRdmr = new Randomer();
@@ -128,19 +128,19 @@ void TerrainSprite::spawnMeteor()
     
     {
         b2CircleShape ball;
-        ball.m_radius = DNA_B2RADIUS + 1;
+        ball.m_radius = DNA_B2RADIUS;
         Vec2 fp = Vec2(winMidX, lastY);
         createMovingLittleGuy(fp, &ball);
     }
     {
         b2CircleShape ball;
-        ball.m_radius = DNA_B2RADIUS + 1;
+        ball.m_radius = DNA_B2RADIUS;
         Vec2 fp = Vec2(winMidX*3/2, lastY);
         createMovingLittleGuy(fp, &ball);
     }
     {
         b2CircleShape ball;
-        ball.m_radius = DNA_B2RADIUS + 1;
+        ball.m_radius = DNA_B2RADIUS;
         Vec2 fp = Vec2(winMidX/2, lastY);
         createMovingLittleGuy(fp, &ball);
     }
@@ -233,6 +233,7 @@ void TerrainSprite::spawnBumps()
     
     switch (bumpRdmr->getRandomItem()) {
         case ITEM_BUMPS_1:
+        {
             int n = rand()%5;
             
             float min_bump_length = winSiz.height / 3;
@@ -276,12 +277,32 @@ void TerrainSprite::spawnBumps()
                     lvertices.push_back(Vec2(0, lastY));
                 }
             }
-            break;
-//        case ITEM_BUMPS_2:
-//            break;
+        }break;
+        case ITEM_BUMPS_2:
+        {
+            
+            int min_wrinkle = random(1, 4);
+            int max_wrinkle = random(4, 8);
+            // 2-6个(半屏) * min_w-max_w个(起伏/半屏)
+            int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
+            for(int i = 0; i < n; i++) {
+                int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
+                int dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
+                lvertices.push_back(Vec2(dx, lastY-dy));
+                
+                dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
+                dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
+                rvertices.push_back(Vec2(winSiz.width - dx, lastY-dy));
+                
+                lastY = getLastY();
+            }
+            int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
+            lvertices.push_back(Vec2(0, lastY - dy));
+            rvertices.push_back(Vec2(winSiz.width, lastY - dy));
+        }break;
 //        case ITEM_BUMPS_3:
 //            break;
-//        default:break;
+        default:break;
     }
 }
 

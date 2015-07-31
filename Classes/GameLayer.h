@@ -14,6 +14,8 @@ class GameLayer : public cocos2d::Layer
     b2World *_world;
     NanaSprite *_nana;
     TerrainSprite *_terrain;
+    
+    InfoLayer *_infoLayer;
 public:
     static cocos2d::Scene* createScene();
     
@@ -27,7 +29,7 @@ public:
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);
     
-    static GameLayer *create();
+    static GameLayer *create(InfoLayer *infoLayer);
     GameLayer();
     ~GameLayer();
 };

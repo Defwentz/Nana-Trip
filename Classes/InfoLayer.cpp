@@ -10,6 +10,8 @@
 
 USING_NS_CC;
 
+using namespace cocos2d::ui;
+
 bool InfoLayer::init()
 {
     if ( !Layer::init() )
@@ -23,7 +25,15 @@ bool InfoLayer::init()
     scoreLabel->setScale(10);
     this->addChild(scoreLabel);
     
-    score = old_pos_score = 0;
+    old_pos_score = 0;
+    scoreLabel->setString(StringUtils::format("0"));
+    
+    pauseBtn = Button::create();
+    pauseBtn->setTouchEnabled(true);
+    pauseBtn->loadTextures("button_pause_small.png", "button_pause_small.png");
+    pauseBtn->cocos2d::Node::setPosition(winSiz.width - 50, winSiz.height - 50);
+    pauseBtn->addTouchEventListener(this, toucheventselector(InfoLayer::pauseBtnTouched));
+    this->addChild(pauseBtn);
     
     scheduleUpdate();
     return true;
@@ -31,15 +41,28 @@ bool InfoLayer::init()
 
 void InfoLayer::update(float dt)
 {
-    if(gameStatus == GAME_OVER) {
-        old_pos_score = 0;
-        score = 0;
-        return;
-    }
     if(pos_score > old_pos_score) {
-        score = pos_score + eat_score;
-        scoreLabel->setString(StringUtils::format("%d", score));
+        scoreLabel->setString(StringUtils::format("%d", pos_score + eat_score));
         old_pos_score = pos_score;
+    }
+    
+}
+
+void InfoLayer::reset() {
+    old_pos_score = 0;
+    scoreLabel->setString(StringUtils::format("0"));
+}
+
+void InfoLayer::pauseBtnTouched(Object *pSender, cocos2d::ui::TouchEventType type)
+{
+    Button* butten = (Button*)pSender;
+    unsigned int tag = butten->getTag();
+    switch (tag) {
+        case TOUCH_EVENT_BEGAN:
+            gameStatus = GAME_PAUSE;
+            break;
+        default:
+            break;
     }
     
 }

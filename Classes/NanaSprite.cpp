@@ -126,7 +126,13 @@ NanaSprite* NanaSprite::create(b2World *world)
 
 NanaSprite::NanaSprite(b2World *world){
     ud = UD_NANA;
+    _nanaFace = Director::getInstance()->getTextureCache()->addImage("nana_face.png");
+    _nanaFace->retain();
     initPhysics(world);
+}
+NanaSprite::~NanaSprite()
+{
+    _nanaFace->release();
 }
 
 void NanaSprite::initPhysics(b2World *world)
@@ -150,7 +156,7 @@ void NanaSprite::initPhysics(b2World *world)
     
     // Radius of the wheel
     float radius = 1.2f;
-    float inner_radius = 1.0f;
+    float inner_radius = 0.9f;
     
     // Need to store the bodies so that we can refer back
     // to it when we connect the joints
@@ -287,19 +293,47 @@ Vec2 NanaSprite::getPosition()
     pos.x = winMidX;
     pos.y *= PTM_RATIO;
     return Vec2(pos.x, pos.y);
-    /*
-    float x = 0, y = 0;
+}
+
+Vec2 NanaSprite::getCenter()
+{
+    float x = 0, y = 0;//, x2 =0,y2=0,x3=0,y3=0;
+
+//    for(int i = 0; i < _bodies.size(); i++) {
+//        b2Vec2 pos = _bodies[i]->GetWorldCenter();
+//        b2Vec2 pos2 = _bodies[i]->GetPosition();
+//        b2Vec2 pos3 = _bodies[i]->GetLocalCenter();
+//        x += pos.x;
+//        y += pos.y;
+//        x2+=pos2.x;y2+=pos2.y;
+//        x3+=pos3.x;y3+=pos3.y;
+//    }
+    Vec2 vertices[NUM_SEGMENTS];
+    
+    Vec2 opos = this->getPosition();
     
     for(int i = 0; i < _bodies.size(); i++) {
+        b2PolygonShape *shape = (b2PolygonShape *) _bodies[i]->GetFixtureList()->GetShape();
+        b2Vec2 point;
+        if(i < NUM_SEGMENTS / 4)
+            point = _bodies[i]->GetWorldVector(shape->GetVertex(0));
+        else if(i < NUM_SEGMENTS * 2/4)
+            point = _bodies[i]->GetWorldVector(shape->GetVertex(1));
+        else if(i < NUM_SEGMENTS * 3/4)
+            point = _bodies[i]->GetWorldVector(shape->GetVertex(2));
+        else if(i < NUM_SEGMENTS)
+            point = _bodies[i]->GetWorldVector(shape->GetVertex(3));
         b2Vec2 pos = _bodies[i]->GetPosition();
-        x += pos.x;
-        y += pos.y;
+        
+        x += (point.x + pos.x)*PTM_RATIO - opos.x;
+        y += (point.y + pos.y)*PTM_RATIO - opos.y;
     }
-    
-    x *= PTM_RATIO; x /= NUM_SEGMENTS;
-    y *= PTM_RATIO; y /= NUM_SEGMENTS;
-    
-    return Vec2(x, y);*/
+    x /= NUM_SEGMENTS;//(PTM_RATIO/NUM_SEGMENTS);
+    y /= NUM_SEGMENTS;//(PTM_RATIO/NUM_SEGMENTS);
+    x -= 6.4;
+    y -= 6.4;
+
+    return Vec2(x, y);
 }
 
 // Gas up the body, apply force with a scale -> hardness.
@@ -365,9 +399,9 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     }
     //_drawNode->clear();
     //_drawNode->drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(1, 1, 0, 1));
-    
-    kmGLPushMatrix();
-    kmGLLoadMatrix(&transform);
+    Director* director = Director::getInstance();
+    director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     //GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
     
@@ -386,8 +420,10 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     //DrawPrimitives::drawRect(Vec2(400, 400), Vec2(500, 700));
     //DrawPrimitives::drawCircle(Vec2(500, 500), 40, 100, 2, true);
     //DrawPrimitives::drawPoly(vertices, NUM_SEGMENTS, true);
-    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(0, 1, 1, 1));
+    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(0.347656f, 0.68f, 0.8086f, 1));
+    _nanaFace->drawAtPoint(this->getCenter());
+    
     CHECK_GL_ERROR_DEBUG();
     
-    kmGLPopMatrix();
+    director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }

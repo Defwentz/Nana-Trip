@@ -12,6 +12,8 @@
 #include "cocos2d.h"
 #include <Box2D/Box2D.h>
 #include "Randomer.h"
+#include "cocostudio/CocoStudio.h"
+#include "ui/CocosGUI.h"
 
 #define PTM_RATIO 32
 

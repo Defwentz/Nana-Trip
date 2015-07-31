@@ -20,11 +20,13 @@ class NanaSprite : public cocos2d::Sprite
     b2World *_world;
     std::vector<b2Body *> _bodies;
     
+    cocos2d::Texture2D *_nanaFace;
     //cocos2d::DrawNode *_drawNode;
     cocos2d::CustomCommand _customCommand;
 public:
     // the vec2 of _bodies[0]->getPosistion()
     cocos2d::Vec2 getPosition();
+    cocos2d::Vec2 getCenter();
     bool isNana(b2Body *body);
     void gasUp();
     void ApplyForce(b2Vec2 force);
@@ -37,6 +39,7 @@ public:
     
     //static b2Body *createPhysicsObject(b2World *world);
     NanaSprite(b2World *world);
+    ~NanaSprite();
     void initPhysics(b2World *world);
     
     int ud;

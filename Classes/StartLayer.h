@@ -10,8 +10,6 @@
 #define __nanatrip__StartLayer__
 
 #include "NanaTrip.h"
-#include "cocostudio/CocoStudio.h"
-#include "ui/CocosGUI.h"
 
 class StartLayer : public cocos2d::Layer
 {

@@ -15,20 +15,27 @@ Scene* GameLayer::createScene()
     
     auto scene = Scene::create();
     
-    auto layer = GameLayer::create();
-    scene->addChild(layer, 5);
-    
     auto infoLayer = InfoLayer::create();
     scene->addChild(infoLayer, 4);
+    
+    auto layer = GameLayer::create(infoLayer);
+    scene->addChild(layer, 5);
 
+//    auto bg = Layer::create();
+//    auto bgSprite = Sprite::create("bg.png");
+//    bgSprite->setPosition(winMidX,winMidY);
+//    bg->addChild(bgSprite);
+//    scene->cocos2d::Node::addChild(bg, 1);
+    
     return scene;
 }
 
-GameLayer *GameLayer::create()
+GameLayer *GameLayer::create(InfoLayer *infoLayer)
 {
     GameLayer *ret = new (std::nothrow) GameLayer();
     if (ret && ret->init())
     {
+        ret->_infoLayer = infoLayer;
         ret->autorelease();
         return ret;
     }
@@ -73,7 +80,7 @@ void GameLayer::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-    flags += b2Draw::e_shapeBit;
+    //flags += b2Draw::e_shapeBit;
     //flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
@@ -167,6 +174,15 @@ void GameLayer::update(float dt)
             if(udA->type == UD_BADGUY || udB->type == UD_BADGUY) {
                 CCLOG("%f-----hit", _nana->getPosition().y);
                 gameStatus = GAME_OVER;
+                //Director::getInstance()->pause();
+                // 好像并没有什么用
+                //glClear(GL_COLOR_BUFFER_BIT);
+                _terrain->removeFromParent();
+                //delete _terrain;
+                _nana->removeFromParent();
+                //delete _nana;
+                delete _world;
+                delete _debugDraw;
                 reset();
                 return;
             }
@@ -205,15 +221,9 @@ void GameLayer::update(float dt)
 // problematic, TODO
 void GameLayer::reset()
 {
-    //Director::getInstance()->pause();
-    // 好像并没有什么用
-    //glClear(GL_COLOR_BUFFER_BIT);
-    _terrain->removeFromParent();
-    //delete _terrain;
-    _nana->removeFromParent();
-    //delete _nana;
-    delete _world;
-    delete _debugDraw;
+    pos_score = 0;
+    eat_score = 0;
+    _infoLayer->reset();
     //delete _nana;
     //delete _debugDraw;
     //CC_SAFE_DELETE(_world);
@@ -229,9 +239,6 @@ bool GameLayer::onTouchBegan(Touch* touch, Event* event)
     }
     
     auto touchLocation = touch->getLocation();
-    
-    if(touchLocation.x > 610 && touchLocation.y > 930)
-        gameStatus = GAME_PAUSE;
     if(touchLocation.y < winMidY - 50) {
         _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
                                  (touchLocation.y - winMidY)/20));
@@ -251,12 +258,13 @@ void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
 {
     Layer::draw(renderer, transform, transformFlags);
-    kmGLPushMatrix();
-    kmGLLoadMatrix(&transform);
+    Director* director = Director::getInstance();
+    director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
     _world->DrawDebugData();
     CHECK_GL_ERROR_DEBUG();
     
-    kmGLPopMatrix();
+    director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
