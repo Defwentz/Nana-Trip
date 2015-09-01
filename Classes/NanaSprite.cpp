@@ -126,7 +126,7 @@ NanaSprite* NanaSprite::create(b2World *world)
 
 NanaSprite::NanaSprite(b2World *world){
     ud = UD_NANA;
-    _nanaFace = Director::getInstance()->getTextureCache()->addImage("nana_face.png");
+    _nanaFace = Director::getInstance()->getTextureCache()->addImage("nana_face_3.png");
     _nanaFace->retain();
     initPhysics(world);
 }
@@ -330,8 +330,6 @@ Vec2 NanaSprite::getCenter()
     }
     x /= NUM_SEGMENTS;//(PTM_RATIO/NUM_SEGMENTS);
     y /= NUM_SEGMENTS;//(PTM_RATIO/NUM_SEGMENTS);
-    x -= 6.4;
-    y -= 6.4;
 
     return Vec2(x, y);
 }
@@ -397,31 +395,27 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
         vertices[i].x = (point.x + pos.x)*PTM_RATIO - opos.x;
         vertices[i].y = (point.y + pos.y)*PTM_RATIO - opos.y;
     }
-    //_drawNode->clear();
-    //_drawNode->drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(1, 1, 0, 1));
     Director* director = Director::getInstance();
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
-    //GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
-    
-    //glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_POSITION, 2, GL_FLOAT, GL_FALSE, 0, vertices);
-    //    glVertexAttrib4f(GLProgram::VERTEX_ATTRIB_COLOR, color.r*0.5f, color.g*0.5f, color.b*0.5f, 0.5f);
-    //mShaderProgram->setUniformLocationWith4f(mColorLocation, color.r*0.5f, color.g*0.5f, color.b*0.5f, 0.5f);
-    
-    //glDrawArrays(GL_TRIANGLE_FAN, 0, NUM_SEGMENTS);
-    //glDrawArrays(GL_LINE_LOOP, 0, NUM_SEGMENTS);
-    
-    //CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(2,NUM_SEGMENTS*2);
-    
-    //CHECK_GL_ERROR_DEBUG();
     glLineWidth( 5.0f );
     //DrawPrimitives::drawLine(Vec2(400, 400), Vec2(500, 700));
     //DrawPrimitives::drawRect(Vec2(400, 400), Vec2(500, 700));
     //DrawPrimitives::drawCircle(Vec2(500, 500), 40, 100, 2, true);
+    ccDrawColor4F(0.347656f, 0.68f, 0.8086f, 1);
+    Vec2 center = this->getCenter();
+    for(int i = 0; i < _bodies.size(); i++) {
+        Vec2 target = (center - vertices[i]) * 1.4;
+        target += center;
+        DrawPrimitives::drawSolidCircle(vertices[i], 8, CC_DEGREES_TO_RADIANS(360), 30);
+    }
+    
     //DrawPrimitives::drawPoly(vertices, NUM_SEGMENTS, true);
     DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(0.347656f, 0.68f, 0.8086f, 1));
-    _nanaFace->drawAtPoint(this->getCenter());
+    //center.x -= 6.4;center.y -= 6.4;
+    center.x-=12;center.y-=12;
+    _nanaFace->drawAtPoint(center);
     
     CHECK_GL_ERROR_DEBUG();
     

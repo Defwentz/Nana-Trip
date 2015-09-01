@@ -55,14 +55,15 @@ void InfoLayer::reset() {
 
 void InfoLayer::pauseBtnTouched(Object *pSender, cocos2d::ui::TouchEventType type)
 {
-    Button* butten = (Button*)pSender;
-    unsigned int tag = butten->getTag();
-    switch (tag) {
-        case TOUCH_EVENT_BEGAN:
-            gameStatus = GAME_PAUSE;
-            break;
-        default:
-            break;
-    }
+    gameStatus = GAME_PAUSE;
+//    Button* butten = (Button*)pSender;
+//    unsigned int tag = butten->getTag();
+//    switch (tag) {
+//        case TOUCH_EVENT_BEGAN:
+//            gameStatus = GAME_PAUSE;
+//            break;
+//        default:
+//            break;
+//    }
     
 }

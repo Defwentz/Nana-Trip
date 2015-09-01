@@ -15,10 +15,14 @@ class GameLayer : public cocos2d::Layer
     NanaSprite *_nana;
     TerrainSprite *_terrain;
     
+    float after_height;
+    std::vector<cocos2d::Sprite *> _bgSprites;
+    
     InfoLayer *_infoLayer;
 public:
     static cocos2d::Scene* createScene();
     
+    void initBG();
     void initPhysics();
     void update(float dt);
     

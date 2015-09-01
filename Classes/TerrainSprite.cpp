@@ -30,7 +30,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 20);
-    terrainRdmr->add(ITEM_BUMPS, 70);
+    terrainRdmr->add(ITEM_BUMPS, 40);
     terrainRdmr->add(ITEM_CHESSBOARD, 5);
     terrainRdmr->add(ITEM_BELT, 10);
     terrainRdmr->add(ITEM_METEOR, 10);
@@ -281,8 +281,8 @@ void TerrainSprite::spawnBumps()
         case ITEM_BUMPS_2:
         {
             
-            int min_wrinkle = random(1, 4);
-            int max_wrinkle = random(4, 8);
+            int min_wrinkle = random(1, 3);
+            int max_wrinkle = random(3, 8);
             // 2-6个(半屏) * min_w-max_w个(起伏/半屏)
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
             for(int i = 0; i < n; i++) {
@@ -592,8 +592,8 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 
 void TerrainSprite::update(float nanaY)
 {
-    float topY = nanaY + winMidY + winSiz.height/4;
-    float bottomY = nanaY - winMidY - winSiz.height/4;
+    float topY = nanaY + winSiz.height;
+    float bottomY = nanaY - winSiz.height;
     
     //if(lvertices.size() < 2) {
        // spawnTerrain();

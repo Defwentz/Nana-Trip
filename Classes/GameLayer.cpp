@@ -16,10 +16,10 @@ Scene* GameLayer::createScene()
     auto scene = Scene::create();
     
     auto infoLayer = InfoLayer::create();
-    scene->addChild(infoLayer, 4);
+    scene->addChild(infoLayer, 10);
     
     auto layer = GameLayer::create(infoLayer);
-    scene->addChild(layer, 5);
+    scene->addChild(layer, 3);
 
 //    auto bg = Layer::create();
 //    auto bgSprite = Sprite::create("bg.png");
@@ -55,7 +55,7 @@ GameLayer::GameLayer()
     touchlistener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
     eventDispatcher->addEventListenerWithFixedPriority(touchlistener, 1);
     setAccelerometerEnabled(true);
-    
+    initBG();
     initPhysics();
 }
 
@@ -65,6 +65,19 @@ GameLayer::~GameLayer()
     delete _nana;
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
+}
+
+void GameLayer::initBG()
+{
+    after_height = winSiz.width*848/1080;
+    int n = ceil(winSiz.height / after_height);
+    for(int i = 0; i < n; i++) {
+        Sprite *bg = Sprite::create("bg_1.png");
+        bg->setScale(winSiz.width/1080.0);
+        bg->setPosition(winMidX, i*after_height + after_height/2);
+        this->addChild(bg, 2);
+        _bgSprites.push_back(bg);
+    }
 }
 
 void GameLayer::initPhysics()
@@ -119,10 +132,10 @@ void GameLayer::initPhysics()
     }*/
     
     _terrain = TerrainSprite::create(_world);
-    this->addChild(_terrain);
+    this->addChild(_terrain, 3);
     
     _nana = NanaSprite::create(_world);
-    this->addChild(_nana);
+    this->addChild(_nana, 4);
     
     auto follow = Follow::create(_nana);
     this->runAction(follow);
@@ -139,7 +152,6 @@ void GameLayer::update(float dt)
     //of the simulation, however, we are using a variable time step here.
     //You need to make an informed choice, the following URL is useful
     //http://gafferongames.com/game-physics/fix-your-timestep/
-    
     int velocityIterations = 8;
     int positionIterations = 1;
     
@@ -149,6 +161,23 @@ void GameLayer::update(float dt)
     _nana->gasUp();
     
     Vec2 nanaPos = _nana->getPosition();
+    //Vec2 topY = this->getPosition();
+    float topY = nanaPos.y + winSiz.height;
+    float bottomY = nanaPos.y - winSiz.height;
+    if(_bgSprites.front()->getPosition().y > topY) {
+        _bgSprites.front()->removeFromParent();
+        _bgSprites.erase(_bgSprites.cbegin());
+    }
+    Vec2 bgsbackPos = _bgSprites.back()->getPosition();
+    if(bgsbackPos.y - after_height/2 > bottomY) {
+        Sprite *bg = Sprite::create("bg_1.png");
+        bg->setScale(winSiz.width/1080.0);
+        bg->setPosition(winMidX, bgsbackPos.y - after_height);
+        this->addChild(bg, 2);
+        _bgSprites.push_back(bg);
+    }
+    
+    
     // update score
     pos_score = (-nanaPos.y + winMidY)/400;
     _nana->setPosition(nanaPos);
@@ -221,6 +250,12 @@ void GameLayer::update(float dt)
 // problematic, TODO
 void GameLayer::reset()
 {
+    for(int i = 0; i < _bgSprites.size(); i++) {
+        _bgSprites[i]->removeFromParent();
+    }
+    _bgSprites.clear();
+    initBG();
+    
     pos_score = 0;
     eat_score = 0;
     _infoLayer->reset();
