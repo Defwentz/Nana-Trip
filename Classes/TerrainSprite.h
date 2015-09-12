@@ -82,6 +82,7 @@ public:
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);
     
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
+    void drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
     void doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination));
     
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)

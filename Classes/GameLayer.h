@@ -22,6 +22,7 @@ class GameLayer : public cocos2d::Layer
 public:
     static cocos2d::Scene* createScene();
     
+    void initListeners();
     void initBG();
     void initPhysics();
     void update(float dt);

@@ -589,6 +589,46 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
     else
         rfixtures.push_back(_fixtures);
 }
+void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
+{
+    float tdy = p1.y - p2.y;
+    //////////////
+    if(tdy == 0) {
+        ccDrawLine(p1, p2);
+    }
+    
+    float x = winSiz.width;
+    if(isLeft) {
+        x = 0;
+    }
+    //////////////
+    
+    int n = floorf(tdy/10);
+    float dy = tdy / n;
+    float dj = M_PI / n;
+    float A = (p1.x - p2.x)/2;
+    float B = (p1.x + p2.x)/2;
+    // x = A*cos(wy)+B
+    
+    Vec2 _p1 = p1, _p2;
+    float y = 0;
+    for(int j = 1; j <= n; j++) {
+        _p2.y = _p1.y - dy;
+        y+=dj;
+        _p2.x = A*cosf(y) + B;
+        
+        //ccDrawLine(_p1, _p2);
+        
+        Point tallerOne(x, _p1.y), shorterOne(x, _p2.y);
+        Point vt1[] = {tallerOne, _p1, shorterOne};
+        Point vt2[] = {shorterOne, _p1, _p2};
+        Color4F color(0.3555f, 0.6289f, 0.78f, 1);
+        ccDrawSolidPoly(vt1, 3, color);
+        ccDrawSolidPoly(vt2, 3, color);
+        
+        _p1 = _p2;
+    }
+}
 
 void TerrainSprite::update(float nanaY)
 {
@@ -700,8 +740,10 @@ void TerrainSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transf
 // TODO: fix this
 void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
 {
-    kmGLPushMatrix();
-    kmGLLoadMatrix(&transform);
+    Director* director = Director::getInstance();
+    director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
+    
     glLineWidth( 5.0f );
     ccDrawColor4F(1.0, 1.0, 1.0, 1.0);
     // left right curve floor
@@ -711,8 +753,8 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
         lp1 = lvertices[i - 1];
         lp2 = lvertices[i];
         
-        
-        doVertices(lp1, lp2, ccDrawLine);
+        drawEdge(lp1, lp2, 1);
+        //doVertices(lp1, lp2, ccDrawLine);
     }
     for(int i = 1; i < rto; i++) {
         
@@ -720,7 +762,8 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
         rp1 = rvertices[i - 1];
         rp2 = rvertices[i];
         
-        doVertices(rp1, rp2, ccDrawLine);
+        drawEdge(rp1, rp2, 0);
+        //doVertices(rp1, rp2, ccDrawLine);
     }
     
     // draw obstacles
@@ -737,7 +780,7 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
                           CC_DEGREES_TO_RADIANS(360), 30);
     }
     CHECK_GL_ERROR_DEBUG();
-    kmGLPopMatrix();
+    director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
 
 void TerrainSprite::drawSegment(Vec2 p1, Vec2 p2)

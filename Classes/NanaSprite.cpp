@@ -400,9 +400,6 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     glLineWidth( 5.0f );
-    //DrawPrimitives::drawLine(Vec2(400, 400), Vec2(500, 700));
-    //DrawPrimitives::drawRect(Vec2(400, 400), Vec2(500, 700));
-    //DrawPrimitives::drawCircle(Vec2(500, 500), 40, 100, 2, true);
     ccDrawColor4F(0.347656f, 0.68f, 0.8086f, 1);
     Vec2 center = this->getCenter();
     for(int i = 0; i < _bodies.size(); i++) {

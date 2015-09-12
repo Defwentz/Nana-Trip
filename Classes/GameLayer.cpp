@@ -48,13 +48,7 @@ GameLayer *GameLayer::create(InfoLayer *infoLayer)
 
 GameLayer::GameLayer()
 {
-    auto eventDispatcher = Director::getInstance()->getEventDispatcher();
-    
-    auto touchlistener = EventListenerTouchOneByOne::create();
-    touchlistener->setSwallowTouches(true);
-    touchlistener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
-    eventDispatcher->addEventListenerWithFixedPriority(touchlistener, 1);
-    setAccelerometerEnabled(true);
+    initListeners();
     initBG();
     initPhysics();
 }
@@ -67,6 +61,13 @@ GameLayer::~GameLayer()
     CC_SAFE_DELETE(_world);
 }
 
+void GameLayer::initListeners() {
+    auto touchlistener = EventListenerTouchOneByOne::create();
+    touchlistener->setSwallowTouches(true);
+    touchlistener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
+    Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(touchlistener, 1);
+    setAccelerometerEnabled(true);
+}
 void GameLayer::initBG()
 {
     after_height = winSiz.width*848/1080;
@@ -201,7 +202,7 @@ void GameLayer::update(float dt)
         
         if(udA->type == UD_NANA || udB->type == UD_NANA) {
             if(udA->type == UD_BADGUY || udB->type == UD_BADGUY) {
-                CCLOG("%f-----hit", _nana->getPosition().y);
+                log("%f-----hit", _nana->getPosition().y);
                 gameStatus = GAME_OVER;
                 //Director::getInstance()->pause();
                 // 好像并没有什么用
@@ -216,13 +217,13 @@ void GameLayer::update(float dt)
                 return;
             }
             if(udA->type == UD_DNA) {
-                CCLOG("%f-----DNA match", _nana->getPosition().y);
+                log("%f-----DNA match", _nana->getPosition().y);
                 udA->type = UD_DESTROYED;
                 eat_score += 10;
                 dna++;
             }
             else {
-                CCLOG("%f-----DNA match", _nana->getPosition().y);
+                log("%f-----DNA match", _nana->getPosition().y);
                 udB->type = UD_DESTROYED;
                 eat_score += 10;
                 dna++;
