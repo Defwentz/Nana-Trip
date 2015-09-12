@@ -1,6 +1,5 @@
 #include "GameLayer.h"
-#include "cocostudio/CocoStudio.h"
-#include "ui/CocosGUI.h"
+#include "OverLayer.h"
 
 USING_NS_CC;
 
@@ -55,8 +54,10 @@ GameLayer::GameLayer()
 
 GameLayer::~GameLayer()
 {
-    delete _terrain;
-    delete _nana;
+//    _terrain->removeFromParent();
+//    _nana->removeFromParent();
+//    CC_SAFE_DELETE(_terrain);
+//    CC_SAFE_DELETE(_nana);
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
 }
@@ -94,8 +95,8 @@ void GameLayer::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-    //flags += b2Draw::e_shapeBit;
-    //flags += b2Draw::e_jointBit;
+//        flags += b2Draw::e_shapeBit;
+//        flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
     //    flags += b2Draw::e_centerOfMassBit;
@@ -187,7 +188,6 @@ void GameLayer::update(float dt)
     int count = 0;
     for(auto *contact = _world->GetContactList();contact; contact = contact->GetNext())
     {
-        log("count: %d - %f", ++count, nanaPos.y);
         b2Body *bodyA = contact->GetFixtureA()->GetBody();
         b2Body *bodyB = contact->GetFixtureB()->GetBody();
         
@@ -199,21 +199,12 @@ void GameLayer::update(float dt)
         if(udA->type == UD_NANA && udB->type == UD_NANA)
             return;
         
-        
+        log("count: %d - %f", ++count, nanaPos.y);
         if(udA->type == UD_NANA || udB->type == UD_NANA) {
             if(udA->type == UD_BADGUY || udB->type == UD_BADGUY) {
                 log("%f-----hit", _nana->getPosition().y);
                 gameStatus = GAME_OVER;
-                //Director::getInstance()->pause();
-                // 好像并没有什么用
-                //glClear(GL_COLOR_BUFFER_BIT);
-                _terrain->removeFromParent();
-                //delete _terrain;
-                _nana->removeFromParent();
-                //delete _nana;
-                delete _world;
-                delete _debugDraw;
-                reset();
+                gameOver();
                 return;
             }
             if(udA->type == UD_DNA) {
@@ -248,9 +239,23 @@ void GameLayer::update(float dt)
     }*/
 }
 
+void GameLayer::gameOver() {
+    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+    Director::getInstance()->replaceScene(OverLayer::createScene());
+}
+
 // problematic, TODO
 void GameLayer::reset()
 {
+    // 好像并没有什么用
+    //glClear(GL_COLOR_BUFFER_BIT);
+    _terrain->removeFromParent();
+    //delete _terrain;
+    _nana->removeFromParent();
+    //delete _nana;
+    delete _world;
+    delete _debugDraw;
+    
     for(int i = 0; i < _bgSprites.size(); i++) {
         _bgSprites[i]->removeFromParent();
     }

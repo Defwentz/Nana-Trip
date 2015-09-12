@@ -11,6 +11,7 @@
 
 #include "NanaTrip.h"
 #include "SpriteWithBody.h"
+#include "MoverSprite.h"
 
 //#define TYPE_DOOR                   99
 //#define TYPE_TUNNEL_SUPER_NARROW    10
@@ -51,10 +52,11 @@ class TerrainSprite : public cocos2d::Sprite
     int lto, rto;
     float getLastY();
     
-    std::vector<b2Body *> littleguys;
-    std::vector<SpriteWithBody *> obstacles;
-    std::vector<SpriteWithBody *> badguys;
-    std::vector<SpriteWithBody *> dnas;
+    std::vector<b2Body *> littleguys;           // those yellow ball
+    std::vector<SpriteWithBody *> obstacles;    // those brown round thing
+    std::vector<SpriteWithBody *> badguys;      // red guy
+    std::vector<SpriteWithBody *> dnas;         // yellow guy
+    std::vector<MoverSprite *> movers;          // mover
     
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
@@ -63,6 +65,7 @@ class TerrainSprite : public cocos2d::Sprite
     
     cocos2d::CustomCommand _customCommand;
 public:
+    // new terrain idea: soft tissue
     void spawnTerrain();
     void spawnMeteor();
     void spawnBelt();
@@ -78,7 +81,6 @@ public:
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     
     void update(float nanaY);
-    
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);
     
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
@@ -91,7 +93,7 @@ public:
     void drawSegment(cocos2d::Vec2 p1, cocos2d::Vec2 p2);
     
     int randWithBase(int base, int addon);
-    // the default bool is false, when rand_0_1() < odds, bool switch to true
+    // the default return is false, when rand_0_1() < odds, bool switch to true
     bool boolWithOdds(float odds);
     
     static TerrainSprite *create(b2World *world);

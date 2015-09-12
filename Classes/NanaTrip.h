@@ -61,4 +61,7 @@ extern int pos_score;
 extern int eat_score;
 extern int dna;
 
+// resources
+extern std::string res_bg[];
+
 #endif

@@ -46,3 +46,6 @@ cocos2d::Vec2 b2ToV(b2Vec2 b)
 {
     return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
 }
+
+// resources
+std::string res_bg[] = {"bg_1.png"};

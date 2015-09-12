@@ -42,9 +42,9 @@ TerrainSprite::TerrainSprite(b2World *world)
     
     // initalize the bump randomer
     bumpRdmr = new Randomer();
-    bumpRdmr->add(ITEM_BUMPS_1, 30);
-    bumpRdmr->add(ITEM_BUMPS_2, 50);
-    bumpRdmr->add(ITEM_BUMPS_3, 0);
+    bumpRdmr->add(ITEM_BUMPS_1, 10);
+    bumpRdmr->add(ITEM_BUMPS_2, 10);
+    bumpRdmr->add(ITEM_BUMPS_3, 30);
     
     crvRdmr = new Randomer();
     crvRdmr->add(ITEM_CURVE_BL, 10);
@@ -280,9 +280,8 @@ void TerrainSprite::spawnBumps()
         }break;
         case ITEM_BUMPS_2:
         {
-            
             int min_wrinkle = random(1, 3);
-            int max_wrinkle = random(3, 8);
+            int max_wrinkle = random(3, 7);
             // 2-6个(半屏) * min_w-max_w个(起伏/半屏)
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
             for(int i = 0; i < n; i++) {
@@ -300,8 +299,24 @@ void TerrainSprite::spawnBumps()
             lvertices.push_back(Vec2(0, lastY - dy));
             rvertices.push_back(Vec2(winSiz.width, lastY - dy));
         }break;
-//        case ITEM_BUMPS_3:
-//            break;
+        case ITEM_BUMPS_3:
+        {
+            int min_wrinkle = random(1, 3);
+            int max_wrinkle = random(3, 9);
+            // 2-6个(半屏) * min_w-max_w个(起伏/半屏)
+            int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
+            for(int i = 0; i < n; i++) {
+                int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
+                int dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
+                lvertices.push_back(Vec2(dx, lastY-dy));
+                rvertices.push_back(Vec2(winSiz.width - dx, lastY-dy));
+                
+                lastY = getLastY();
+            }
+            int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
+            lvertices.push_back(Vec2(0, lastY - dy));
+            rvertices.push_back(Vec2(winSiz.width, lastY - dy));
+        }break;
         default:break;
     }
 }
@@ -347,6 +362,12 @@ void TerrainSprite::spawnChessboard()
             
             if(boolWithOdds(0.1)) {
                 createBadGuy(pos, &ball);
+            }
+            else if(boolWithOdds(0.5)) {
+                auto mover = MoverSprite::create("rod_1.png");
+                mover->setup(_world, _body, pos, radius);
+                this->addChild(mover);
+                movers.push_back(mover);
             }
             else {
                 createBallObstacle(pos, &ball, false);
@@ -478,11 +499,12 @@ void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
     
     b2PolygonShape stick_1;
     float round_edge_radius = 10.0/PTM_RATIO;
-    b2Vec2 vertices[4];
-    vertices[0] = b2Vec2(-round_edge_radius, round_edge_radius - radius);
-    vertices[1] = b2Vec2(-round_edge_radius, radius - round_edge_radius);
-    vertices[2] = b2Vec2(round_edge_radius, radius - round_edge_radius);
-    vertices[3] = b2Vec2(round_edge_radius, round_edge_radius - radius);
+    b2Vec2 vertices[4] = {
+        b2Vec2(-round_edge_radius, round_edge_radius - radius),
+        b2Vec2(-round_edge_radius, radius - round_edge_radius),
+        b2Vec2(round_edge_radius, radius - round_edge_radius),
+        b2Vec2(round_edge_radius, round_edge_radius - radius)
+    };
     stick_1.Set(vertices, 4);
     mover->CreateFixture(&stick_1, 0.2f);   // trying something
     {
@@ -622,7 +644,7 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         Point tallerOne(x, _p1.y), shorterOne(x, _p2.y);
         Point vt1[] = {tallerOne, _p1, shorterOne};
         Point vt2[] = {shorterOne, _p1, _p2};
-        Color4F color(0.3555f, 0.6289f, 0.78f, 1);
+        Color4F color(0.3555f, 0.3289f, 0.98f, 1);//(0.3555f, 0.6289f, 0.78f, 1);
         ccDrawSolidPoly(vt1, 3, color);
         ccDrawSolidPoly(vt2, 3, color);
         
@@ -686,6 +708,18 @@ void TerrainSprite::update(float nanaY)
     // if so, delete
     spriteCheck(obstacles, topY);
     spriteCheck(badguys, topY);
+    for(std::vector<MoverSprite *>::iterator i = movers.begin();
+        i != movers.end();) {
+        if((*i)->getPosition().y > topY) {
+            (*i)->selfDestruct(_world);
+            (*i)->removeFromParent();
+            i = movers.erase(i);
+        }
+        else {
+            (*i)->update();
+            ++i;
+        }
+    }
     
     for(std::vector<SpriteWithBody *>::iterator i = dnas.begin();
         i != dnas.end();) {
@@ -745,7 +779,14 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     glLineWidth( 5.0f );
-    ccDrawColor4F(1.0, 1.0, 1.0, 1.0);
+    ccDrawColor4F(0.9, 0.83, 0.62, 1.0);
+    for(int i = 0; i < littleguys.size(); i++) {
+        Vec2 pos = b2ToV(littleguys[i]->GetPosition());
+        ccDrawSolidCircle(b2ToV(littleguys[i]->GetPosition()),
+                          littleguys[i]->GetFixtureList()->GetShape()->m_radius * PTM_RATIO,
+                          CC_DEGREES_TO_RADIANS(360), 30);
+    }
+    
     // left right curve floor
     for(int i = 1; i < lto; i++) {
         
@@ -772,13 +813,6 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
 //                          nonos[i]->GetShape()->m_radius * PTM_RATIO,
 //                          CC_DEGREES_TO_RADIANS(360), 30);
 //    }
-    ccDrawColor4F(0.9, 0.83, 0.62, 1.0);
-    for(int i = 0; i < littleguys.size(); i++) {
-        Vec2 pos = b2ToV(littleguys[i]->GetPosition());
-        ccDrawSolidCircle(b2ToV(littleguys[i]->GetPosition()),
-                          littleguys[i]->GetFixtureList()->GetShape()->m_radius * PTM_RATIO,
-                          CC_DEGREES_TO_RADIANS(360), 30);
-    }
     CHECK_GL_ERROR_DEBUG();
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }

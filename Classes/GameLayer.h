@@ -27,6 +27,7 @@ public:
     void initPhysics();
     void update(float dt);
     
+    void gameOver();
     void reset();
     
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
