@@ -364,10 +364,7 @@ void TerrainSprite::spawnChessboard()
                 createBadGuy(pos, &ball);
             }
             else if(boolWithOdds(0.5)) {
-                auto mover = MoverSprite::create("rod_1.png");
-                mover->setup(_world, _body, pos, radius);
-                this->addChild(mover);
-                movers.push_back(mover);
+                createMoverObstacle(pos, radius);
             }
             else {
                 createBallObstacle(pos, &ball, false);
@@ -492,36 +489,10 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
 
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 {
-    b2BodyDef bd;
-    bd.position = vToB2(vpos);
-    bd.type = b2_dynamicBody;
-    b2Body *mover = _world->CreateBody(&bd);
-    
-    b2PolygonShape stick_1;
-    float round_edge_radius = 10.0/PTM_RATIO;
-    b2Vec2 vertices[4] = {
-        b2Vec2(-round_edge_radius, round_edge_radius - radius),
-        b2Vec2(-round_edge_radius, radius - round_edge_radius),
-        b2Vec2(round_edge_radius, radius - round_edge_radius),
-        b2Vec2(round_edge_radius, round_edge_radius - radius)
-    };
-    stick_1.Set(vertices, 4);
-    mover->CreateFixture(&stick_1, 0.2f);   // trying something
-    {
-        b2CircleShape round_edge;
-        round_edge.m_p.Set(0, radius - round_edge_radius);
-        round_edge.m_radius = round_edge_radius;
-        mover->CreateFixture(&round_edge, 0.2f);
-    }
-    {
-        b2CircleShape round_edge;
-        round_edge.m_p.Set(0, - radius + round_edge_radius);
-        round_edge.m_radius = round_edge_radius;
-        mover->CreateFixture(&round_edge, 0.2f);
-    }
-    b2RevoluteJointDef jd;
-    jd.Initialize(_body, mover, vToB2(vpos));
-    _world->CreateJoint(&jd);
+    auto mover = MoverSprite::create("rod_1.png");
+    mover->setup(_world, _body, vpos, radius);
+    this->addChild(mover);
+    movers.push_back(mover);
 }
 
 void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2,
@@ -661,7 +632,7 @@ void TerrainSprite::update(float nanaY)
        // spawnTerrain();
     //}
     //else
-        if (lvertices[1].y > topY) {
+    if (lvertices[1].y > topY) {
         lvertices.erase(lvertices.cbegin());
         std::vector<b2Fixture *> _fixtures = lfixtures.front();
         for(int i = 0; i < _fixtures.size(); i++) {
@@ -685,7 +656,7 @@ void TerrainSprite::update(float nanaY)
       //  spawnTerrain();
     //}
     //else
-        if (rvertices[1].y > topY) {
+    if (rvertices[1].y > topY) {
         rvertices.erase(rvertices.cbegin());
         std::vector<b2Fixture *> _fixtures = rfixtures.front();
         for(int i = 0; i < _fixtures.size(); i++) {

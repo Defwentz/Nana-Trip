@@ -16,9 +16,9 @@ class NanaSprite : public cocos2d::Sprite
     // scale for gasUp method, default 12
     // 10 is ok, 20 is a bit much, get stuck sometime
     int hardness = 12;
+    bool enableUnbreakable = false;
     
     b2World *_world;
-    std::vector<b2Body *> _bodies;
     
     cocos2d::Texture2D *_nanaFace;
     //cocos2d::DrawNode *_drawNode;
@@ -42,7 +42,8 @@ public:
     ~NanaSprite();
     void initPhysics(b2World *world);
     
-    int ud;
+    std::vector<b2Body *> _bodies;
+    std::vector<b2RevoluteJoint *> _joints;
 };
 
 #endif /* defined(__nanatrip__NanaSprite__) */

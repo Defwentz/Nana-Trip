@@ -57,6 +57,7 @@ extern float winMidX;
 extern float winMidY;
 
 // TODO: change
+extern int score;
 extern int pos_score;
 extern int eat_score;
 extern int dna;

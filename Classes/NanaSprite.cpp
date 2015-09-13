@@ -125,7 +125,6 @@ NanaSprite* NanaSprite::create(b2World *world)
 }
 
 NanaSprite::NanaSprite(b2World *world){
-    ud = UD_NANA;
     _nanaFace = Director::getInstance()->getTextureCache()->addImage("nana_face_3.png");
     _nanaFace->retain();
     initPhysics(world);
@@ -253,8 +252,18 @@ void NanaSprite::initPhysics(b2World *world)
         
         // Connect the outside
         rjointDef.Initialize(currentBody, neighborBody, outer_joint);
-        world->CreateJoint(&rjointDef);
+        // do not work
+        if(enableUnbreakable) {
+            rjointDef.upperAngle = 0 * b2_pi;
+            rjointDef.lowerAngle = -7/6.0 * b2_pi;//-210*M_PI/180;
+            rjointDef.enableLimit = true;
+            rjointDef.maxMotorTorque = 10.0f;
+            rjointDef.motorSpeed = 0.0f;
+            rjointDef.enableMotor = true;
+        }
         
+        auto rj = world->CreateJoint(&rjointDef);
+        _joints.push_back((b2RevoluteJoint *)rj);
         // Connect the inside
         jointDef.Initialize(currentBody, neighborBody,
                             inner_joint,
@@ -289,10 +298,7 @@ bool NanaSprite::isNana(b2Body *body)
 
 Vec2 NanaSprite::getPosition()
 {
-    b2Vec2 pos = _bodies[0]->GetPosition();
-    pos.x = winMidX;
-    pos.y *= PTM_RATIO;
-    return Vec2(pos.x, pos.y);
+    return Vec2(winMidX, _bodies[0]->GetPosition().y*PTM_RATIO);
 }
 
 Vec2 NanaSprite::getCenter()

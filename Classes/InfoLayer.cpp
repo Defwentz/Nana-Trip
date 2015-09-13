@@ -7,6 +7,7 @@
 //
 
 #include "InfoLayer.h"
+#include "PauseLayer.h"
 
 USING_NS_CC;
 
@@ -19,51 +20,52 @@ bool InfoLayer::init()
         return false;
     }
     
-    scoreLabel = Label::create();
+    scoreLabel = Label::createWithTTF(StringUtils::format("0"), "fonts/Marker Felt.ttf", 60);
     scoreLabel->setPosition(winMidX, winSiz.height - 100);
     scoreLabel->setColor(Color3B::WHITE);
-    scoreLabel->setScale(10);
     this->addChild(scoreLabel);
-    
     old_pos_score = 0;
-    scoreLabel->setString(StringUtils::format("0"));
     
     pauseBtn = Button::create();
-    pauseBtn->setTouchEnabled(true);
     pauseBtn->loadTextures("button_pause_small.png", "button_pause_small.png");
     pauseBtn->cocos2d::Node::setPosition(winSiz.width - 50, winSiz.height - 50);
-    pauseBtn->addTouchEventListener(this, toucheventselector(InfoLayer::pauseBtnTouched));
+    pauseBtn->setTouchEnabled(true);
+    pauseBtn->addTouchEventListener(CC_CALLBACK_2(InfoLayer::pauseCallback, this));
     this->addChild(pauseBtn);
     
-    scheduleUpdate();
+    NotificationCenter::getInstance()->
+    addObserver(this, callfuncO_selector(InfoLayer::defaultCallBack), "defaultCallback", NULL);
+    
     return true;
 }
-
-void InfoLayer::update(float dt)
-{
-    if(pos_score > old_pos_score) {
-        scoreLabel->setString(StringUtils::format("%d", pos_score + eat_score));
-        old_pos_score = pos_score;
-    }
-    
+InfoLayer::~InfoLayer() {
+    NotificationCenter::getInstance()->removeObserver(this, "defaultCallback");
 }
-
 void InfoLayer::reset() {
     old_pos_score = 0;
     scoreLabel->setString(StringUtils::format("0"));
 }
 
-void InfoLayer::pauseBtnTouched(Object *pSender, cocos2d::ui::TouchEventType type)
+void InfoLayer::update()
 {
+    if(pos_score > old_pos_score) {
+        old_pos_score = pos_score;
+    }
+    else {
+        pos_score = old_pos_score;
+    }
+    score = pos_score + eat_score;
+    scoreLabel->setString(StringUtils::format("%d", score));
+}
+
+void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
     gameStatus = GAME_PAUSE;
-//    Button* butten = (Button*)pSender;
-//    unsigned int tag = butten->getTag();
-//    switch (tag) {
-//        case TOUCH_EVENT_BEGAN:
-//            gameStatus = GAME_PAUSE;
-//            break;
-//        default:
-//            break;
-//    }
-    
+    Device::setAccelerometerEnabled(false);
+    pauseBtn->setTouchEnabled(false);
+    Director::getInstance()->pushScene(PauseLayer::createScene());
+}
+void InfoLayer::defaultCallBack(cocos2d::Ref *pSender) {
+    gameStatus = GAME_PLAY;
+    Device::setAccelerometerEnabled(true);
+    pauseBtn->setTouchEnabled(true);
 }

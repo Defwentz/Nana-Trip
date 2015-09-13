@@ -15,15 +15,16 @@ class InfoLayer : public cocos2d::Layer
 {
     int old_pos_score;
     cocos2d::Label *scoreLabel;
-    
     cocos2d::ui::Button *pauseBtn;
-    void pauseBtnTouched(Object *pSender, cocos2d::ui::TouchEventType type);
 public:
     virtual bool init();
     CREATE_FUNC(InfoLayer);
-    
-    void update(float dt);
+    ~InfoLayer();
     void reset();
+    
+    void update();
+    void pauseCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    void defaultCallBack(cocos2d::Ref *pSender);
 };
 
 #endif /* defined(__nanatrip__InfoLayer__) */

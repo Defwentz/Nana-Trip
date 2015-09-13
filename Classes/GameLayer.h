@@ -7,6 +7,14 @@
 #include "GLESDebugDraw.h"
 #include "InfoLayer.h"
 
+#define ZORDER_GAMELAYER 0
+#define ZORDER_INFOLAYER 1
+
+#define ZORDER_BG 0
+#define ZORDER_TERRAIN 1
+#define ZORDER_NANA 2
+
+
 class GameLayer : public cocos2d::Layer
 {
     GLESDebugDraw *_debugDraw;
@@ -17,27 +25,25 @@ class GameLayer : public cocos2d::Layer
     
     float after_height;
     std::vector<cocos2d::Sprite *> _bgSprites;
-    
-    InfoLayer *_infoLayer;
 public:
     static cocos2d::Scene* createScene();
+    static GameLayer *create(InfoLayer *infoLayer);
+    GameLayer();
+    ~GameLayer();
     
+    InfoLayer *_infoLayer;
     void initListeners();
     void initBG();
     void initPhysics();
     void update(float dt);
-    
     void gameOver();
     void reset();
     
-    virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
-    override;
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);
     
-    static GameLayer *create(InfoLayer *infoLayer);
-    GameLayer();
-    ~GameLayer();
+    virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
+    override;
 };
 
 #endif // __GAME_LAYER_H__

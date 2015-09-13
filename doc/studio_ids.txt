@@ -1,0 +1,49 @@
+StartLayer: homepage/homepage.csb
+	Button:
+	音乐 button_sound_on / button_sound_off
+	开始 button_start
+	商店 button_store
+	关于 button_about
+	Nano(角色) button_nano
+	Label:
+	最高分 Text_highscore
+	DNA Text_dna
+
+CharacterLayer: character/character.csb
+	Button:
+	角1(已选择) button_nano
+	角2(10DNA) button_nano2
+	角3(20DNA) button_nano3
+	角4(30DNA) button_nano4
+	商店 button_store
+	返回菜单 button_back
+
+StoreLayer: store/store.csb
+	Button:
+	去除广告 button_removead
+	获得DNA button_getdna
+	返回菜单 button_back
+	Label:
+	DNA Text_dna
+
+PauseLayer: pause/pause.csb
+	Button:
+	音乐 button_sound_on / button_sound_off
+	继续 button_continue
+	再来一局 button_new
+	返回菜单 button_back
+	Label:
+	分数 Text_score
+
+OverLayer: result/result.csb
+	Button:
+	分享 button_share
+	再来一局 button_newgame
+	返回菜单 button_back
+	Label:
+	最高分 Text_highscore
+	总得分 Text_score
+	下落距离 Text_distance
+	避开敌人 Text_enemy
+	获得DNA Text_dna
+	吃到药丸 Text_eat

@@ -18,6 +18,7 @@
 // double rod, like cross, with motor
 class MoverSprite : public cocos2d::Sprite
 {
+    int type;
 public:
     static MoverSprite *create(const std::string& filename);
     MoverSprite();

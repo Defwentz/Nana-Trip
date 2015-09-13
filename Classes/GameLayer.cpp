@@ -15,11 +15,11 @@ Scene* GameLayer::createScene()
     auto scene = Scene::create();
     
     auto infoLayer = InfoLayer::create();
-    scene->addChild(infoLayer, 10);
+    scene->addChild(infoLayer, ZORDER_INFOLAYER);
     
     auto layer = GameLayer::create(infoLayer);
-    scene->addChild(layer, 3);
-
+    scene->addChild(layer, ZORDER_GAMELAYER);
+    
 //    auto bg = Layer::create();
 //    auto bgSprite = Sprite::create("bg.png");
 //    bgSprite->setPosition(winMidX,winMidY);
@@ -50,24 +50,27 @@ GameLayer::GameLayer()
     initListeners();
     initBG();
     initPhysics();
+//    NotificationCenter::getInstance()->
+//    addObserver(this, callfuncO_selector(GameLayer::defaultCallBack), "defaultCallback", NULL);
 }
 
 GameLayer::~GameLayer()
 {
-//    _terrain->removeFromParent();
-//    _nana->removeFromParent();
-//    CC_SAFE_DELETE(_terrain);
-//    CC_SAFE_DELETE(_nana);
+    Device::setAccelerometerEnabled(false);
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
 }
 
 void GameLayer::initListeners() {
+    Device::setAccelerometerEnabled(true);
+    // creating an accelerometer event
+    auto listener = EventListenerAcceleration::create(CC_CALLBACK_2(GameLayer::onAcceleration, this));
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
     auto touchlistener = EventListenerTouchOneByOne::create();
     touchlistener->setSwallowTouches(true);
     touchlistener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
-    Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(touchlistener, 1);
-    setAccelerometerEnabled(true);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
 }
 void GameLayer::initBG()
 {
@@ -77,7 +80,7 @@ void GameLayer::initBG()
         Sprite *bg = Sprite::create("bg_1.png");
         bg->setScale(winSiz.width/1080.0);
         bg->setPosition(winMidX, i*after_height + after_height/2);
-        this->addChild(bg, 2);
+        this->addChild(bg, ZORDER_BG);
         _bgSprites.push_back(bg);
     }
 }
@@ -134,13 +137,12 @@ void GameLayer::initPhysics()
     }*/
     
     _terrain = TerrainSprite::create(_world);
-    this->addChild(_terrain, 3);
+    this->addChild(_terrain, ZORDER_TERRAIN);
     
     _nana = NanaSprite::create(_world);
-    this->addChild(_nana, 4);
-    
     auto follow = Follow::create(_nana);
     this->runAction(follow);
+    this->addChild(_nana, ZORDER_NANA);
     
     scheduleUpdate();
 //    this->schedule(schedule_selector(GameLayer::update), 1/60.0f);
@@ -163,7 +165,6 @@ void GameLayer::update(float dt)
     _nana->gasUp();
     
     Vec2 nanaPos = _nana->getPosition();
-    //Vec2 topY = this->getPosition();
     float topY = nanaPos.y + winSiz.height;
     float bottomY = nanaPos.y - winSiz.height;
     if(_bgSprites.front()->getPosition().y > topY) {
@@ -175,55 +176,39 @@ void GameLayer::update(float dt)
         Sprite *bg = Sprite::create("bg_1.png");
         bg->setScale(winSiz.width/1080.0);
         bg->setPosition(winMidX, bgsbackPos.y - after_height);
-        this->addChild(bg, 2);
+        this->addChild(bg, ZORDER_BG);
         _bgSprites.push_back(bg);
     }
     
-    
     // update score
     pos_score = (-nanaPos.y + winMidY)/400;
+    _infoLayer->update();
     _nana->setPosition(nanaPos);
     _terrain->update(nanaPos.y);
     
     int count = 0;
-    for(auto *contact = _world->GetContactList();contact; contact = contact->GetNext())
-    {
-        b2Body *bodyA = contact->GetFixtureA()->GetBody();
-        b2Body *bodyB = contact->GetFixtureB()->GetBody();
-        
-        auto udA = (Entity *) bodyA->GetUserData();
-        auto udB = (Entity *) bodyB->GetUserData();
-        
-        if(udA == NULL || udB == NULL)
-            return;
-        if(udA->type == UD_NANA && udB->type == UD_NANA)
-            return;
-        
-        log("count: %d - %f", ++count, nanaPos.y);
-        if(udA->type == UD_NANA || udB->type == UD_NANA) {
-            if(udA->type == UD_BADGUY || udB->type == UD_BADGUY) {
-                log("%f-----hit", _nana->getPosition().y);
+    for(int i = 0; i < _nana->_bodies.size(); i++) {
+        b2Body *nana_body = _nana->_bodies[i];
+        for(b2ContactEdge *contact = nana_body->GetContactList(); contact; contact = contact->next) {
+            b2Body *other = contact->other;
+            auto other_userdata = (Entity *) other->GetUserData();
+            if(other_userdata == NULL || other_userdata->type == UD_NANA)
+                return;
+            
+            log("count: %d - %f", ++count, nanaPos.y);
+            if(other_userdata->type == UD_BADGUY) {
                 gameStatus = GAME_OVER;
                 gameOver();
                 return;
             }
-            if(udA->type == UD_DNA) {
-                log("%f-----DNA match", _nana->getPosition().y);
-                udA->type = UD_DESTROYED;
-                eat_score += 10;
-                dna++;
-            }
-            else {
-                log("%f-----DNA match", _nana->getPosition().y);
-                udB->type = UD_DESTROYED;
+            if(other_userdata->type == UD_DNA) {
+                other_userdata->type = UD_DESTROYED;
                 eat_score += 10;
                 dna++;
             }
         }
-
     }
     
-    //m_world->Step(dt, 8, 1);
     /*for(b2Body *b = _world->GetBodyList(); b; b = b->GetNext())
     {
         if(b->GetUserData()!=NULL)
@@ -275,10 +260,6 @@ void GameLayer::reset()
 
 bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 {
-    if (gameStatus == GAME_PAUSE) {
-        gameStatus = GAME_PLAY;
-    }
-    
     auto touchLocation = touch->getLocation();
     if(touchLocation.y < winMidY - 50) {
         _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
@@ -294,8 +275,8 @@ void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
     _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
 }
-// Draw
 
+// Draw
 void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
 {
     Layer::draw(renderer, transform, transformFlags);
