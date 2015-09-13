@@ -1,0 +1,11 @@
+proj.*
+cocosstudio
+nanatrip.ccs
+nanatrip.cfg
+nanatrip.udf
+Classes/.DS_Store
+doc/.DS_Store
+package/.DS_Store
+Resources/.DS_Store
+Resources/res/.DS_Store
+Resources/res/fonts/.DS_Store
