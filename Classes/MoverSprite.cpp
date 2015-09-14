@@ -8,9 +8,19 @@
 
 #include "MoverSprite.h"
 
-MoverSprite* MoverSprite::create(const std::string& filename)
+MoverSprite* MoverSprite::create(uint32 flags)
 {
     MoverSprite *sprite = new (std::nothrow) MoverSprite();
+    
+    sprite->_flags = flags;
+    std::string filename;
+    if(flags & _randomBit) {
+        // randomly generate flags -> mover
+    }
+    else if(flags & _normalBit) {
+        filename = res_mover[0];
+    }
+    
     if (sprite && sprite->initWithFile(filename))
     {
         sprite->autorelease();
@@ -55,6 +65,12 @@ void MoverSprite::setup(b2World *world, b2Body *body, const cocos2d::Vec2 &p, fl
     }
     b2RevoluteJointDef jd;
     jd.Initialize(body, mover, vToB2(p));
+    if(_flags & _motorBit) {
+        // TODO: set motor, or have it relevent to size
+        jd.maxMotorTorque = 3.0f;
+        jd.motorSpeed = 3.0f;
+        jd.enableMotor = true;
+    }
     _joint = world->CreateJoint(&jd);
     _body = mover;
 }

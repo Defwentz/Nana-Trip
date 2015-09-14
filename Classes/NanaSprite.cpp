@@ -314,7 +314,7 @@ Vec2 NanaSprite::getCenter()
 //        x2+=pos2.x;y2+=pos2.y;
 //        x3+=pos3.x;y3+=pos3.y;
 //    }
-    Vec2 vertices[NUM_SEGMENTS];
+//    Vec2 vertices[NUM_SEGMENTS];
     
     Vec2 opos = this->getPosition();
     

@@ -31,6 +31,9 @@ bool OverLayer::init()
     auto rootNode = CSLoader::createNode("result/result.csb");
     addChild(rootNode);
     
+    Text* scoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_score"));
+    scoreTxt->setString(StringUtils::format("%d", score));
+    
     Button* anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_newgame"));
     Button* returnBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     anotherBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::anotherCallback, this));

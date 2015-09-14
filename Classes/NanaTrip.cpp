@@ -51,3 +51,4 @@ cocos2d::Vec2 b2ToV(b2Vec2 b)
 
 // resources
 std::string res_bg[] = {"bg_1.png"};
+std::string res_mover[] = {"rod_1.png"};

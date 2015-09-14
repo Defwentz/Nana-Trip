@@ -18,9 +18,18 @@
 // double rod, like cross, with motor
 class MoverSprite : public cocos2d::Sprite
 {
-    int type;
+    uint32 _flags;
 public:
-    static MoverSprite *create(const std::string& filename);
+    enum
+    {
+        _motorBit				= 0x0001,	///< mover with motor
+        _normalBit				= 0x0002,	///< mover with single rod
+        _randomBit				= 0x0004,	///< randomly generate mover
+//        e_pairBit				= 0x0008,	///< draw broad-phase pairs
+//        e_centerOfMassBit		= 0x0010	///< draw center of mass frame
+    };
+    
+    static MoverSprite *create(uint32 flags);
     MoverSprite();
     void setup(b2World *world, b2Body *body, const cocos2d::Vec2& p, float radius);
     void selfDestruct(b2World *world);

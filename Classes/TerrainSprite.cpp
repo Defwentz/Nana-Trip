@@ -29,7 +29,7 @@ TerrainSprite::TerrainSprite(b2World *world)
 {
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
-    terrainRdmr->add(ITEM_TUNNEL, 20);
+    terrainRdmr->add(ITEM_TUNNEL, 200);
     terrainRdmr->add(ITEM_BUMPS, 40);
     terrainRdmr->add(ITEM_CHESSBOARD, 5);
     terrainRdmr->add(ITEM_BELT, 10);
@@ -126,21 +126,17 @@ void TerrainSprite::spawnMeteor()
     lvertices.push_back(Vec2(0, lastY));
     rvertices.push_back(Vec2(winSiz.width, lastY));
     
+    b2CircleShape ball;
+    ball.m_radius = DNA_B2RADIUS;
     {
-        b2CircleShape ball;
-        ball.m_radius = DNA_B2RADIUS;
         Vec2 fp = Vec2(winMidX, lastY);
         createMovingLittleGuy(fp, &ball);
     }
     {
-        b2CircleShape ball;
-        ball.m_radius = DNA_B2RADIUS;
         Vec2 fp = Vec2(winMidX*3/2, lastY);
         createMovingLittleGuy(fp, &ball);
     }
     {
-        b2CircleShape ball;
-        ball.m_radius = DNA_B2RADIUS;
         Vec2 fp = Vec2(winMidX/2, lastY);
         createMovingLittleGuy(fp, &ball);
     }
@@ -171,6 +167,7 @@ const int TUNNEL_KEYPOINT = 5,
     X_IN_SCREEN = 5,
     NARROW_WIDTH = 45,                      // different than others
     ROW_WIDTH = 50, ROW_WIDTH_ADDON = 50;   // different than others
+// TODO: tunnels with caves
 void TerrainSprite::spawnTunnel()
 {
     float lastY = getLastY();
@@ -188,7 +185,7 @@ void TerrainSprite::spawnTunnel()
                 int width = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
                 int x = randWithBase(winSiz.width/X_IN_SCREEN, winSiz.width*3/X_IN_SCREEN);
                 lastY -= length;
-                
+                createDNA(Vec2(x, lastY));
                 lvertices.push_back(Vec2(x - width/2, lastY));
                 rvertices.push_back(Vec2(x + width/2, lastY));
             }
@@ -200,7 +197,7 @@ void TerrainSprite::spawnTunnel()
                 int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
                 int x = random(winSiz.width/5, winSiz.width*4/5);
                 lastY -= length;
-                
+                createDNA(Vec2(x, lastY));
                 lvertices.push_back(Vec2(x - width/2, lastY));
                 rvertices.push_back(Vec2(x + width/2, lastY));
             }
@@ -489,7 +486,10 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
 
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 {
-    auto mover = MoverSprite::create("rod_1.png");
+    uint32 flags;
+    flags += MoverSprite::_motorBit;
+    flags += MoverSprite::_normalBit;
+    auto mover = MoverSprite::create(flags);
     mover->setup(_world, _body, vpos, radius);
     this->addChild(mover);
     movers.push_back(mover);
@@ -610,14 +610,15 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         y+=dj;
         _p2.x = A*cosf(y) + B;
         
-        //ccDrawLine(_p1, _p2);
-        
         Point tallerOne(x, _p1.y), shorterOne(x, _p2.y);
         Point vt1[] = {tallerOne, _p1, shorterOne};
         Point vt2[] = {shorterOne, _p1, _p2};
         Color4F color(0.3555f, 0.3289f, 0.98f, 1);//(0.3555f, 0.6289f, 0.78f, 1);
         ccDrawSolidPoly(vt1, 3, color);
         ccDrawSolidPoly(vt2, 3, color);
+        
+        ccDrawColor4F(1, 1, 1, 1.0);
+        ccDrawLine(_p1, _p2);
         
         _p1 = _p2;
     }
@@ -639,7 +640,6 @@ void TerrainSprite::update(float nanaY)
             _body->DestroyFixture(_fixtures[i]);
         }
         lfixtures.erase(lfixtures.cbegin());
-        //terrainTypes.erase(terrainTypes.cbegin());
         lto--;
     }
     for(int i = lto; i < lvertices.size(); i++) {
@@ -678,7 +678,52 @@ void TerrainSprite::update(float nanaY)
     // check if there are sprites with b2body out of sight
     // if so, delete
     spriteCheck(obstacles, topY);
-    spriteCheck(badguys, topY);
+    
+    for(std::vector<SpriteWithBody *>::iterator i = dnas.begin();
+        i != dnas.end();) {
+        auto ud = (Entity *) (*i)->_body->GetUserData();
+        if(ud->type == UD_DESTROYED || (*i)->getPosition().y > topY) {
+            _world->DestroyBody((*i)->_body);
+            (*i)->removeFromParent();
+            i = dnas.erase(i);
+        }
+        else {
+            bool isDestroyed = false;
+            for(b2ContactEdge *contact = (*i)->_body->GetContactList(); contact; contact = contact->next) {
+                b2Body *other = contact->other;
+                auto other_userdata = (Entity *) other->GetUserData();
+                if(other_userdata->type == UD_NANA) {
+                    eat_score += 10;
+                    dna++;
+                    _world->DestroyBody((*i)->_body);
+                    (*i)->removeFromParent();
+                    i = dnas.erase(i);
+                    isDestroyed = true;
+                }
+            }
+            if(!isDestroyed)
+                ++i;
+        }
+    }
+    
+    for(std::vector<SpriteWithBody *>::iterator i = badguys.begin();
+        i != badguys.end();) {
+        if((*i)->getPosition().y > topY) {
+            _world->DestroyBody((*i)->_body);
+            (*i)->removeFromParent();
+            i = badguys.erase(i);
+        }
+        else {
+            for(b2ContactEdge *contact = (*i)->_body->GetContactList(); contact; contact = contact->next) {
+                b2Body *other = contact->other;
+                auto other_userdata = (Entity *) other->GetUserData();
+                if(other_userdata->type == UD_NANA) {
+                    gameStatus = GAME_OVER;
+                    return;
+                }
+            }
+        }
+    }
     for(std::vector<MoverSprite *>::iterator i = movers.begin();
         i != movers.end();) {
         if((*i)->getPosition().y > topY) {
@@ -691,19 +736,6 @@ void TerrainSprite::update(float nanaY)
             ++i;
         }
     }
-    
-    for(std::vector<SpriteWithBody *>::iterator i = dnas.begin();
-        i != dnas.end();) {
-        auto ud = (Entity *) (*i)->_body->GetUserData();
-        if(ud->type == UD_DESTROYED || (*i)->getPosition().y > topY) {
-            _world->DestroyBody((*i)->_body);
-            (*i)->removeFromParent();
-            i = dnas.erase(i);
-        }
-        else
-            ++i;
-    }
-    //spriteCheck(dnas, topY);
     
     for(std::vector<b2Body *>::iterator i = littleguys.begin();
         i != littleguys.end();) {
@@ -778,12 +810,6 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
         //doVertices(rp1, rp2, ccDrawLine);
     }
     
-    // draw obstacles
-//    for(int i = 0; i < nonoVertices.size(); i++) {
-//        ccDrawSolidCircle(nonoVertices[i],
-//                          nonos[i]->GetShape()->m_radius * PTM_RATIO,
-//                          CC_DEGREES_TO_RADIANS(360), 30);
-//    }
     CHECK_GL_ERROR_DEBUG();
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }

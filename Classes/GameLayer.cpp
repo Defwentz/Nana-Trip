@@ -8,7 +8,6 @@ using namespace cocostudio::timeline;
 Scene* GameLayer::createScene()
 {
     // initalize the global stuff in NanaTrip.h
-    initWinSiz();
     initStatistic();
     gameStatus = GAME_PLAY;
     
@@ -19,12 +18,6 @@ Scene* GameLayer::createScene()
     
     auto layer = GameLayer::create(infoLayer);
     scene->addChild(layer, ZORDER_GAMELAYER);
-    
-//    auto bg = Layer::create();
-//    auto bgSprite = Sprite::create("bg.png");
-//    bgSprite->setPosition(winMidX,winMidY);
-//    bg->addChild(bgSprite);
-//    scene->cocos2d::Node::addChild(bg, 1);
     
     return scene;
 }
@@ -50,8 +43,6 @@ GameLayer::GameLayer()
     initListeners();
     initBG();
     initPhysics();
-//    NotificationCenter::getInstance()->
-//    addObserver(this, callfuncO_selector(GameLayer::defaultCallBack), "defaultCallback", NULL);
 }
 
 GameLayer::~GameLayer()
@@ -145,17 +136,16 @@ void GameLayer::initPhysics()
     this->addChild(_nana, ZORDER_NANA);
     
     scheduleUpdate();
-//    this->schedule(schedule_selector(GameLayer::update), 1/60.0f);
 }
 
 void GameLayer::update(float dt)
 {
     if(gameStatus == GAME_PAUSE || gameStatus == GAME_OVER) return;
     
-    //It is recommended that a fixed time step is used with Box2D for stability
-    //of the simulation, however, we are using a variable time step here.
-    //You need to make an informed choice, the following URL is useful
-    //http://gafferongames.com/game-physics/fix-your-timestep/
+    // It is recommended that a fixed time step is used with Box2D for stability
+    // of the simulation, however, we are using a variable time step here.
+    // You need to make an informed choice, the following URL is useful
+    // http://gafferongames.com/game-physics/fix-your-timestep/
     int velocityIterations = 8;
     int positionIterations = 1;
     
@@ -185,29 +175,6 @@ void GameLayer::update(float dt)
     _infoLayer->update();
     _nana->setPosition(nanaPos);
     _terrain->update(nanaPos.y);
-    
-    int count = 0;
-    for(int i = 0; i < _nana->_bodies.size(); i++) {
-        b2Body *nana_body = _nana->_bodies[i];
-        for(b2ContactEdge *contact = nana_body->GetContactList(); contact; contact = contact->next) {
-            b2Body *other = contact->other;
-            auto other_userdata = (Entity *) other->GetUserData();
-            if(other_userdata == NULL || other_userdata->type == UD_NANA)
-                return;
-            
-            log("count: %d - %f", ++count, nanaPos.y);
-            if(other_userdata->type == UD_BADGUY) {
-                gameStatus = GAME_OVER;
-                gameOver();
-                return;
-            }
-            if(other_userdata->type == UD_DNA) {
-                other_userdata->type = UD_DESTROYED;
-                eat_score += 10;
-                dna++;
-            }
-        }
-    }
     
     /*for(b2Body *b = _world->GetBodyList(); b; b = b->GetNext())
     {

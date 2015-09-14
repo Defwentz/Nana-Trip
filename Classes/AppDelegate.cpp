@@ -49,6 +49,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // run
     director->runWithScene(scene);
 
+    // initalize the global stuff in NanaTrip.h
+    initWinSiz();
+    
     return true;
 }
 

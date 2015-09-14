@@ -6,6 +6,30 @@
 //
 //
 
+// Issue:
+// didn't detect certain contact like with red or DNA. WHY WON'T YOU DETECT IT!!!!!!!!!! - I think I solved this by get the contact of the static_body instead of the dynamic ones
+// sometimes weirdly falls apart, but still connected. All in all, weird
+// situations when nana got stuck in the walls and things - I think there was something in the Box2d header file I can change, a parameter
+
+// TODO:                    more terrain, more obstacle
+// highest score
+// DNA, which add to HP
+// more stuff to InfoLayer
+// also the HP system
+// moving red
+// increasing difficulty
+// bonus item, like pills
+// speed limits
+// character change
+// terrain change and other
+// scoring detail
+// music control
+
+// TODO for artwork:
+// DNA img
+// Texture for land
+
+
 #ifndef nanatrip_NanaTrip_h
 #define nanatrip_NanaTrip_h
 
@@ -22,8 +46,13 @@
 #define GAME_PLAY 1
 #define GAME_PAUSE 2
 #define GAME_OVER 3
-
 extern int gameStatus;
+
+// for example, this is a row on the screen [ xxx ]
+// when minium colums it would be           [ O O O ]
+// maxium colums would be                   [......]
+#define MAX_COL 6
+#define MIN_COL 3
 
 //  User Data
 #define UD_FLOOR 0  // which will actually be NULL
@@ -31,12 +60,6 @@ extern int gameStatus;
 #define UD_BADGUY 2
 #define UD_DNA 3
 #define UD_DESTROYED 99
-
-// for example, this is a row on the screen [ xxx ]
-// when minium colums it would be     [ O O O ]
-// maxium colums would be            [.......]
-#define MAX_COL 6
-#define MIN_COL 3
 
 class Entity
 {
@@ -64,5 +87,6 @@ extern int dna;
 
 // resources
 extern std::string res_bg[];
+extern std::string res_mover[];
 
 #endif
