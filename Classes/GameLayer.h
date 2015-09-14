@@ -23,6 +23,8 @@ class GameLayer : public cocos2d::Layer
     NanaSprite *_nana;
     TerrainSprite *_terrain;
     
+    // using it in this way is because, the background has to be consistent with nana's position
+    // and simply put it in another layer statically just isn't gonna do.
     float after_height;
     std::vector<cocos2d::Sprite *> _bgSprites;
 public:

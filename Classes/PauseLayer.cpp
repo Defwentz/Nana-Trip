@@ -57,7 +57,9 @@ void PauseLayer::continueCallback(Ref *sender, Widget::TouchEventType type) {
 void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::ENDED)
     {
-        Director::getInstance()->popScene();
+        // I don't know what to do. Do I reset it? Do simply don't care about it?
+        //Director::getInstance()->popScene();
+        // bug
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
 }
@@ -65,7 +67,7 @@ void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
 {
     if (type == Widget::TouchEventType::ENDED)
     {
-        Director::getInstance()->popScene();
+        //Director::getInstance()->popScene();
         Director::getInstance()->replaceScene(StartLayer::createScene());
     }
 }

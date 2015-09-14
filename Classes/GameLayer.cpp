@@ -240,7 +240,7 @@ bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
+    _nana->ApplyForce(b2Vec2(acc->x * 2, 0));
 }
 
 // Draw

@@ -356,7 +356,6 @@ void TerrainSprite::spawnChessboard()
             ball.m_p = bpos;
             ball.m_radius = radius;
             
-            
             if(boolWithOdds(0.1)) {
                 createBadGuy(pos, &ball);
             }
@@ -699,6 +698,7 @@ void TerrainSprite::update(float nanaY)
                     (*i)->removeFromParent();
                     i = dnas.erase(i);
                     isDestroyed = true;
+                    break;
                 }
             }
             if(!isDestroyed)
@@ -722,6 +722,7 @@ void TerrainSprite::update(float nanaY)
                     return;
                 }
             }
+            ++i;
         }
     }
     for(std::vector<MoverSprite *>::iterator i = movers.begin();
