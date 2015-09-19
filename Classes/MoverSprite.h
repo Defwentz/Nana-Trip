@@ -29,7 +29,10 @@ public:
 //        e_centerOfMassBit		= 0x0010	///< draw center of mass frame
     };
     
-    static MoverSprite *create(uint32 flags);
+    /**
+     *  the flags is by default _randomBit, which means randomly generate a mover
+     */
+    static MoverSprite *create(uint32 flags = _randomBit);
     MoverSprite();
     void setup(b2World *world, b2Body *body, const cocos2d::Vec2& p, float radius);
     void selfDestruct(b2World *world);

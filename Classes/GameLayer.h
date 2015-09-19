@@ -17,6 +17,8 @@
 
 class GameLayer : public cocos2d::Layer
 {
+    b2Vec2 stdGrav = b2Vec2(0, -20);
+    
     GLESDebugDraw *_debugDraw;
     
     b2World *_world;
@@ -27,6 +29,8 @@ class GameLayer : public cocos2d::Layer
     // and simply put it in another layer statically just isn't gonna do.
     float after_height;
     std::vector<cocos2d::Sprite *> _bgSprites;
+    
+    // hand draw system trying
 public:
     static cocos2d::Scene* createScene();
     static GameLayer *create(InfoLayer *infoLayer);
@@ -35,11 +39,13 @@ public:
     
     InfoLayer *_infoLayer;
     void initListeners();
-    void initBG();
     void initPhysics();
     void update(float dt);
     void gameOver();
     void reset();
+    
+    void initBG();
+    void updateBG(float topY, float bottomY);
     
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);

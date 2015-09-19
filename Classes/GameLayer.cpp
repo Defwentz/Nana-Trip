@@ -40,6 +40,7 @@ GameLayer *GameLayer::create(InfoLayer *infoLayer)
 
 GameLayer::GameLayer()
 {
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
     initListeners();
     initBG();
     initPhysics();
@@ -50,6 +51,7 @@ GameLayer::~GameLayer()
     Device::setAccelerometerEnabled(false);
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
+    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 void GameLayer::initListeners() {
@@ -75,13 +77,24 @@ void GameLayer::initBG()
         _bgSprites.push_back(bg);
     }
 }
+void GameLayer::updateBG(float topY, float bottomY) {
+    if(_bgSprites.front()->getPosition().y > topY) {
+        _bgSprites.front()->removeFromParent();
+        _bgSprites.erase(_bgSprites.cbegin());
+    }
+    Vec2 bgsbackPos = _bgSprites.back()->getPosition();
+    if(bgsbackPos.y - after_height/2 > bottomY) {
+        Sprite *bg = Sprite::create("bg_1.png");
+        bg->setScale(winSiz.width/1080.0);
+        bg->setPosition(winMidX, bgsbackPos.y - after_height);
+        this->addChild(bg, ZORDER_BG);
+        _bgSprites.push_back(bg);
+    }
+}
 
 void GameLayer::initPhysics()
 {
-    //b2_velocityThreshold = 0.1f;
-    
-    _world = new b2World(b2Vec2(0.0f, -8.0f));
-    // Do we want to let bodies sleep?
+    _world = new b2World(stdGrav);
     _world->SetAllowSleeping(true);
     _world->SetContinuousPhysics(true);
     
@@ -89,8 +102,8 @@ void GameLayer::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-//        flags += b2Draw::e_shapeBit;
-//        flags += b2Draw::e_jointBit;
+        flags += b2Draw::e_shapeBit;
+        flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
     //    flags += b2Draw::e_centerOfMassBit;
@@ -127,6 +140,51 @@ void GameLayer::initPhysics()
         groundBody->CreateFixture(&groundBox,0);
     }*/
     
+//    {
+//        b2Vec2 center = b2Vec2(winMidX/PTM_RATIO, (winMidY+100)/PTM_RATIO);
+//        
+//        b2Vec2 vertices[4];
+//        vertices[0].Set(-1, -1);
+//        vertices[1].Set(-1, 1);
+//        vertices[2].Set(1, 1);
+//        vertices[3].Set(1, -1);
+//        b2PolygonShape shell;
+//        shell.Set(vertices, 4);
+//        
+//        b2BodyDef bodyDef;
+//        bodyDef.type = b2_dynamicBody;
+//        bodyDef.position = center + b2Vec2(-1, 0);
+//        //+ b2Vec2(0.4*cosf(next_theta - deltaAngle/2),
+//        // 0.4*sinf(next_theta - deltaAngle/2))
+//        //);
+//        // don't know exact effect
+//        bodyDef.linearDamping = 0.1f;
+//        bodyDef.gravityScale = 1;
+//        
+//        b2Body *body1 = _world->CreateBody(&bodyDef);
+//        body1->CreateFixture(&shell, 1.0f);
+//        
+//        bodyDef.position = center + b2Vec2(1, 0);
+//        b2Body *body2 = _world->CreateBody(&bodyDef);
+//        body2->CreateFixture(&shell, 1.0f);
+//        
+//        // Connect the outside
+//        b2RevoluteJointDef rjointDef;
+//        rjointDef.Initialize(body1, body2, center + b2Vec2(0, 1));
+//        rjointDef.collideConnected = true;
+//        // do not work
+//        if(false) {
+//            rjointDef.upperAngle = 0 * b2_pi;
+//            rjointDef.lowerAngle = -7/6.0 * b2_pi;//-210*M_PI/180;
+//            rjointDef.enableLimit = true;
+//            rjointDef.maxMotorTorque = 10.0f;
+//            rjointDef.motorSpeed = 0.0f;
+//            rjointDef.enableMotor = true;
+//        }
+//        
+//        _world->CreateJoint(&rjointDef);
+//    }
+    
     _terrain = TerrainSprite::create(_world);
     this->addChild(_terrain, ZORDER_TERRAIN);
     
@@ -140,7 +198,12 @@ void GameLayer::initPhysics()
 
 void GameLayer::update(float dt)
 {
-    if(gameStatus == GAME_PAUSE || gameStatus == GAME_OVER) return;
+    if(gameStatus == GAME_PAUSE) {
+        return;
+    }
+    else if(gameStatus == GAME_OVER) {
+        gameOver();
+    }
     
     // It is recommended that a fixed time step is used with Box2D for stability
     // of the simulation, however, we are using a variable time step here.
@@ -157,18 +220,8 @@ void GameLayer::update(float dt)
     Vec2 nanaPos = _nana->getPosition();
     float topY = nanaPos.y + winSiz.height;
     float bottomY = nanaPos.y - winSiz.height;
-    if(_bgSprites.front()->getPosition().y > topY) {
-        _bgSprites.front()->removeFromParent();
-        _bgSprites.erase(_bgSprites.cbegin());
-    }
-    Vec2 bgsbackPos = _bgSprites.back()->getPosition();
-    if(bgsbackPos.y - after_height/2 > bottomY) {
-        Sprite *bg = Sprite::create("bg_1.png");
-        bg->setScale(winSiz.width/1080.0);
-        bg->setPosition(winMidX, bgsbackPos.y - after_height);
-        this->addChild(bg, ZORDER_BG);
-        _bgSprites.push_back(bg);
-    }
+    
+    updateBG(topY, bottomY);
     
     // update score
     pos_score = (-nanaPos.y + winMidY)/400;
@@ -228,19 +281,19 @@ void GameLayer::reset()
 bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 {
     auto touchLocation = touch->getLocation();
-    if(touchLocation.y < winMidY - 50) {
-        _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
-                                 (touchLocation.y - winMidY)/20));
-    }
-    else if(touchLocation.y > winMidY + 50) {
-        _nana->ApplyForce(b2Vec2(0, 7));
-    }
+//    if(touchLocation.y < winMidY - 50) {
+//        _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
+//                                 (touchLocation.y - winMidY)/20));
+//    }
+//    else if(touchLocation.y > winMidY + 50) {
+//        _nana->ApplyForce(b2Vec2(0, 7));
+//    }
     return true;
 }
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    _nana->ApplyForce(b2Vec2(acc->x * 2, 0));
+    _world->SetGravity(stdGrav + b2Vec2(acc->x * 20, 0));
 }
 
 // Draw

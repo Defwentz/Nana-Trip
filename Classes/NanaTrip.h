@@ -8,10 +8,11 @@
 
 // Issue:
 // didn't detect certain contact like with red or DNA. WHY WON'T YOU DETECT IT!!!!!!!!!! - I think I solved this by get the contact of the static_body instead of the dynamic ones
-// sometimes weirdly falls apart, but still connected. All in all, weird
+// sometimes weirdly falls apart, but still connected. All in all, weird - Something to do with drawing method, maybe there's a way to improve it
 // situations when nana got stuck in the walls and things - I think there was something in the Box2d header file I can change, a parameter
 
 // TODO:                    more terrain, more obstacle
+// nana size according to screen size
 // highest score
 // DNA, which add to HP
 // more stuff to InfoLayer
@@ -35,9 +36,12 @@
 
 #include "cocos2d.h"
 #include <Box2D/Box2D.h>
-#include "Randomer.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
+#include <SimpleAudioEngine.h>
+#include "Randomer.h"
+
+#include "Resources.h"
 
 #define PTM_RATIO 32
 
@@ -59,6 +63,7 @@ extern int gameStatus;
 #define UD_NANA 1
 #define UD_BADGUY 2
 #define UD_DNA 3
+#define UD_HAND 4
 #define UD_DESTROYED 99
 
 class Entity
@@ -68,12 +73,17 @@ public:
     int type;
 };
 
-int getDNA();
 void initStatistic();
 void initWinSiz();
 
 b2Vec2 vToB2(cocos2d::Vec2 v);
 cocos2d::Vec2 b2ToV(b2Vec2 b);
+int randWithBase(int base, int addon);
+/**
+ * Return false by default.
+ * When rand_0_1() < odds, bool switch to true.
+ */
+bool boolWithOdds(float odds);
 
 extern cocos2d::Size winSiz;
 extern float winMidX;
@@ -81,12 +91,9 @@ extern float winMidY;
 
 // TODO: change
 extern int score;
+
 extern int pos_score;
 extern int eat_score;
 extern int dna;
-
-// resources
-extern std::string res_bg[];
-extern std::string res_mover[];
 
 #endif

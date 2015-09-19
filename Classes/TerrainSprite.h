@@ -92,10 +92,6 @@ public:
     void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
     void drawSegment(cocos2d::Vec2 p1, cocos2d::Vec2 p2);
     
-    int randWithBase(int base, int addon);
-    // the default return is false, when rand_0_1() < odds, bool switch to true
-    bool boolWithOdds(float odds);
-    
     static TerrainSprite *create(b2World *world);
     
     TerrainSprite(b2World *world);

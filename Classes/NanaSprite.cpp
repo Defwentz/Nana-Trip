@@ -254,12 +254,10 @@ void NanaSprite::initPhysics(b2World *world)
         rjointDef.Initialize(currentBody, neighborBody, outer_joint);
         // do not work
         if(enableUnbreakable) {
+            rjointDef.collideConnected = true;
             rjointDef.upperAngle = 0 * b2_pi;
-            rjointDef.lowerAngle = -7/6.0 * b2_pi;//-210*M_PI/180;
+            rjointDef.lowerAngle = -7/6.0 * b2_pi;
             rjointDef.enableLimit = true;
-            rjointDef.maxMotorTorque = 10.0f;
-            rjointDef.motorSpeed = 0.0f;
-            rjointDef.enableMotor = true;
         }
         
         auto rj = world->CreateJoint(&rjointDef);
@@ -336,12 +334,9 @@ Vec2 NanaSprite::getCenter()
     }
     x /= NUM_SEGMENTS;//(PTM_RATIO/NUM_SEGMENTS);
     y /= NUM_SEGMENTS;//(PTM_RATIO/NUM_SEGMENTS);
-
     return Vec2(x, y);
 }
 
-// Gas up the body, apply force with a scale -> hardness.
-// currently only work when 12 segments. If change, need adjustment.
 void NanaSprite::gasUp()
 {
     for(int i = 0; i < _bodies.size(); i++) {

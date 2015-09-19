@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
-#include "StartLayer.h"
+//#include "StartLayer.h"
+#include "LaunchLayer.h"
 #include "GameLayer.h"
 
 USING_NS_CC;
@@ -42,15 +43,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     FileUtils::getInstance()->addSearchPath("res");
 
+    // initalize the global stuff in NanaTrip.h
+    initWinSiz();
+    
     // create a scene. it's an autorelease object
     //auto scene = GameLayer::createScene();
-    auto scene = StartLayer::createScene();
+    auto scene = LaunchLayer::createScene();
     
     // run
     director->runWithScene(scene);
-
-    // initalize the global stuff in NanaTrip.h
-    initWinSiz();
     
     return true;
 }

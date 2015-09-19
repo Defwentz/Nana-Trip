@@ -29,11 +29,11 @@ TerrainSprite::TerrainSprite(b2World *world)
 {
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
-    terrainRdmr->add(ITEM_TUNNEL, 200);
-    terrainRdmr->add(ITEM_BUMPS, 40);
-    terrainRdmr->add(ITEM_CHESSBOARD, 5);
+    terrainRdmr->add(ITEM_TUNNEL, 10);
+    terrainRdmr->add(ITEM_BUMPS, 10);
+    terrainRdmr->add(ITEM_CHESSBOARD, 20);
     terrainRdmr->add(ITEM_BELT, 10);
-    terrainRdmr->add(ITEM_METEOR, 10);
+    terrainRdmr->add(ITEM_METEOR, 20);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();
@@ -430,6 +430,7 @@ void TerrainSprite::createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *sha
     b2BodyDef bd;
     bd.position.Set(vpos.x/PTM_RATIO, vpos.y/PTM_RATIO);
     bd.type = b2_dynamicBody;
+    bd.gravityScale = -1;
     b2Body *b = _world->CreateBody(&bd);
     b->CreateFixture(shape, 0);
     b->ApplyForce(b2Vec2(0, 16.0f), b->GetWorldCenter(), true);
@@ -486,7 +487,8 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 {
     uint32 flags;
-    flags += MoverSprite::_motorBit;
+    if(boolWithOdds(0.5))
+        flags += MoverSprite::_motorBit;
     flags += MoverSprite::_normalBit;
     auto mover = MoverSprite::create(flags);
     mover->setup(_world, _body, vpos, radius);
@@ -521,18 +523,6 @@ void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2,
         func(_p1, _p2);
         _p1 = _p2;
     }
-}
-
-int TerrainSprite::randWithBase(int base, int addon)
-{
-    return base + rand()%addon;
-}
-bool TerrainSprite::boolWithOdds(float odds)
-{
-    if(rand_0_1() < odds)
-        return true;
-    else
-        return false;
 }
 
 void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
@@ -583,6 +573,8 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 }
 void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 {
+    Texture2D *terrainTxture;
+    
     float tdy = p1.y - p2.y;
     //////////////
     if(tdy == 0) {
@@ -592,6 +584,10 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
     float x = winSiz.width;
     if(isLeft) {
         x = 0;
+        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_l.png");
+    }
+    else {
+        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
     }
     //////////////
     
@@ -609,15 +605,38 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         y+=dj;
         _p2.x = A*cosf(y) + B;
         
-        Point tallerOne(x, _p1.y), shorterOne(x, _p2.y);
-        Point vt1[] = {tallerOne, _p1, shorterOne};
-        Point vt2[] = {shorterOne, _p1, _p2};
-        Color4F color(0.3555f, 0.3289f, 0.98f, 1);//(0.3555f, 0.6289f, 0.78f, 1);
-        ccDrawSolidPoly(vt1, 3, color);
-        ccDrawSolidPoly(vt2, 3, color);
+        Point vt[] = {
+            Point(x, _p1.y),
+            Point(x, _p2.y),
+            _p1,
+            _p2
+        };
+        float _p2c1 = _p1.x/330, _p2c2 = _p2.x/330;
+        Point ct[] = {
+            Point(_p2c1, 1),
+            Point(_p2c2, 1),
+            Point(_p2c1, 0),
+            Point(_p2c2, 0)
+        };
+        GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POSITION | GL::VERTEX_ATTRIB_FLAG_TEX_COORD);
+        terrainTxture->getGLProgram()->use();
+        // bad performence
+        terrainTxture->getGLProgram()->setUniformsForBuiltins();
+        GL::bindTexture2D(terrainTxture->getName());
+        glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_POSITION, 2, GL_FLOAT, GL_FALSE, 0, vt);
+        glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_TEX_COORD, 2, GL_FLOAT, GL_FALSE, 0, ct);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         
-        ccDrawColor4F(1, 1, 1, 1.0);
-        ccDrawLine(_p1, _p2);
+//        Point tallerOne(x, _p1.y), shorterOne(x, _p2.y);
+//        Point vt1[] = {tallerOne, _p1, shorterOne};
+//        Point vt2[] = {shorterOne, _p1, _p2};
+//        
+//        Color4F color(0.3555f, 0.3289f, 0.98f, 1);//(0.3555f, 0.6289f, 0.78f, 1);
+//        ccDrawSolidPoly(vt1, 3, color);
+//        ccDrawSolidPoly(vt2, 3, color);
+        
+//        ccDrawColor4F(1, 1, 1, 1.0);
+//        ccDrawLine(_p1, _p2);
         
         _p1 = _p2;
     }
@@ -628,10 +647,6 @@ void TerrainSprite::update(float nanaY)
     float topY = nanaY + winSiz.height;
     float bottomY = nanaY - winSiz.height;
     
-    //if(lvertices.size() < 2) {
-       // spawnTerrain();
-    //}
-    //else
     if (lvertices[1].y > topY) {
         lvertices.erase(lvertices.cbegin());
         std::vector<b2Fixture *> _fixtures = lfixtures.front();
@@ -651,10 +666,6 @@ void TerrainSprite::update(float nanaY)
     if(lto == lvertices.size())
         spawnTerrain();
     
-    //if(rvertices.size() < 2) {
-      //  spawnTerrain();
-    //}
-    //else
     if (rvertices[1].y > topY) {
         rvertices.erase(rvertices.cbegin());
         std::vector<b2Fixture *> _fixtures = rfixtures.front();
@@ -691,7 +702,7 @@ void TerrainSprite::update(float nanaY)
             for(b2ContactEdge *contact = (*i)->_body->GetContactList(); contact; contact = contact->next) {
                 b2Body *other = contact->other;
                 auto other_userdata = (Entity *) other->GetUserData();
-                if(other_userdata->type == UD_NANA) {
+                if(other_userdata && other_userdata->type == UD_NANA) {
                     eat_score += 10;
                     dna++;
                     _world->DestroyBody((*i)->_body);
@@ -717,7 +728,7 @@ void TerrainSprite::update(float nanaY)
             for(b2ContactEdge *contact = (*i)->_body->GetContactList(); contact; contact = contact->next) {
                 b2Body *other = contact->other;
                 auto other_userdata = (Entity *) other->GetUserData();
-                if(other_userdata->type == UD_NANA) {
+                if(other_userdata && other_userdata->type == UD_NANA) {
                     gameStatus = GAME_OVER;
                     return;
                 }

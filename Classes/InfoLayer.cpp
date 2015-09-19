@@ -33,8 +33,15 @@ bool InfoLayer::init()
     pauseBtn->addTouchEventListener(CC_CALLBACK_2(InfoLayer::pauseCallback, this));
     this->addChild(pauseBtn);
     
+//    soundBtn = Button::create();
+//    soundBtn->loadTextures("homepage/button_sound_off.png", "homepage/button_sound_off.png");
+//    pauseBtn->cocos2d::Node::setPosition(winSiz.width - 50, winSiz.height - 50);
+//    pauseBtn->setTouchEnabled(true);
+//    pauseBtn->addTouchEventListener(CC_CALLBACK_2(InfoLayer::pauseCallback, this));
+//    this->addChild(pauseBtn);
+    
     NotificationCenter::getInstance()->
-    addObserver(this, callfuncO_selector(InfoLayer::defaultCallBack), "defaultCallback", NULL);
+    addObserver(this, callfuncO_selector(InfoLayer::defaultCallback), "defaultCallback", NULL);
     
     return true;
 }
@@ -62,10 +69,15 @@ void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
     gameStatus = GAME_PAUSE;
     Device::setAccelerometerEnabled(false);
     pauseBtn->setTouchEnabled(false);
+    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
     Director::getInstance()->pushScene(PauseLayer::createScene());
 }
-void InfoLayer::defaultCallBack(cocos2d::Ref *pSender) {
+void InfoLayer::soundCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    
+}
+void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
     gameStatus = GAME_PLAY;
     Device::setAccelerometerEnabled(true);
+    CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     pauseBtn->setTouchEnabled(true);
 }

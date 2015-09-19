@@ -58,8 +58,8 @@ void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::ENDED)
     {
         // I don't know what to do. Do I reset it? Do simply don't care about it?
-        //Director::getInstance()->popScene();
-        // bug
+        // The answer is, I simply don't care.
+        // Director::getInstance()->popScene();
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
 }

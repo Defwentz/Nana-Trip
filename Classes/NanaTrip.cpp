@@ -19,11 +19,6 @@ int pos_score;
 int eat_score;
 int dna;
 
-int getDNA()
-{
-    return 0;
-}
-
 void initStatistic()
 {
     score = 0;
@@ -49,6 +44,15 @@ cocos2d::Vec2 b2ToV(b2Vec2 b)
     return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
 }
 
-// resources
-std::string res_bg[] = {"bg_1.png"};
-std::string res_mover[] = {"rod_1.png"};
+int randWithBase(int base, int addon)
+{
+    return base + rand()%addon;
+}
+
+bool boolWithOdds(float odds)
+{
+    if(rand_0_1() < odds)
+        return true;
+    else
+        return false;
+}
