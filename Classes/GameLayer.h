@@ -31,6 +31,12 @@ class GameLayer : public cocos2d::Layer
     std::vector<cocos2d::Sprite *> _bgSprites;
     
     // hand draw system trying
+    b2Body *_drawBody;
+    std::vector<b2Vec2> _drawVertices;
+    std::vector<b2Fixture *> _drawFixtures;
+    bool isCounting2Destroy;
+    void destroyDrawFixtures(float dt);
+    void drawHand();
 public:
     static cocos2d::Scene* createScene();
     static GameLayer *create(InfoLayer *infoLayer);
@@ -48,6 +54,8 @@ public:
     void updateBG(float topY, float bottomY);
     
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+    void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
+    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
     virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);
     
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)

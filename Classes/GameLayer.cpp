@@ -44,6 +44,7 @@ GameLayer::GameLayer()
     initListeners();
     initBG();
     initPhysics();
+    isCounting2Destroy = false;
 }
 
 GameLayer::~GameLayer()
@@ -63,33 +64,35 @@ void GameLayer::initListeners() {
     auto touchlistener = EventListenerTouchOneByOne::create();
     touchlistener->setSwallowTouches(true);
     touchlistener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
+    touchlistener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
+    touchlistener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
 }
 void GameLayer::initBG()
 {
-    after_height = winSiz.width*848/1080;
-    int n = ceil(winSiz.height / after_height);
-    for(int i = 0; i < n; i++) {
-        Sprite *bg = Sprite::create("bg_1.png");
-        bg->setScale(winSiz.width/1080.0);
-        bg->setPosition(winMidX, i*after_height + after_height/2);
-        this->addChild(bg, ZORDER_BG);
-        _bgSprites.push_back(bg);
-    }
+//    after_height = winSiz.width*848/1080;
+//    int n = ceil(winSiz.height / after_height);
+//    for(int i = 0; i < n; i++) {
+//        Sprite *bg = Sprite::create("bg_1.png");
+//        bg->setScale(winSiz.width/1080.0);
+//        bg->setPosition(winMidX, i*after_height + after_height/2);
+//        this->addChild(bg, ZORDER_BG);
+//        _bgSprites.push_back(bg);
+//    }
 }
 void GameLayer::updateBG(float topY, float bottomY) {
-    if(_bgSprites.front()->getPosition().y > topY) {
-        _bgSprites.front()->removeFromParent();
-        _bgSprites.erase(_bgSprites.cbegin());
-    }
-    Vec2 bgsbackPos = _bgSprites.back()->getPosition();
-    if(bgsbackPos.y - after_height/2 > bottomY) {
-        Sprite *bg = Sprite::create("bg_1.png");
-        bg->setScale(winSiz.width/1080.0);
-        bg->setPosition(winMidX, bgsbackPos.y - after_height);
-        this->addChild(bg, ZORDER_BG);
-        _bgSprites.push_back(bg);
-    }
+//    if(_bgSprites.front()->getPosition().y > topY) {
+//        _bgSprites.front()->removeFromParent();
+//        _bgSprites.erase(_bgSprites.cbegin());
+//    }
+//    Vec2 bgsbackPos = _bgSprites.back()->getPosition();
+//    if(bgsbackPos.y - after_height/2 > bottomY) {
+//        Sprite *bg = Sprite::create("bg_1.png");
+//        bg->setScale(winSiz.width/1080.0);
+//        bg->setPosition(winMidX, bgsbackPos.y - after_height);
+//        this->addChild(bg, ZORDER_BG);
+//        _bgSprites.push_back(bg);
+//    }
 }
 
 void GameLayer::initPhysics()
@@ -102,8 +105,8 @@ void GameLayer::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-        flags += b2Draw::e_shapeBit;
-        flags += b2Draw::e_jointBit;
+//        flags += b2Draw::e_shapeBit;
+//        flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
     //    flags += b2Draw::e_centerOfMassBit;
@@ -193,6 +196,12 @@ void GameLayer::initPhysics()
     this->runAction(follow);
     this->addChild(_nana, ZORDER_NANA);
     
+    
+    b2BodyDef bd;
+    bd.position.SetZero();
+    bd.type = b2_staticBody;
+    _drawBody = _world->CreateBody(&bd);
+    
     scheduleUpdate();
 }
 
@@ -280,7 +289,10 @@ void GameLayer::reset()
 
 bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 {
+    if(isCounting2Destroy)
+        return true;
     auto touchLocation = touch->getLocation();
+    _drawVertices.push_back(vToB2(this->convertToNodeSpace(touchLocation)));
 //    if(touchLocation.y < winMidY - 50) {
 //        _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
 //                                 (touchLocation.y - winMidY)/20));
@@ -290,6 +302,49 @@ bool GameLayer::onTouchBegan(Touch* touch, Event* event)
 //    }
     return true;
 }
+void GameLayer::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event) {
+    if(isCounting2Destroy)
+        return;
+    auto touchLocation = touch->getLocation();
+    b2Vec2 cTouchLocation = vToB2(this->convertToNodeSpace(touchLocation));
+    b2ChainShape chain;
+    b2Vec2 vt[] = {_drawVertices.back(), cTouchLocation};
+    chain.CreateChain(vt, 2);
+    _drawVertices.push_back(cTouchLocation);
+    _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
+}
+void GameLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event) {
+    if(isCounting2Destroy)
+        return;
+    auto touchLocation = touch->getLocation();
+    b2Vec2 cTouchLocation = vToB2(this->convertToNodeSpace(touchLocation));
+    b2ChainShape chain;
+    b2Vec2 vt[] = {_drawVertices.back(), cTouchLocation};
+    chain.CreateChain(vt, 2);
+    _drawVertices.push_back(cTouchLocation);
+    _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
+    
+    scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures),2.0f);
+    isCounting2Destroy = true;
+}
+
+void GameLayer::destroyDrawFixtures(float dt) {
+    _drawVertices.clear();
+    for(std::vector<b2Fixture *>::iterator i = _drawFixtures.begin();
+        i != _drawFixtures.end();) {
+        _drawBody->DestroyFixture((*i));
+        i = _drawFixtures.erase(i);
+    }
+    isCounting2Destroy = false;
+//    for(b2ContactEdge *contact = _drawBody->GetContactList(); contact; contact = contact->next) {
+//        b2Body *other = contact->other;
+//        auto other_userdata = (Entity *) other->GetUserData();
+//        if(other_userdata && other_userdata->type == UD_NANA) {
+//            scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures),2.0f);
+//            return;
+//        }
+//    }
+}
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
@@ -297,6 +352,15 @@ void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 }
 
 // Draw
+void GameLayer::drawHand() {
+    if(_drawVertices.empty())
+        return;
+    glLineWidth( 7.0f );
+    ccDrawColor4F(1, 1, 1, 1.0);
+    for(int i = 0; i < (_drawVertices.size()-1); i++) {
+        ccDrawLine(b2ToV(_drawVertices[i]), b2ToV(_drawVertices[i+1]));
+    }
+}
 void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
 {
     Layer::draw(renderer, transform, transformFlags);
@@ -305,6 +369,7 @@ void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transfo
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
+    drawHand();
     _world->DrawDebugData();
     CHECK_GL_ERROR_DEBUG();
     
