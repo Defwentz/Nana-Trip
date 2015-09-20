@@ -15,6 +15,9 @@ MoverSprite* MoverSprite::create(uint32 flags)
     sprite->_flags = flags;
     std::string filename;
     if(flags & _randomBit) {
+        filename = res_mover[0];
+        if(boolWithOdds(0.5))
+            flags += _motorBit;
         // randomly generate flags -> mover
     }
     else if(flags & _normalBit) {

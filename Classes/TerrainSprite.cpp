@@ -31,9 +31,9 @@ TerrainSprite::TerrainSprite(b2World *world)
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 10);
     terrainRdmr->add(ITEM_BUMPS, 10);
-    terrainRdmr->add(ITEM_CHESSBOARD, 20);
+    terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 10);
-    terrainRdmr->add(ITEM_METEOR, 20);
+    terrainRdmr->add(ITEM_METEOR, 15);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();
@@ -176,10 +176,23 @@ void TerrainSprite::spawnTunnel()
     if(rvertices.back().y > lastY)
         rvertices.push_back(Vec2(winSiz.width, lastY));
     
-    int n = randWithBase(TUNNEL_KEYPOINT, TUNNEL_KEYPOINT);
+    int n = randWithBase(5, 3);
+    int cave_count = random(0, n/3);
+    float cave_odds = cave_count/(float)n;
     switch (tnlRdmr->getRandomItem()) {
         case ITEM_TUNNEL_NR:
             for(int i = 0; i < n; i++) {
+                
+                if(boolWithOdds(cave_odds)) {
+                    int length = random(winSiz.height/8, winSiz.height/4);
+                    int width = random(winSiz.width/8, winSiz.height/4);
+                    int x = random(winSiz.width/4, winSiz.width*3/4);
+                    lastY -= length;
+                    lvertices.push_back(Vec2(x - width/2, lastY));
+                    rvertices.push_back(Vec2(x + width/2, lastY));
+                    createMoverObstacle(Vec2(x, lastY), width/2.0/PTM_RATIO);
+                    continue;
+                }
                 int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
                 int width = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
@@ -192,6 +205,16 @@ void TerrainSprite::spawnTunnel()
             break;
         case ITEM_TUNNEL_BRD:
             for(int i = 0; i < n; i++) {
+                if(boolWithOdds(cave_odds)) {
+                    int length = random(winSiz.height/8, winSiz.height/4);
+                    int width = random(winSiz.width/8, winSiz.height/4);
+                    int x = random(winSiz.width/4, winSiz.width*3/4);
+                    lastY -= length;
+                    lvertices.push_back(Vec2(x - width/2, lastY));
+                    rvertices.push_back(Vec2(x + width/2, lastY));
+                    createMoverObstacle(Vec2(x, lastY), width/2.0/PTM_RATIO);
+                    continue;
+                }
                 int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
                 int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
@@ -302,11 +325,18 @@ void TerrainSprite::spawnBumps()
             int max_wrinkle = random(3, 9);
             // 2-6个(半屏) * min_w-max_w个(起伏/半屏)
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
+            
+            bool isFirst = true;
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
                 int dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
                 lvertices.push_back(Vec2(dx, lastY-dy));
                 rvertices.push_back(Vec2(winSiz.width - dx, lastY-dy));
+                
+                if(isFirst) {
+                    isFirst = false;
+                    createMoverObstacle(Vec2(winMidX, lastY), dx/2.0/PTM_RATIO);
+                }
                 
                 lastY = getLastY();
             }
@@ -356,7 +386,10 @@ void TerrainSprite::spawnChessboard()
             ball.m_p = bpos;
             ball.m_radius = radius;
             
-            if(boolWithOdds(0.1)) {
+            float pos_odds_for_badguy = pos_score / 10000.0;
+            if(pos_odds_for_badguy > 1)
+                pos_odds_for_badguy = 1;
+            if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
                 createBadGuy(pos, &ball);
             }
             else if(boolWithOdds(0.5)) {
@@ -573,7 +606,7 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 }
 void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 {
-    Texture2D *terrainTxture;
+    Texture2D *terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
     
     float tdy = p1.y - p2.y;
     //////////////
@@ -584,11 +617,11 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
     float x = winSiz.width;
     if(isLeft) {
         x = 0;
-        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_l.png");
+        //terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_l.png");
     }
-    else {
-        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
-    }
+//    else {
+//        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
+//    }
     //////////////
     
     int n = floorf(tdy/10);

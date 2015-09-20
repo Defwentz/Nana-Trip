@@ -355,19 +355,11 @@ void GameLayer::destroyDrawFixtures(float dt) {
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    _world->SetGravity(stdGrav + b2Vec2(acc->x * 20, 0));
+    _nana->ApplyForce(b2Vec2(acc->x * 3, 0));
+    _world->SetGravity(stdGrav + b2Vec2(acc->x * 5, 0));
 }
 
 // Draw
-void GameLayer::drawHand() {
-//    if(_drawVertices.empty())
-//        return;
-//    glLineWidth( 7.0f );
-//    ccDrawColor4F(1, 1, 1, 1.0);
-//    for(int i = 0; i < (_drawVertices.size()-1); i++) {
-//        ccDrawLine(b2ToV(_drawVertices[i]), b2ToV(_drawVertices[i+1]));
-//    }
-}
 void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
 {
     Layer::draw(renderer, transform, transformFlags);
@@ -377,7 +369,6 @@ void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transfo
     
     GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
     _world->DrawDebugData();
-    //drawHand();
     CHECK_GL_ERROR_DEBUG();
     
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);

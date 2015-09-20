@@ -32,7 +32,7 @@ bool LaunchLayer::init()
     bgSprite->setPosition(Vec2(winMidX, winMidY));
     bgSprite->setScale(winSiz.width/640, winSiz.height/1136);
     this->addChild(bgSprite);
-    scheduleOnce(schedule_selector(LaunchLayer::launch),2.0f);
+    scheduleOnce(schedule_selector(LaunchLayer::launch),1.5f);
     return true;
 }
 

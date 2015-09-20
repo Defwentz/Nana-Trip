@@ -18,7 +18,7 @@
 
 class GameLayer : public cocos2d::Layer
 {
-    b2Vec2 stdGrav = b2Vec2(0, -20);
+    b2Vec2 stdGrav = b2Vec2(0, -8);
     
     GLESDebugDraw *_debugDraw;
     
@@ -37,7 +37,6 @@ class GameLayer : public cocos2d::Layer
     std::vector<b2Fixture *> _drawFixtures;
     bool isCounting2Destroy;
     void destroyDrawFixtures(float dt);
-    void drawHand();
     cocos2d::DrawNode *_drawNode;
 public:
     static cocos2d::Scene* createScene();
