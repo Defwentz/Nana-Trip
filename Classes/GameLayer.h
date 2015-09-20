@@ -13,6 +13,7 @@
 #define ZORDER_BG 0
 #define ZORDER_TERRAIN 1
 #define ZORDER_NANA 2
+#define ZORDER_HANDDRAW 4
 
 
 class GameLayer : public cocos2d::Layer
@@ -32,11 +33,12 @@ class GameLayer : public cocos2d::Layer
     
     // hand draw system trying
     b2Body *_drawBody;
-    std::vector<b2Vec2> _drawVertices;
+    std::vector<cocos2d::Vec2> _drawVertices;
     std::vector<b2Fixture *> _drawFixtures;
     bool isCounting2Destroy;
     void destroyDrawFixtures(float dt);
     void drawHand();
+    cocos2d::DrawNode *_drawNode;
 public:
     static cocos2d::Scene* createScene();
     static GameLayer *create(InfoLayer *infoLayer);
