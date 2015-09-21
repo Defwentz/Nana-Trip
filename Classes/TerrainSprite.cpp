@@ -310,7 +310,7 @@ void TerrainSprite::spawnBumps()
                 lvertices.push_back(Vec2(dx, lastY-dy));
                 
                 dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
-                dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
+                dx = random(winMidX/3, winMidX - NARROW_WIDTH/2);
                 rvertices.push_back(Vec2(winSiz.width - dx, lastY-dy));
                 
                 lastY = getLastY();
@@ -329,7 +329,7 @@ void TerrainSprite::spawnBumps()
             bool isFirst = true;
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
-                int dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
+                int dx = random(winMidX/3, winMidX - NARROW_WIDTH/2);
                 lvertices.push_back(Vec2(dx, lastY-dy));
                 rvertices.push_back(Vec2(winSiz.width - dx, lastY-dy));
                 

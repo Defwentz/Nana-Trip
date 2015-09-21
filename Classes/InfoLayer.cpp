@@ -66,11 +66,13 @@ void InfoLayer::update()
 }
 
 void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
-    gameStatus = GAME_PAUSE;
-    Device::setAccelerometerEnabled(false);
-    pauseBtn->setTouchEnabled(false);
-    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-    Director::getInstance()->pushScene(PauseLayer::createScene());
+    if (type == Widget::TouchEventType::ENDED) {
+        gameStatus = GAME_PAUSE;
+        Device::setAccelerometerEnabled(false);
+        pauseBtn->setTouchEnabled(false);
+        CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        Director::getInstance()->pushScene(PauseLayer::createScene());
+    }
 }
 void InfoLayer::soundCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
     

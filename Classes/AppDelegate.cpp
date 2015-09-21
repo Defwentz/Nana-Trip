@@ -1,6 +1,6 @@
 #include "AppDelegate.h"
-//#include "StartLayer.h"
-#include "LaunchLayer.h"
+#include "StartLayer.h"
+//#include "LaunchLayer.h"
 #include "GameLayer.h"
 
 USING_NS_CC;
@@ -48,7 +48,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     // create a scene. it's an autorelease object
     //auto scene = GameLayer::createScene();
-    auto scene = LaunchLayer::createScene();
+    auto scene = StartLayer::createScene();
     
     // run
     director->runWithScene(scene);

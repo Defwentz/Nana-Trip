@@ -9,3 +9,5 @@ package/.DS_Store
 Resources/.DS_Store
 Resources/res/.DS_Store
 Resources/res/fonts/.DS_Store
+.DS_Store
+Resources

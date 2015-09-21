@@ -42,6 +42,7 @@
 #include "Randomer.h"
 
 #include "Resources.h"
+#include <base/CCUserDefault.h>
 
 #define PTM_RATIO 32
 

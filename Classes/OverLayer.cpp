@@ -28,11 +28,22 @@ bool OverLayer::init()
         return false;
     }
 
-    auto rootNode = CSLoader::createNode("result/result.csb");
+    auto rootNode = CSLoader::createNode("over/over.csb");
     addChild(rootNode);
+    
+    UserDefault *db = UserDefault::getInstance();
+    int bestScore = db->getIntegerForKey("best_score", 0);
+    if(bestScore < score) {
+        bestScore = score;
+        db->setIntegerForKey("best_score", score);
+        db->flush();
+    }
     
     Text* scoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_score"));
     scoreTxt->setString(StringUtils::format("%d", score));
+    
+    Text* bestScoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_bestscore"));
+    bestScoreTxt->setString(StringUtils::format("%d", bestScore));
     
     Button* anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_newgame"));
     Button* returnBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
@@ -42,13 +53,21 @@ bool OverLayer::init()
     return true;
 }
 
-// another round
+/**
+ * call when new-game button is clicked.
+ */
 void OverLayer::anotherCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
-    Director::getInstance()->replaceScene(GameLayer::createScene());
+    if (type == Widget::TouchEventType::ENDED) {
+        Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+        Director::getInstance()->replaceScene(GameLayer::createScene());
+    }
 }
-// return to menu
+/**
+ * call when return-to-menu button is clicked.
+ */
 void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-    Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
-    Director::getInstance()->replaceScene(StartLayer::createScene());
+    if (type == Widget::TouchEventType::ENDED) {
+        Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+        Director::getInstance()->replaceScene(StartLayer::createScene());
+    }
 }

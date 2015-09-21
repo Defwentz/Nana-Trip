@@ -22,7 +22,7 @@ class NanaSprite : public cocos2d::Sprite
      * When true, the chance of getting deformed would be slimer, I think.
      * default true.
      */
-    bool enableUnbreakable = true;
+    bool enableUnbreakable = false;
     
     b2World *_world;
     
