@@ -15,7 +15,7 @@ class PauseLayer : public cocos2d::Layer
 {
     cocos2d::ui::Button* conitnueBtn;
     cocos2d::ui::Button* anotherBtn;
-    cocos2d::ui::Button* backBtn;
+//    cocos2d::ui::Button* backBtn;
 public:
     static cocos2d::Scene* createScene();
     virtual bool init();
@@ -24,7 +24,7 @@ public:
 
     void continueCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void anotherCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
-    void backCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+//    void backCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 };
 
 #endif /* defined(__nanatrip__PauseLayer__) */

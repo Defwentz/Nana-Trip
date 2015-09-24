@@ -27,8 +27,9 @@ bool InfoLayer::init()
     old_pos_score = 0;
     
     pauseBtn = Button::create();
-    pauseBtn->loadTextures("button_pause_small.png", "button_pause_small.png");
-    pauseBtn->cocos2d::Node::setPosition(winSiz.width - 50, winSiz.height - 50);
+    pauseBtn->loadTextures("button_pause.png", "button_pause.png");
+    //pauseBtn->cocos2d::Node::setScale(1.5);
+    pauseBtn->cocos2d::Node::setPosition(winSiz.width - 100, winSiz.height - 100);
     pauseBtn->setTouchEnabled(true);
     pauseBtn->addTouchEventListener(CC_CALLBACK_2(InfoLayer::pauseCallback, this));
     this->addChild(pauseBtn);

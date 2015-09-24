@@ -9,7 +9,6 @@ Scene* GameLayer::createScene()
 {
     // initalize the global stuff in NanaTrip.h
     initStatistic();
-    gameStatus = GAME_PLAY;
     
     auto scene = Scene::create();
     
@@ -40,6 +39,7 @@ GameLayer *GameLayer::create(InfoLayer *infoLayer)
 
 GameLayer::GameLayer()
 {
+    //gameStatus = GAME_PAUSE;
     CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
     initListeners();
     initBG();
@@ -191,14 +191,14 @@ void GameLayer::initPhysics()
 //        _world->CreateJoint(&rjointDef);
 //    }
     
-    _terrain = TerrainSprite::create(_world);
-    this->addChild(_terrain, ZORDER_TERRAIN);
-    
     _nana = NanaSprite::create(_world);
+    _nana->setPosition(winMidX, winMidY);
     auto follow = Follow::create(_nana);
     this->runAction(follow);
     this->addChild(_nana, ZORDER_NANA);
     
+    _terrain = TerrainSprite::create(_world);
+    this->addChild(_terrain, ZORDER_TERRAIN);
     
     b2BodyDef bd;
     bd.position.SetZero();
@@ -207,14 +207,18 @@ void GameLayer::initPhysics()
     
     scheduleUpdate();
 }
-
+#include <unistd.h>
 void GameLayer::update(float dt)
 {
     if(gameStatus == GAME_PAUSE) {
         return;
     }
     else if(gameStatus == GAME_OVER) {
-        gameOver();
+        gameStatus = GAME_PAUSE;
+        utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead");
+        //gameOver(0);
+        scheduleOnce(schedule_selector(GameLayer::gameOver), 1.0f);
+        return;
     }
     
     // It is recommended that a fixed time step is used with Box2D for stability
@@ -256,9 +260,27 @@ void GameLayer::update(float dt)
     }*/
 }
 
-void GameLayer::gameOver() {
+
+void GameLayer::gameOver(float dt) {
+//    RenderTexture *screen = RenderTexture::create(winSiz.width, winSiz.height);
+//    screen->setPosition(winMidX, winMidY);
+//    screen->begin();
+//    Director::getInstance()->getRunningScene()->visit();
+//    screen->end();
+//    screen->saveToFile(deadScreen);
+    
     Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
     Director::getInstance()->replaceScene(OverLayer::createScene());
+}
+
+void GameLayer::captureScreenCallback(bool succeed, const std::string &filename) {
+    if(succeed) {
+        deadScreen = filename;
+//        auto sp = Sprite::create(filename);
+//        Director::getInstance()->getRunningScene()->addChild(sp, 10);
+//        sp->setPosition(winMidX, winMidY);
+//        sp->setScale(0.25);
+    }
 }
 
 // problematic, TODO
@@ -267,9 +289,7 @@ void GameLayer::reset()
     // 好像并没有什么用
     //glClear(GL_COLOR_BUFFER_BIT);
     _terrain->removeFromParent();
-    //delete _terrain;
     _nana->removeFromParent();
-    //delete _nana;
     delete _world;
     delete _debugDraw;
     
@@ -282,9 +302,6 @@ void GameLayer::reset()
     pos_score = 0;
     eat_score = 0;
     _infoLayer->reset();
-    //delete _nana;
-    //delete _debugDraw;
-    //CC_SAFE_DELETE(_world);
     this->initPhysics();
     //Director::getInstance()->resume();
     gameStatus = GAME_PLAY;
@@ -312,7 +329,7 @@ void GameLayer::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event) {
     b2Vec2 vt[] = {vToB2(_drawVertices.back()) , vToB2(cTouchLoc)};
     chain.CreateChain(vt, 2);
     
-    _drawNode->drawSegment(_drawVertices.back(), cTouchLoc, 7.0f, Color4F(1, 1, 1, 1));
+    _drawNode->drawSegment(_drawVertices.back(), cTouchLoc, 7.0f, _drawColor);
     _drawVertices.push_back(cTouchLoc);
     _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
     
@@ -324,12 +341,12 @@ void GameLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event) {
     b2ChainShape chain;
     b2Vec2 vt[] = {vToB2(_drawVertices.back()), vToB2(cTouchLoc)};
     chain.CreateChain(vt, 2);
-    _drawNode->drawSegment(_drawVertices.back(), cTouchLoc, 7.0f, Color4F(1, 1, 1, 1));
+    _drawNode->drawSegment(_drawVertices.back(), cTouchLoc, 7.0f, _drawColor);
     _drawVertices.push_back(cTouchLoc);
     _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
     
     
-    scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures),2.0f);
+    scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures), 1.5f);
     isCounting2Destroy = true;
 }
 

@@ -11,5 +11,8 @@
 
 extern std::string res_bg[];
 extern std::string res_mover[];
+extern std::string res_ratings[];
+
+extern std::string key_best_score;
 
 #endif /* defined(__nanatrip__Resources__) */

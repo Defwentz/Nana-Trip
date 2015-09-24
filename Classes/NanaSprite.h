@@ -26,6 +26,8 @@ class NanaSprite : public cocos2d::Sprite
     
     b2World *_world;
     
+    Color4F _nanaColor = Color4F(0.347656f, 0.68f, 0.8086f, 1);
+    
     cocos2d::Texture2D *_nanaFace;
     cocos2d::CustomCommand _customCommand;
 public:

@@ -13,11 +13,6 @@
 #include "SpriteWithBody.h"
 #include "MoverSprite.h"
 
-//#define TYPE_DOOR                   99
-//#define TYPE_TUNNEL_SUPER_NARROW    10
-////#define TYPE_TUNNEL_ONE_ROW         11
-//#define TYPE_TUNNEL_TWO_ROWS        12
-
 // for general terrain randomer
 #define ITEM_TUNNEL         0
 #define ITEM_BUMPS          1

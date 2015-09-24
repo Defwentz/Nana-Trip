@@ -125,7 +125,7 @@ NanaSprite* NanaSprite::create(b2World *world)
 }
 
 NanaSprite::NanaSprite(b2World *world){
-    _nanaFace = Director::getInstance()->getTextureCache()->addImage("nana_face_3.png");
+    _nanaFace = Director::getInstance()->getTextureCache()->addImage("nana_face_6.png");
     _nanaFace->retain();
     initPhysics(world);
 }
@@ -281,8 +281,6 @@ void NanaSprite::initPhysics(b2World *world)
         world->CreateJoint(&jointDef);*/
     }
     _bodies = bodies;
-    
-    //this->getParent()->addChild(_drawNode);
 }
 
 bool NanaSprite::isNana(b2Body *body)
@@ -375,7 +373,6 @@ void NanaSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform
 
 void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
 {
-    //ccDrawColor4F(1.0, 1.0, 1.0, 1.0);
     Vec2 vertices[NUM_SEGMENTS];
     
     Vec2 opos = this->getPosition();
@@ -403,17 +400,18 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     glLineWidth( 5.0f );
     ccDrawColor4F(0.347656f, 0.68f, 0.8086f, 1);
     Vec2 center = this->getCenter();
+    
+    // tiny side burns (...Guesss that one way to call it)
     for(int i = 0; i < _bodies.size(); i++) {
         Vec2 target = (center - vertices[i]) * 1.4;
         target += center;
         DrawPrimitives::drawSolidCircle(vertices[i], 8, CC_DEGREES_TO_RADIANS(360), 30);
     }
     
-    //DrawPrimitives::drawPoly(vertices, NUM_SEGMENTS, true);
-    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(0.347656f, 0.68f, 0.8086f, 1));
-    //center.x -= 6.4;center.y -= 6.4;
+    // draw the body
+    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, _nanaColor);
     center.x-=12;center.y-=12;
-    _nanaFace->drawAtPoint(center);
+    _nanaFace->drawAtPoint(center - Vec2(15, 15));
     
     CHECK_GL_ERROR_DEBUG();
     

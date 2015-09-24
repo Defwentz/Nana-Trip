@@ -25,6 +25,7 @@ void initStatistic()
     pos_score = 0;
     eat_score = 0;
     dna = 0;
+    gameStatus = GAME_PLAY;
 }
 
 void initWinSiz()
@@ -56,3 +57,5 @@ bool boolWithOdds(float odds)
     else
         return false;
 }
+
+std::string deadScreen;// = "dead.png";

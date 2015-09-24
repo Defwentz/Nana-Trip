@@ -13,7 +13,7 @@
 
 // TODO:                    more terrain, more obstacle
 // nana size according to screen size
-// highest score
+// * highest score
 // DNA, which add to HP
 // more stuff to InfoLayer
 // also the HP system
@@ -22,13 +22,12 @@
 // bonus item, like pills
 // speed limits
 // character change
-// terrain change and other
+// * terrain change and other
 // scoring detail
 // music control
 
 // TODO for artwork:
-// DNA img
-// Texture for land
+// * Texture for land
 
 
 #ifndef nanatrip_NanaTrip_h
@@ -39,6 +38,7 @@
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include <SimpleAudioEngine.h>
+#include "C2DXShareSDK.h"
 #include "Randomer.h"
 
 #include "Resources.h"
@@ -85,6 +85,8 @@ int randWithBase(int base, int addon);
  * When rand_0_1() < odds, bool switch to true.
  */
 bool boolWithOdds(float odds);
+
+extern std::string deadScreen;
 
 extern cocos2d::Size winSiz;
 extern float winMidX;

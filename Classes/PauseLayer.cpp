@@ -30,7 +30,7 @@ bool PauseLayer::init()
         return false;
     }
     
-    auto rootNode = CSLoader::createNode("pause/pause.csb");
+    auto rootNode = CSLoader::createNode("another_pause/NewPauseLayer.csb");
     addChild(rootNode);
     
     Text* scoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_score"));
@@ -38,10 +38,10 @@ bool PauseLayer::init()
     
     conitnueBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_continue"));
     anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_new"));
-    backBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
+    //backBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     conitnueBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::continueCallback, this));
     anotherBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::anotherCallback, this));
-    backBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::backCallback, this));
+    //backBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::backCallback, this));
     
     return true;
 }
@@ -63,11 +63,11 @@ void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
 }
-void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
-{
-    if (type == Widget::TouchEventType::ENDED)
-    {
-        //Director::getInstance()->popScene();
-        Director::getInstance()->replaceScene(StartLayer::createScene());
-    }
-}
+//void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
+//{
+//    if (type == Widget::TouchEventType::ENDED)
+//    {
+//        //Director::getInstance()->popScene();
+//        Director::getInstance()->replaceScene(StartLayer::createScene());
+//    }
+//}

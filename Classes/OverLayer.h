@@ -11,6 +11,8 @@
 
 #include "NanaTrip.h"
 
+using namespace cn::sharesdk;
+
 class OverLayer : public cocos2d::Layer
 {
 
@@ -21,6 +23,8 @@ public:
     
     void anotherCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void returnCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    void shareCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+        static void shareResultHandler(C2DXResponseState state, C2DXPlatType platType, CCDictionary *shareInfo, CCDictionary *error);
 };
 
 #endif /* defined(__nanatrip__OverLayer__) */

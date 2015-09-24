@@ -32,6 +32,7 @@ class GameLayer : public cocos2d::Layer
     std::vector<cocos2d::Sprite *> _bgSprites;
     
     // hand draw system trying
+    Color4F _drawColor = Color4F(0.984375f, 0.85546875f, 0.15625f, 1);
     b2Body *_drawBody;
     std::vector<cocos2d::Vec2> _drawVertices;
     std::vector<b2Fixture *> _drawFixtures;
@@ -48,7 +49,7 @@ public:
     void initListeners();
     void initPhysics();
     void update(float dt);
-    void gameOver();
+    void gameOver(float dt);
     void reset();
     
     void initBG();
@@ -61,6 +62,8 @@ public:
     
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
     override;
+    
+    void captureScreenCallback(bool, const std::string &);
 };
 
 #endif // __GAME_LAYER_H__

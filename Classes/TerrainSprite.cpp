@@ -32,7 +32,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     terrainRdmr->add(ITEM_TUNNEL, 10);
     terrainRdmr->add(ITEM_BUMPS, 10);
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
-    terrainRdmr->add(ITEM_BELT, 10);
+    terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
     
     // initalize the tunnel randomer
@@ -159,7 +159,15 @@ void TerrainSprite::spawnBelt()
     ball.m_p = bpos;
     ball.m_radius = half_length/PTM_RATIO - DNA_B2RADIUS*2;
     
-    createBallObstacle(pos, &ball, true);
+    float pos_odds_for_badguy = pos_score / 100.0;
+    if(pos_odds_for_badguy > 1)
+        pos_odds_for_badguy = 1;
+    if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
+        createBadGuy(pos, &ball);
+    }
+    else {
+        createBallObstacle(pos, &ball, true);
+    }
 }
 
 const int TUNNEL_KEYPOINT = 5,
@@ -386,7 +394,7 @@ void TerrainSprite::spawnChessboard()
             ball.m_p = bpos;
             ball.m_radius = radius;
             
-            float pos_odds_for_badguy = pos_score / 10000.0;
+            float pos_odds_for_badguy = pos_score / 100.0;
             if(pos_odds_for_badguy > 1)
                 pos_odds_for_badguy = 1;
             if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
@@ -606,7 +614,7 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 }
 void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
 {
-    Texture2D *terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
+    Texture2D *terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.jpg");
     
     float tdy = p1.y - p2.y;
     //////////////
@@ -616,7 +624,7 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
     
     float x = winSiz.width;
     if(isLeft) {
-        x = 0;
+        x = -winSiz.width;
         //terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_l.png");
     }
 //    else {
@@ -639,12 +647,12 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         _p2.x = A*cosf(y) + B;
         
         Point vt[] = {
-            Point(x, _p1.y),
-            Point(x, _p2.y),
+            Point(_p1.x + x, _p1.y),
+            Point(_p1.x + x, _p2.y),
             _p1,
             _p2
         };
-        float _p2c1 = _p1.x/330, _p2c2 = _p2.x/330;
+        float _p2c1 = _p1.x/1000, _p2c2 = _p2.x/1000;
         Point ct[] = {
             Point(_p2c1, 1),
             Point(_p2c2, 1),
