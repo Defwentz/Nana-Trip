@@ -3,14 +3,14 @@
 //#include "LaunchLayer.h"
 #include "GameLayer.h"
 
-#include "C2DXShareSDK.h"
+//#include "C2DXShareSDK.h"
 
 USING_NS_CC;
 
-using namespace cn::sharesdk;
+//using namespace cn::sharesdk;
 
 AppDelegate::AppDelegate() {
-
+    
 }
 
 AppDelegate::~AppDelegate() 
@@ -31,10 +31,10 @@ void AppDelegate::initGLContextAttrs()
 bool AppDelegate::applicationDidFinishLaunching() {
     
     //初始化ShareSDK
-    C2DXShareSDK::open(CCString::create("api20"), false);
+    //C2DXShareSDK::open(CCString::create("api20"), false);
     
     //初始化社交平台信息
-    this -> initPlatformConfig();
+    //this -> initPlatformConfig();
     
     // initialize director
     auto director = Director::getInstance();
@@ -43,11 +43,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
         glview = GLViewImpl::createWithRect("nanatrip", Rect(0, 0, 640, 960));
         director->setOpenGLView(glview);
     }
-
     director->getOpenGLView()->setDesignResolutionSize(1080, 1920, ResolutionPolicy::EXACT_FIT);
-
     // turn on display FPS
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
@@ -84,6 +82,7 @@ void AppDelegate::applicationWillEnterForeground() {
 }
 
 // 初始化平台配置
+/*
 void AppDelegate::initPlatformConfig() {
     //新浪微博
     CCDictionary *sinaConfigDict = CCDictionary::create();
@@ -163,4 +162,4 @@ void AppDelegate::initPlatformConfig() {
     dbConfigDict -> setObject(CCString::create("http://www.sharesdk.cn"), "redirect_uri");
     C2DXShareSDK::setPlatformConfig(C2DXPlatTypeDouBan, dbConfigDict);
 
-}
+}*/

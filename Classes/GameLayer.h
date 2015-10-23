@@ -18,27 +18,86 @@
 
 class GameLayer : public cocos2d::Layer
 {
+    /**
+     * Default gravity, b2Vec2(0, -8)
+     */
     b2Vec2 stdGrav = b2Vec2(0, -8);
     
+    /**
+     * helper class for Box2D, to debug
+     */
     GLESDebugDraw *_debugDraw;
     
+    /**
+     * Box2D world
+     */
     b2World *_world;
+    
+    /**
+     * Nana, aka Nano
+     */
     NanaSprite *_nana;
+    
+    /**
+     * Terrain
+     */
     TerrainSprite *_terrain;
     
-    // using it in this way is because, the background has to be consistent with nana's position
+    /*** background sprites ***/
+    // Using it in this way is because, the background has to be consistent with nana's position
     // and simply put it in another layer statically just isn't gonna do.
+    
     float after_height;
     std::vector<cocos2d::Sprite *> _bgSprites;
     
-    // hand draw system trying
+    /*** gesture draw system ***/
+    
+    /**
+     * Color of gesture draw.
+     */
     Color4F _drawColor = Color4F(0.984375f, 0.85546875f, 0.15625f, 1);
+    
+    /**
+     * How long the gesture draw will last once touch ended.
+     */
+    float _drawLast = 1.5f;
+    
+    /**
+     * Box2D body of gesture draw.
+     */
     b2Body *_drawBody;
+    
+    /**
+     * Vertices of gesture draw in cocos2d::Vec2.
+     */
     std::vector<cocos2d::Vec2> _drawVertices;
+    
+    /**
+     * Fixtures of gesture draw.
+     */
     std::vector<b2Fixture *> _drawFixtures;
-    bool isCounting2Destroy;
-    void destroyDrawFixtures(float dt);
+    
+    /**
+     * DrawNode for gesture draw
+     */
     cocos2d::DrawNode *_drawNode;
+    
+    /**
+     * If the last gesture draw was being destroyed.
+     */
+    bool isCounting2Destroy;
+    
+    /**
+     *  @brief	add new point to gesture draw
+     *
+     *  @param 	newPoint 	新点
+     */
+    void addPoint(cocos2d::Vec2 newPoint);
+    
+    /**
+     *  @brief	destroy fixtures, clear DrawNode and vertices
+     */
+    void destroyDrawFixtures(float dt);
 public:
     static cocos2d::Scene* createScene();
     static GameLayer *create(InfoLayer *infoLayer);
@@ -46,7 +105,12 @@ public:
     ~GameLayer();
     
     InfoLayer *_infoLayer;
+    
+    /*
+     *  @brief	Enable Accelerometer and attach listener, enable touch and attach listeners.
+     */
     void initListeners();
+    
     void initPhysics();
     void update(float dt);
     void gameOver(float dt);

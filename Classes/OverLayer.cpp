@@ -92,8 +92,9 @@ void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchE
 /**
  * call when share button is clicked.
  */
+
 void OverLayer::shareCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-    if (type == Widget::TouchEventType::ENDED) {
+    if (type == Widget::TouchEventType::ENDED) {/*
         Dictionary *share_content = Dictionary::create();
         share_content -> setObject(String::create("。。我是一只软软的Nano。。。欢迎来到软蠢萌的世界"), "content");
         share_content -> setObject(String::create(deadScreen.c_str()), "image");
@@ -105,9 +106,9 @@ void OverLayer::shareCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEv
         //content -> setObject(String::create("ShareSDK"), "site");
         //content -> setObject(String::create("http://mp3.mwap8.com/destdir/Music/2009/20090601/ZuiXuanMinZuFeng20090601119.mp3"), "musicUrl");
         share_content -> setObject(String::create("extInfo"), "extInfo");
-        C2DXShareSDK::showShareMenu(NULL, share_content, CCPointMake(100, 100), C2DXMenuArrowDirectionLeft, shareResultHandler);
+        C2DXShareSDK::showShareMenu(NULL, share_content, Vec2(100, 100), C2DXMenuArrowDirectionLeft, shareResultHandler);*/
     }
-}
+}/*
 void OverLayer::shareResultHandler(cn::sharesdk::C2DXResponseState state, cn::sharesdk::C2DXPlatType platType, CCDictionary *shareInfo, CCDictionary *error) {
     switch (state) {
         case cn::sharesdk::C2DXResponseStateSuccess:
@@ -118,4 +119,4 @@ void OverLayer::shareResultHandler(cn::sharesdk::C2DXResponseState state, cn::sh
         default:
             break;
     }
-}
+}*/

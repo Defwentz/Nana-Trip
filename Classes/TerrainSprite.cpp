@@ -170,7 +170,7 @@ void TerrainSprite::spawnBelt()
     }
 }
 
-const int TUNNEL_KEYPOINT = 5,
+const int //TUNNEL_KEYPOINT = 5,
     TUNNEL_KP_DIST_IN_SCREEN = 3,
     X_IN_SCREEN = 5,
     NARROW_WIDTH = 45,                      // different than others
@@ -426,8 +426,8 @@ void TerrainSprite::spawnCurve()
     lvertices.push_back(Vec2(0, lastY-length));
     rvertices.push_back(Vec2(winSiz.width, lastY-length));
     
-    int margin_x = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
-    int big_radius = random(winMidX - margin_x*2, winSiz.width - margin_x*2);
+    //int margin_x = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+    //int big_radius = random(winMidX - margin_x*2, winSiz.width - margin_x*2);
     
     switch (crvRdmr->getRandomItem()) {
         case ITEM_CURVE_BR:
@@ -527,7 +527,7 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
 
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 {
-    uint32 flags;
+    uint32 flags = 0;
     if(boolWithOdds(0.5))
         flags += MoverSprite::_motorBit;
     flags += MoverSprite::_normalBit;
@@ -661,24 +661,11 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft)
         };
         GL::enableVertexAttribs(GL::VERTEX_ATTRIB_FLAG_POSITION | GL::VERTEX_ATTRIB_FLAG_TEX_COORD);
         terrainTxture->getGLProgram()->use();
-        // bad performence
         terrainTxture->getGLProgram()->setUniformsForBuiltins();
         GL::bindTexture2D(terrainTxture->getName());
         glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_POSITION, 2, GL_FLOAT, GL_FALSE, 0, vt);
         glVertexAttribPointer(GLProgram::VERTEX_ATTRIB_TEX_COORD, 2, GL_FLOAT, GL_FALSE, 0, ct);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-//        Point tallerOne(x, _p1.y), shorterOne(x, _p2.y);
-//        Point vt1[] = {tallerOne, _p1, shorterOne};
-//        Point vt2[] = {shorterOne, _p1, _p2};
-//        
-//        Color4F color(0.3555f, 0.3289f, 0.98f, 1);//(0.3555f, 0.6289f, 0.78f, 1);
-//        ccDrawSolidPoly(vt1, 3, color);
-//        ccDrawSolidPoly(vt2, 3, color);
-        
-//        ccDrawColor4F(1, 1, 1, 1.0);
-//        ccDrawLine(_p1, _p2);
-        
         _p1 = _p2;
     }
 }
@@ -689,12 +676,12 @@ void TerrainSprite::update(float nanaY)
     float bottomY = nanaY - winSiz.height;
     
     if (lvertices[1].y > topY) {
-        lvertices.erase(lvertices.cbegin());
+        lvertices.erase(lvertices.begin());
         std::vector<b2Fixture *> _fixtures = lfixtures.front();
         for(int i = 0; i < _fixtures.size(); i++) {
             _body->DestroyFixture(_fixtures[i]);
         }
-        lfixtures.erase(lfixtures.cbegin());
+        lfixtures.erase(lfixtures.begin());
         lto--;
     }
     for(int i = lto; i < lvertices.size(); i++) {
@@ -708,12 +695,12 @@ void TerrainSprite::update(float nanaY)
         spawnTerrain();
     
     if (rvertices[1].y > topY) {
-        rvertices.erase(rvertices.cbegin());
+        rvertices.erase(rvertices.begin());
         std::vector<b2Fixture *> _fixtures = rfixtures.front();
         for(int i = 0; i < _fixtures.size(); i++) {
             _body->DestroyFixture(_fixtures[i]);
         }
-        rfixtures.erase(rfixtures.cbegin());
+        rfixtures.erase(rfixtures.begin());
         rto--;
     }
     for(int i = rto; i < rvertices.size(); i++) {

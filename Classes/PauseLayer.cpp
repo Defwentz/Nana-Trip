@@ -10,6 +10,11 @@
 #include "GameLayer.h"
 #include "StartLayer.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include <platform/android/jni/JniHelper.h>
+#include <jni.h>
+#endif
+
 USING_NS_CC;
 
 using namespace cocostudio::timeline;
@@ -43,6 +48,22 @@ bool PauseLayer::init()
     anotherBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::anotherCallback, this));
     //backBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::backCallback, this));
     
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    
+    // Andorid
+    log("android platform!");
+    JniMethodInfo t;
+    if(JniHelper::getStaticMethodInfo(t, "xx/jnitst/MyJavaClass", "dosth", "()V")) {
+        log("call function succeed!!!!!!!!!!");
+        t.env->CallStaticVoidMethod(t.classID, t.methodID);
+        //t.env->DeleteLocalRef(t.classID);
+    }
+    
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    
+    // iOS
+    
+#endif
     return true;
 }
 

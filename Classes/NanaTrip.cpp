@@ -13,6 +13,7 @@ int gameStatus;
 cocos2d::Size winSiz;
 float winMidX;
 float winMidY;
+cocos2d::Size screenSiz;
 
 int score;
 int pos_score;
@@ -30,9 +31,11 @@ void initStatistic()
 
 void initWinSiz()
 {
-    winSiz = cocos2d::Director::getInstance()->getWinSize();
+    auto director = cocos2d::Director::getInstance();
+    winSiz = director->getWinSize();
     winMidX = winSiz.width/2;
     winMidY = winSiz.height/2;
+    screenSiz = director->getOpenGLView()->getFrameSize();
 }
 
 b2Vec2 vToB2(cocos2d::Vec2 v)

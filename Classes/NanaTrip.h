@@ -38,7 +38,7 @@
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include <SimpleAudioEngine.h>
-#include "C2DXShareSDK.h"
+//#include "C2DXShareSDK.h"
 #include "Randomer.h"
 
 #include "Resources.h"
@@ -91,6 +91,7 @@ extern std::string deadScreen;
 extern cocos2d::Size winSiz;
 extern float winMidX;
 extern float winMidY;
+extern cocos2d::Size screenSiz;
 
 // TODO: change
 extern int score;

@@ -152,10 +152,10 @@ void NanaSprite::initPhysics(b2World *world)
     
     // Delta angle to step by
     float deltaAngle = (2.f * M_PI) / NUM_SEGMENTS;
-    
+
     // Radius of the wheel
-    float radius = 1.2f;
-    float inner_radius = 0.9f;
+    //float radius = screenSiz.width*0.0016f;//1.2f;
+    //float inner_radius = screenSiz.width*0.0012f;//0.9f;
     
     // Need to store the bodies so that we can refer back
     // to it when we connect the joints
@@ -252,7 +252,6 @@ void NanaSprite::initPhysics(b2World *world)
         
         // Connect the outside
         rjointDef.Initialize(currentBody, neighborBody, outer_joint);
-        // do not work
         if(enableUnbreakable) {
             rjointDef.collideConnected = true;
             rjointDef.upperAngle = 0 * b2_pi;
@@ -403,15 +402,16 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     
     // tiny side burns (...Guesss that one way to call it)
     for(int i = 0; i < _bodies.size(); i++) {
-        Vec2 target = (center - vertices[i]) * 1.4;
+        Vec2 target = (center - vertices[i]) * nub_pos;
         target += center;
-        DrawPrimitives::drawSolidCircle(vertices[i], 8, CC_DEGREES_TO_RADIANS(360), 30);
+        DrawPrimitives::drawSolidCircle(vertices[i], nub_size, CC_DEGREES_TO_RADIANS(360), 30);
     }
     
     // draw the body
     DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, _nanaColor);
-    center.x-=12;center.y-=12;
-    _nanaFace->drawAtPoint(center - Vec2(15, 15));
+    
+    //center.x-=12;center.y-=12;
+    _nanaFace->drawAtPoint(center + Vec2(face_offset, face_offset));
     
     CHECK_GL_ERROR_DEBUG();
     

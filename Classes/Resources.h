@@ -9,6 +9,8 @@
 #ifndef __nanatrip__Resources__
 #define __nanatrip__Resources__
 
+#include <string>
+
 extern std::string res_bg[];
 extern std::string res_mover[];
 extern std::string res_ratings[];

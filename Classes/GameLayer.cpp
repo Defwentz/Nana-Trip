@@ -58,7 +58,9 @@ GameLayer::~GameLayer()
     CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
+// Enable Accelerometer and attach listener, enable touch and attach listeners.
 void GameLayer::initListeners() {
+
     Device::setAccelerometerEnabled(true);
     // creating an accelerometer event
     auto listener = EventListenerAcceleration::create(CC_CALLBACK_2(GameLayer::onAcceleration, this));
@@ -86,7 +88,7 @@ void GameLayer::initBG()
 void GameLayer::updateBG(float topY, float bottomY) {
     if(_bgSprites.front()->getPosition().y > topY) {
         _bgSprites.front()->removeFromParent();
-        _bgSprites.erase(_bgSprites.cbegin());
+        _bgSprites.erase(_bgSprites.begin());
     }
     Vec2 bgsbackPos = _bgSprites.back()->getPosition();
     if(bgsbackPos.y - after_height/2 > bottomY) {
@@ -207,7 +209,7 @@ void GameLayer::initPhysics()
     
     scheduleUpdate();
 }
-#include <unistd.h>
+
 void GameLayer::update(float dt)
 {
     if(gameStatus == GAME_PAUSE) {
@@ -216,8 +218,7 @@ void GameLayer::update(float dt)
     else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
         utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead");
-        //gameOver(0);
-        scheduleOnce(schedule_selector(GameLayer::gameOver), 1.0f);
+        scheduleOnce(schedule_selector(GameLayer::gameOver), 0.5f);
         return;
     }
     
@@ -307,67 +308,51 @@ void GameLayer::reset()
     gameStatus = GAME_PLAY;
 }
 
-bool GameLayer::onTouchBegan(Touch* touch, Event* event)
-{
-    if(isCounting2Destroy)
+bool GameLayer::onTouchBegan(Touch* touch, Event* event) {
+    if(isCounting2Destroy || _drawVertices.size() != 0)
         return true;
     _drawVertices.push_back(this->convertTouchToNodeSpace(touch));
-//    if(touchLocation.y < winMidY - 50) {
-//        _nana->ApplyForce(b2Vec2((touchLocation.x - _nana->getPosition().x)/20,
-//                                 (touchLocation.y - winMidY)/20));
-//    }
-//    else if(touchLocation.y > winMidY + 50) {
-//        _nana->ApplyForce(b2Vec2(0, 7));
-//    }
     return true;
 }
 void GameLayer::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event) {
-    if(isCounting2Destroy)
+    if(isCounting2Destroy || _drawVertices.size() == 0)
         return;
     Vec2 cTouchLoc = this->convertTouchToNodeSpace(touch);
-    b2ChainShape chain;
-    b2Vec2 vt[] = {vToB2(_drawVertices.back()) , vToB2(cTouchLoc)};
-    chain.CreateChain(vt, 2);
-    
-    _drawNode->drawSegment(_drawVertices.back(), cTouchLoc, 7.0f, _drawColor);
-    _drawVertices.push_back(cTouchLoc);
-    _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
-    
+    addPoint(cTouchLoc);
 }
 void GameLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event) {
-    if(isCounting2Destroy)
+    if(isCounting2Destroy || _drawVertices.size() == 0)
         return;
     Vec2 cTouchLoc = this->convertTouchToNodeSpace(touch);
-    b2ChainShape chain;
-    b2Vec2 vt[] = {vToB2(_drawVertices.back()), vToB2(cTouchLoc)};
-    chain.CreateChain(vt, 2);
-    _drawNode->drawSegment(_drawVertices.back(), cTouchLoc, 7.0f, _drawColor);
-    _drawVertices.push_back(cTouchLoc);
-    _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
+    addPoint(cTouchLoc);
     
-    
-    scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures), 1.5f);
     isCounting2Destroy = true;
+    scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures), _drawLast);
+}
+
+void GameLayer::addPoint(Vec2 newPoint) {
+    // get chain shape
+    b2ChainShape chain;
+    b2Vec2 vt[] = {vToB2(_drawVertices.back()), vToB2(newPoint)};
+    //log("(%f,%f)-(%f,%f)", vt[0].x, vt[0].y, vt[1].x, vt[1].y);
+    chain.CreateChain(vt, 2);
+    
+    // draw
+    _drawNode->drawSegment(_drawVertices.back(), newPoint, 7.0f, _drawColor);
+    _drawVertices.push_back(newPoint);
+    _drawFixtures.push_back(_drawBody->CreateFixture(&chain, 1.0f));
 }
 
 void GameLayer::destroyDrawFixtures(float dt) {
-    
     _drawVertices.clear();
-    _drawNode->clear();
     for(std::vector<b2Fixture *>::iterator i = _drawFixtures.begin();
         i != _drawFixtures.end();) {
         _drawBody->DestroyFixture((*i));
         i = _drawFixtures.erase(i);
     }
+    _drawNode->clear();
+    //log("%f,%f", vToB2(_drawVertices.back()).x, vToB2(_drawVertices.back()).y);
     isCounting2Destroy = false;
-//    for(b2ContactEdge *contact = _drawBody->GetContactList(); contact; contact = contact->next) {
-//        b2Body *other = contact->other;
-//        auto other_userdata = (Entity *) other->GetUserData();
-//        if(other_userdata && other_userdata->type == UD_NANA) {
-//            scheduleOnce(schedule_selector(GameLayer::destroyDrawFixtures),2.0f);
-//            return;
-//        }
-//    }
 }
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)

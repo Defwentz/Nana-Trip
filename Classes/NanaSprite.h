@@ -27,6 +27,11 @@ class NanaSprite : public cocos2d::Sprite
     b2World *_world;
     
     Color4F _nanaColor = Color4F(0.347656f, 0.68f, 0.8086f, 1);
+    float radius = screenSiz.width*0.0016f;
+    float inner_radius = screenSiz.width*0.0012f;
+    float nub_pos = screenSiz.width*1.4/750;
+    float nub_size = screenSiz.width*8./750;
+    float face_offset = -screenSiz.width*28./750;
     
     cocos2d::Texture2D *_nanaFace;
     cocos2d::CustomCommand _customCommand;
