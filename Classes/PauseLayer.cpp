@@ -53,7 +53,7 @@ bool PauseLayer::init()
     // Andorid
     log("android platform!");
     JniMethodInfo t;
-    if(JniHelper::getStaticMethodInfo(t, "xx/jnitst/MyJavaClass", "dosth", "()V")) {
+    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/cpp/AppActivity", "dosth", "()V")) {
         log("call function succeed!!!!!!!!!!");
         t.env->CallStaticVoidMethod(t.classID, t.methodID);
         //t.env->DeleteLocalRef(t.classID);

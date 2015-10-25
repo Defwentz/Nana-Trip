@@ -20,3 +20,5 @@ SpriteWithBody* SpriteWithBody::create(const std::string& filename)
     return nullptr;
 }
 SpriteWithBody::SpriteWithBody(){}
+void SpriteWithBody::selfDestruct(b2World *world) {
+}

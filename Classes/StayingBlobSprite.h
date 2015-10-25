@@ -1,30 +1,23 @@
 //
-//  NanaSprite.h
+//  StayingBlobSprite.h
 //  nanatrip
 //
-//  Created by Macbook Air on 7/19/15.
+//  Created by Macbook Air on 10/24/15.
 //
 //
 
-#ifndef __nanatrip__NanaSprite__
-#define __nanatrip__NanaSprite__
+#ifndef __nanatrip__StayingBlobSprite__
+#define __nanatrip__StayingBlobSprite__
 
 #include "NanaTrip.h"
 
-class NanaSprite : public cocos2d::Sprite
+class StayingBlobSprite : public cocos2d::Sprite
 {
     /**
      * Scale used in gasUp method.
      * default 12, 10 is ok, 20 is a bit much, get stuck sometime.
      */
     int hardness = 12;
-    /**
-     * When true, the chance of getting deformed would be slimer, I think.
-     * default true.
-     */
-    bool enableUnbreakable = false;
-    
-    b2World *_world;
     
     Color4F _nanaColor = Color4F(0.347656f, 0.68f, 0.8086f, 1);
     float radius = screenSiz.width*0.0016f;
@@ -33,31 +26,25 @@ class NanaSprite : public cocos2d::Sprite
     float nub_size = screenSiz.width*8./750;
     float face_offset = -screenSiz.width*28./750;
     
-    cocos2d::Texture2D *_nanaFace;
+    b2Body *_center_body;
+    std::vector<b2Body *> _bodies;
+    std::vector<b2RevoluteJoint *> _joints;
+    
     cocos2d::CustomCommand _customCommand;
 public:
+    static StayingBlobSprite *create();
+    StayingBlobSprite();
+    
     /**
      * _bodies[0]->getPosistion()
      */
     cocos2d::Vec2 getPosition();
     cocos2d::Vec2 getCenter();
-    bool isNana(b2Body *body);
-    
     /**
      * Gas up the body, apply force with a scale, which is a member variable "hardness".
      * Currently only work with 12 segments. If change, need adjustment.
      */
     void gasUp();
-    void ApplyForce(b2Vec2 force);
-    
-    static NanaSprite *create(b2World *world);
-    
-    NanaSprite(b2World *world);
-    ~NanaSprite();
-    void initPhysics(b2World *world);
-    
-    std::vector<b2Body *> _bodies;
-    std::vector<b2RevoluteJoint *> _joints;
     
     // draw
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
@@ -65,4 +52,4 @@ public:
     void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
 };
 
-#endif /* defined(__nanatrip__NanaSprite__) */
+#endif /* defined(__nanatrip__StayingBlobSprite__) */

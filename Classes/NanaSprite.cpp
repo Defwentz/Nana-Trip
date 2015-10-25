@@ -120,7 +120,6 @@ NanaSprite* NanaSprite::create(b2World *world)
     {
         CC_SAFE_DELETE(pRet);
     }
-    
     return pRet;
 }
 

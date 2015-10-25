@@ -12,6 +12,7 @@
 #include "NanaTrip.h"
 #include "SpriteWithBody.h"
 #include "MoverSprite.h"
+#include "RedSprite.h"
 
 // for general terrain randomer
 #define ITEM_TUNNEL         0
@@ -40,18 +41,16 @@ class TerrainSprite : public cocos2d::Sprite
     
     //std::vector<int> terrainTypes;
     
-    std::vector<std::vector<b2Fixture *>> lfixtures;
-    std::vector<std::vector<b2Fixture *>> rfixtures;
-    std::vector<cocos2d::Vec2> lvertices;
-    std::vector<cocos2d::Vec2> rvertices;
-    int lto, rto;
+    std::vector<std::vector<b2Fixture *>> fixtures[2];
+    std::vector<cocos2d::Vec2> vertices[2];
+    int to[2];
     float getLastY();
     
     std::vector<b2Body *> littleguys;           // those yellow ball
     std::vector<SpriteWithBody *> obstacles;    // those brown round thing
-    std::vector<SpriteWithBody *> badguys;      // red guy
     std::vector<SpriteWithBody *> dnas;         // yellow guy
     std::vector<MoverSprite *> movers;          // mover
+    std::vector<RedSprite *> badguys;           // red guy
     
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
@@ -71,15 +70,15 @@ public:
     
     void createDNA(cocos2d::Vec2 vpos);
     void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
-    void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
+    void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     
     void update(float nanaY);
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);
     
-    void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
-    void drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isLeft);
+    void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight);
+    void drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight);
     void doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2, void (*func)(const cocos2d::Vec2 &origin, const cocos2d::Vec2 &destination));
     
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)

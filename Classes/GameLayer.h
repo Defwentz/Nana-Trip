@@ -21,7 +21,7 @@ class GameLayer : public cocos2d::Layer
     /**
      * Default gravity, b2Vec2(0, -8)
      */
-    b2Vec2 stdGrav = b2Vec2(0, -8);
+    b2Vec2 stdGrav = b2Vec2(0, -9);
     
     /**
      * helper class for Box2D, to debug

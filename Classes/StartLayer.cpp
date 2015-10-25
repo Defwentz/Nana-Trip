@@ -10,6 +10,12 @@
 #include "GameLayer.h"
 #include "AboutLayer.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include <platform/android/jni/JniHelper.h>
+#include <jni.h>
+#endif
+
+
 USING_NS_CC;
 
 using namespace cocostudio::timeline;
@@ -40,6 +46,19 @@ bool StartLayer::init()
 //    storeBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::storeCallback, this));
 //    aboutBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::aboutCallback, this));
     
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+
+    JniMethodInfo t;
+    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/cpp/AppActivity", "showbar", "()V")) {
+        log("call do nothing succeed!!!!!!!!!!");
+        t.env->CallStaticVoidMethod(t.classID, t.methodID);
+        //t.env->DeleteLocalRef(t.classID);
+    }
+    
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    
+#endif
+    
     return true;
 }
 
@@ -47,6 +66,22 @@ void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
 {
     if (type == Widget::TouchEventType::ENDED)
     {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+        
+        // Andorid
+        log("android platform!");
+        JniMethodInfo t;
+        if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/cpp/AppActivity", "hidebar", "()V")) {
+            log("call do nothing succeed!!!!!!!!!!");
+            t.env->CallStaticVoidMethod(t.classID, t.methodID);
+            //t.env->DeleteLocalRef(t.classID);
+        }
+        
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        
+        // iOS
+        
+#endif
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }

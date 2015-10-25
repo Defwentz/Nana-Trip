@@ -34,7 +34,7 @@
 #define nanatrip_NanaTrip_h
 
 #include "cocos2d.h"
-#include <Box2D/Box2D.h>
+#include "Box2DHelper.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include <SimpleAudioEngine.h>
@@ -66,6 +66,8 @@ extern int gameStatus;
 #define UD_DNA 3
 #define UD_HAND 4
 #define UD_DESTROYED 99
+
+#define IS_DEBUGGING 0
 
 class Entity
 {

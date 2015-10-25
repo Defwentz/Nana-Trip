@@ -73,8 +73,8 @@ void GameLayer::initListeners() {
     touchlistener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
 }
-void GameLayer::initBG()
-{
+void GameLayer::initBG() {
+    if(IS_DEBUGGING)return;
     after_height = winSiz.width*848/1080;
     int n = ceil(winSiz.height / after_height);
     for(int i = 0; i < n; i++) {
@@ -86,6 +86,7 @@ void GameLayer::initBG()
     }
 }
 void GameLayer::updateBG(float topY, float bottomY) {
+    if(IS_DEBUGGING)return;
     if(_bgSprites.front()->getPosition().y > topY) {
         _bgSprites.front()->removeFromParent();
         _bgSprites.erase(_bgSprites.begin());
@@ -110,7 +111,8 @@ void GameLayer::initPhysics()
     _world->SetDebugDraw(_debugDraw);
     
     uint32 flags = 0;
-//        flags += b2Draw::e_shapeBit;
+    if(IS_DEBUGGING)
+        flags += b2Draw::e_shapeBit;
 //        flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
@@ -358,7 +360,7 @@ void GameLayer::destroyDrawFixtures(float dt) {
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
     _nana->ApplyForce(b2Vec2(acc->x * 3, 0));
-    _world->SetGravity(stdGrav + b2Vec2(acc->x * 5, 0));
+    _world->SetGravity(stdGrav + b2Vec2(acc->x * 10, 0));
 }
 
 // Draw
