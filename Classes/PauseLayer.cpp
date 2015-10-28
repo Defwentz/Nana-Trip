@@ -38,22 +38,26 @@ bool PauseLayer::init()
     auto rootNode = CSLoader::createNode("another_pause/NewPauseLayer.csb");
     addChild(rootNode);
     
+    Sprite* bgSprite = dynamic_cast<Sprite*>(rootNode->getChildByName("bg"));
+    Texture2D* texture = Director::getInstance()->getTextureCache()->addImage(pauseScreen);
+    bgSprite->setTexture(texture);
+    
     Text* scoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_score"));
     scoreTxt->setString(StringUtils::format("%d", score));
     
     conitnueBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_continue"));
     anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_new"));
-    //backBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
+    backBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     conitnueBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::continueCallback, this));
     anotherBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::anotherCallback, this));
-    //backBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::backCallback, this));
+    backBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::backCallback, this));
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     
     // Andorid
     log("android platform!");
     JniMethodInfo t;
-    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/cpp/AppActivity", "dosth", "()V")) {
+    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/mz/AppActivity", "dosth", "()V")) {
         log("call function succeed!!!!!!!!!!");
         t.env->CallStaticVoidMethod(t.classID, t.methodID);
         //t.env->DeleteLocalRef(t.classID);
@@ -84,11 +88,11 @@ void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
 }
-//void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
-//{
-//    if (type == Widget::TouchEventType::ENDED)
-//    {
-//        //Director::getInstance()->popScene();
-//        Director::getInstance()->replaceScene(StartLayer::createScene());
-//    }
-//}
+void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
+{
+    if (type == Widget::TouchEventType::ENDED)
+    {
+        //Director::getInstance()->popScene();
+        Director::getInstance()->replaceScene(StartLayer::createScene());
+    }
+}

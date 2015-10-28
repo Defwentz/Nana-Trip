@@ -68,12 +68,17 @@ void InfoLayer::update()
 
 void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::ENDED) {
-        gameStatus = GAME_PAUSE;
-        Device::setAccelerometerEnabled(false);
-        pauseBtn->setTouchEnabled(false);
-        CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-        Director::getInstance()->pushScene(PauseLayer::createScene());
+        utils::captureScreen(CC_CALLBACK_2(InfoLayer::captureScreenCallback, this), "pause");
+        //toPause(0);
+        scheduleOnce(schedule_selector(InfoLayer::toPause), 0.1f);
     }
+}
+void InfoLayer::toPause(float dt) {
+    gameStatus = GAME_PAUSE;
+    Device::setAccelerometerEnabled(false);
+    pauseBtn->setTouchEnabled(false);
+    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+    Director::getInstance()->pushScene(PauseLayer::createScene());
 }
 void InfoLayer::soundCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
     
@@ -83,4 +88,14 @@ void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
     Device::setAccelerometerEnabled(true);
     CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     pauseBtn->setTouchEnabled(true);
+}
+
+void InfoLayer::captureScreenCallback(bool succeed, const std::string &filename) {
+    if(succeed) {
+        pauseScreen = filename;
+        //        auto sp = Sprite::create(filename);
+        //        Director::getInstance()->getRunningScene()->addChild(sp, 10);
+        //        sp->setPosition(winMidX, winMidY);
+        //        sp->setScale(0.25);
+    }
 }

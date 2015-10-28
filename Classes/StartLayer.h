@@ -15,7 +15,7 @@ class StartLayer : public cocos2d::Layer
 {
     cocos2d::ui::Button* startBtn;
 //    cocos2d::ui::Button* storeBtn;
-//    cocos2d::ui::Button* aboutBtn;
+    cocos2d::ui::Button* aboutBtn;
 public:
     static cocos2d::Scene* createScene();
     virtual bool init();
@@ -23,7 +23,7 @@ public:
     
     void startCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 //    void storeCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
-//    void aboutCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    void aboutCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
 };
 
 #endif /* defined(__nanatrip__StartLayer__) */

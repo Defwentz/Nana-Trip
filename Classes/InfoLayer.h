@@ -25,8 +25,11 @@ public:
     
     void update();
     void pauseCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    void toPause(float dt);
     void soundCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void defaultCallback(cocos2d::Ref *pSender);
+    
+    void captureScreenCallback(bool, const std::string &);
 };
 
 #endif /* defined(__nanatrip__InfoLayer__) */

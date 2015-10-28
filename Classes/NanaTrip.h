@@ -12,12 +12,12 @@
 // situations when nana got stuck in the walls and things - I think there was something in the Box2d header file I can change, a parameter
 
 // TODO:                    more terrain, more obstacle
-// nana size according to screen size
+// * nana size according to screen size
 // * highest score
 // DNA, which add to HP
 // more stuff to InfoLayer
 // also the HP system
-// moving red
+// * moving red
 // increasing difficulty
 // bonus item, like pills
 // speed limits
@@ -25,15 +25,14 @@
 // * terrain change and other
 // scoring detail
 // music control
-
-// TODO for artwork:
-// * Texture for land
+// keep screen on
 
 
 #ifndef nanatrip_NanaTrip_h
 #define nanatrip_NanaTrip_h
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
+#include "SpriteBlur.h"
 #include "Box2DHelper.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
@@ -88,7 +87,10 @@ int randWithBase(int base, int addon);
  */
 bool boolWithOdds(float odds);
 
+void BackButtonReleased(EventKeyboard::KeyCode code, Event *event);
+
 extern std::string deadScreen;
+extern std::string pauseScreen;
 
 extern cocos2d::Size winSiz;
 extern float winMidX;

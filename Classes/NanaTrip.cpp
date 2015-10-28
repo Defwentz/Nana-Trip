@@ -61,4 +61,9 @@ bool boolWithOdds(float odds)
         return false;
 }
 
+void BackButtonReleased(EventKeyboard::KeyCode code, Event *event) {
+    Director::getInstance()->end();
+}
+
 std::string deadScreen;// = "dead.png";
+std::string pauseScreen;// = "dead.png";

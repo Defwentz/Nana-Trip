@@ -41,15 +41,15 @@ bool StartLayer::init()
     
     startBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_start"));
 //    storeBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_store"));
-//    aboutBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_about"));
+    aboutBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_about"));
     startBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::startCallback, this));
 //    storeBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::storeCallback, this));
-//    aboutBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::aboutCallback, this));
+    aboutBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::aboutCallback, this));
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
     JniMethodInfo t;
-    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/cpp/AppActivity", "showbar", "()V")) {
+    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/mz/AppActivity", "showbar", "()V")) {
         log("call do nothing succeed!!!!!!!!!!");
         t.env->CallStaticVoidMethod(t.classID, t.methodID);
         //t.env->DeleteLocalRef(t.classID);
@@ -71,7 +71,7 @@ void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
         // Andorid
         log("android platform!");
         JniMethodInfo t;
-        if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/cpp/AppActivity", "hidebar", "()V")) {
+        if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/mz/AppActivity", "hidebar", "()V")) {
             log("call do nothing succeed!!!!!!!!!!");
             t.env->CallStaticVoidMethod(t.classID, t.methodID);
             //t.env->DeleteLocalRef(t.classID);
@@ -94,11 +94,11 @@ void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
 //        //CCDirector::getInstance()->replaceScene(GameLayer::createScene());
 //    }
 //}
-//void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
-//{
-//    if (type == Widget::TouchEventType::ENDED)
-//    {
-//        Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
-//        Director::getInstance()->replaceScene(AboutLayer::createScene());
-//    }
-//}
+void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
+{
+    if (type == Widget::TouchEventType::ENDED)
+    {
+        Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+        Director::getInstance()->replaceScene(AboutLayer::createScene());
+    }
+}

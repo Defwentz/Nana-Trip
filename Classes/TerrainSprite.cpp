@@ -1,4 +1,5 @@
 //
+
 //  TerrainSprite.cpp
 //  nanatrip
 //
@@ -171,10 +172,9 @@ void TerrainSprite::spawnBelt()
 }
 
 const int //TUNNEL_KEYPOINT = 5,
-    TUNNEL_KP_DIST_IN_SCREEN = 3,
-    X_IN_SCREEN = 5,
-    NARROW_WIDTH = 45,                      // different than others
-    ROW_WIDTH = 50, ROW_WIDTH_ADDON = 50;   // different than others
+TUNNEL_KP_DIST_IN_SCREEN = 3,
+X_IN_SCREEN = 5,                     // different than others
+ROW_WIDTH = 50, ROW_WIDTH_ADDON = 50;   // different than others
 // TODO: tunnels with caves
 void TerrainSprite::spawnTunnel()
 {
@@ -203,7 +203,7 @@ void TerrainSprite::spawnTunnel()
                 }
                 int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
-                int width = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+                int width = randWithBase(narrowest_width, narrowest_width);
                 int x = randWithBase(winSiz.width/X_IN_SCREEN, winSiz.width*3/X_IN_SCREEN);
                 lastY -= length;
                 createDNA(Vec2(x, lastY));
@@ -225,7 +225,7 @@ void TerrainSprite::spawnTunnel()
                 }
                 int length = randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
-                int width = randWithBase(NARROW_WIDTH + ROW_WIDTH, NARROW_WIDTH + ROW_WIDTH_ADDON);
+                int width = randWithBase(narrowest_width + ROW_WIDTH, narrowest_width + ROW_WIDTH_ADDON);
                 int x = random(winSiz.width/5, winSiz.width*4/5);
                 lastY -= length;
                 createDNA(Vec2(x, lastY));
@@ -239,7 +239,7 @@ void TerrainSprite::spawnTunnel()
     lastY -= randWithBase(winSiz.height/TUNNEL_KP_DIST_IN_SCREEN,
                           winSiz.height/TUNNEL_KP_DIST_IN_SCREEN);
     
-    Vec2 badguyPos = Vec2((vertices[0].back().x + 0)/2, (vertices[0].back().y + lastY)/2) + Vec2(NARROW_WIDTH, -NARROW_WIDTH);
+    Vec2 badguyPos = Vec2((vertices[0].back().x + 0)/2, (vertices[0].back().y + lastY)/2) + Vec2(narrowest_width, -narrowest_width);
     b2CircleShape ball;
     ball.m_p = vToB2(badguyPos);
     ball.m_radius = DNA_B2RADIUS;
@@ -247,7 +247,7 @@ void TerrainSprite::spawnTunnel()
     
     vertices[0].push_back(Vec2(0, lastY));
     vertices[1].push_back(Vec2(winSiz.width, lastY));
-  }
+}
 
 
 // type 1   >
@@ -270,7 +270,7 @@ void TerrainSprite::spawnBumps()
                 // I think same total x,y difference will look better than different
                 int bump_length = random(min_bump_length, max_bump_length);
                 int bump_peak_tdy = random(bump_length/2, bump_length*2/3);
-                int bump_peak_tdx = random((float)NARROW_WIDTH, winSiz.width - NARROW_WIDTH);
+                int bump_peak_tdx = random((float)narrowest_width, winSiz.width - narrowest_width);
                 int bump_peak_y_1 = lastY - bump_peak_tdy;
                 int bump_end_y_1 = lastY - bump_length;
                 
@@ -289,7 +289,7 @@ void TerrainSprite::spawnBumps()
                 }
                 
                 lastY = bump_end_y_1;
-                int margin = random(0, bump_peak_tdy - bump_peak_tdy + NARROW_WIDTH);
+                int margin = random(0.0f, bump_peak_tdy - bump_peak_tdy + narrowest_width);
                 int bump_begin_y_2 = bump_peak_y_1 - margin;
                 int bump_peak_y_2 = bump_begin_y_2 - bump_peak_tdy;
                 lastY = bump_begin_y_2 - bump_length;
@@ -314,11 +314,11 @@ void TerrainSprite::spawnBumps()
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
-                int dx = random(winMidX/4, winMidX - NARROW_WIDTH/2);
+                int dx = random(winMidX/4, winMidX - narrowest_width/2);
                 vertices[0].push_back(Vec2(dx, lastY-dy));
                 
                 dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
-                dx = random(winMidX/3, winMidX - NARROW_WIDTH/2);
+                dx = random(winMidX/3, winMidX - narrowest_width/2);
                 vertices[1].push_back(Vec2(winSiz.width - dx, lastY-dy));
                 
                 lastY = getLastY();
@@ -337,7 +337,7 @@ void TerrainSprite::spawnBumps()
             bool isFirst = true;
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
-                int dx = random(winMidX/3, winMidX - NARROW_WIDTH/2);
+                int dx = random(winMidX/3, winMidX - narrowest_width/2);
                 vertices[0].push_back(Vec2(dx, lastY-dy));
                 vertices[1].push_back(Vec2(winSiz.width - dx, lastY-dy));
                 
@@ -369,7 +369,7 @@ void TerrainSprite::spawnChessboard()
     vertices[1].push_back(Vec2(winSiz.width, lastY-length));
     
     //terrainTypes.push_back(TYPE_DOOR);
-    int margin = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+    int margin = randWithBase(narrowest_width, narrowest_width);
     
     int col = random(MIN_COL, MAX_COL);
     float max_radius = (winSiz.width / (col-1) - margin)/2;
@@ -426,7 +426,7 @@ void TerrainSprite::spawnCurve()
     vertices[0].push_back(Vec2(0, lastY-length));
     vertices[1].push_back(Vec2(winSiz.width, lastY-length));
     
-    //int margin_x = randWithBase(NARROW_WIDTH, NARROW_WIDTH);
+    //int margin_x = randWithBase(narrowest_width, narrowest_width);
     //int big_radius = random(winMidX - margin_x*2, winSiz.width - margin_x*2);
     
     switch (crvRdmr->getRandomItem()) {
@@ -534,7 +534,7 @@ void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2,
         _p2.y = _p1.y - dy;
         y+=dj;
         _p2.x = A*cosf(y) + B;
-
+        
         func(_p1, _p2);
         _p1 = _p2;
     }
@@ -594,9 +594,9 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
         x = -winSiz.width;
         //terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_l.png");
     }
-//    else {
-//        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
-//    }
+    //    else {
+    //        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
+    //    }
     //////////////
     
     int n = floorf(tdy/10);
@@ -662,7 +662,7 @@ void TerrainSprite::update(float nanaY)
         if(to[n] == vertices[n].size())
             spawnTerrain();
     }
-
+    
     // check if there are sprites with b2body out of sight
     // if so, delete
     spriteCheck(obstacles, topY);
@@ -680,7 +680,7 @@ void TerrainSprite::update(float nanaY)
             for(b2ContactEdge *ce = (*i)->_body->GetContactList(); ce; ce = ce->next) {
                 b2Body *other = ce->other;
                 auto other_userdata = (Entity *) other->GetUserData();
-                if(other_userdata && ce->contact->IsTouching() && other_userdata->type == UD_NANA) {
+                if(other_userdata && other_userdata->type == UD_NANA) {
                     eat_score += 10;
                     dna++;
                     _world->DestroyBody((*i)->_body);

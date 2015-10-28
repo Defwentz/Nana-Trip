@@ -220,7 +220,7 @@ void GameLayer::update(float dt)
     else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
         utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead");
-        scheduleOnce(schedule_selector(GameLayer::gameOver), 0.5f);
+        scheduleOnce(schedule_selector(GameLayer::gameOver), 0.2f);
         return;
     }
     
@@ -359,8 +359,8 @@ void GameLayer::destroyDrawFixtures(float dt) {
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    _nana->ApplyForce(b2Vec2(acc->x * 3, 0));
-    _world->SetGravity(stdGrav + b2Vec2(acc->x * 10, 0));
+    _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
+    _world->SetGravity(stdGrav + b2Vec2(acc->x * 15, 0));
 }
 
 // Draw

@@ -54,12 +54,12 @@ bool OverLayer::init()
     Text* bestScoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_bestscore"));
     bestScoreTxt->setString(StringUtils::format("%d", bestScore));
     
-    Sprite* ratingSprite = dynamic_cast<Sprite*>(rootNode->getChildByName("sprite_ratings"));
-    Texture2D* newRatingTexture;
-    if(rating != 0) {
-        newRatingTexture = Director::getInstance()->getTextureCache()->addImage(res_ratings[rating]);
-        ratingSprite->setTexture(newRatingTexture);
-    }
+//    Sprite* ratingSprite = dynamic_cast<Sprite*>(rootNode->getChildByName("sprite_ratings"));
+//    Texture2D* newRatingTexture;
+//    if(rating != 0) {
+//        newRatingTexture = Director::getInstance()->getTextureCache()->addImage(res_ratings[rating]);
+//        ratingSprite->setTexture(newRatingTexture);
+//    }
     
     Button* anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_newgame"));
     Button* returnBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
