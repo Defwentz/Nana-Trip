@@ -19,6 +19,6 @@ SpriteWithBody* SpriteWithBody::create(const std::string& filename)
     CC_SAFE_DELETE(sprite);
     return nullptr;
 }
-SpriteWithBody::SpriteWithBody(){}
 void SpriteWithBody::selfDestruct(b2World *world) {
+    world->DestroyBody(_body);
 }

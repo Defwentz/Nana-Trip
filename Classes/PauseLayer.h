@@ -17,14 +17,17 @@ class PauseLayer : public cocos2d::Layer
     cocos2d::ui::Button* anotherBtn;
     cocos2d::ui::Button* backBtn;
 public:
-    static cocos2d::Scene* createScene();
+    //static cocos2d::Scene* createScene();
     virtual bool init();
     CREATE_FUNC(PauseLayer);
+    ~PauseLayer();
     void disableAllBtn();
 
     void continueCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void anotherCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void backCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    EventListenerKeyboard *keyListener;
+    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 };
 
 #endif /* defined(__nanatrip__PauseLayer__) */

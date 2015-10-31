@@ -166,6 +166,9 @@ void TerrainSprite::spawnBelt()
     if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
         createBadGuy(pos, &ball, RedSprite::_moving);
     }
+    else if (boolWithOdds(0.5)) {
+        createBlob(pos, &ball);
+    }
     else {
         createBallObstacle(pos, &ball, true);
     }
@@ -476,6 +479,14 @@ void TerrainSprite::createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape, int t
     badguys.push_back(redSprite);
     this->addChild(redSprite);
 }
+void TerrainSprite::createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape)
+{
+    StayingBlobSprite *blob = StayingBlobSprite::create();
+    blob->setPosition(vpos);
+    blob->setup(_world, shape);
+    blobs.push_back(blob);
+    this->addChild(blob);
+}
 
 void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA)
 {
@@ -736,7 +747,20 @@ void TerrainSprite::update(float nanaY)
             i = littleguys.erase(i);
         }
         else {
-            (*i)->ApplyForce(b2Vec2(0, 16.0f), (*i)->GetWorldCenter(), true);
+            //(*i)->ApplyForce(b2Vec2(0, 16.0f), (*i)->GetWorldCenter(), true);
+            ++i;
+        }
+    }
+    
+    for(std::vector<StayingBlobSprite *>::iterator i = blobs.begin();
+        i != blobs.end();) {
+        if((*i)->getPosition().y > topY) {
+            (*i)->selfDestruct(_world); // TODO!!!!!
+            (*i)->removeFromParent();
+            i = blobs.erase(i);
+        }
+        else {
+            (*i)->update();
             ++i;
         }
     }
@@ -747,7 +771,8 @@ void TerrainSprite::spriteCheck(std::vector<SpriteWithBody *> &sprites, float to
     for(std::vector<SpriteWithBody *>::iterator i = sprites.begin();
         i != sprites.end();) {
         if((*i)->getPosition().y > topY) {
-            _world->DestroyBody((*i)->_body);
+            (*i)->selfDestruct(_world);
+            //_world->DestroyBody((*i)->_body);
             (*i)->removeFromParent();
             i = sprites.erase(i);
         }

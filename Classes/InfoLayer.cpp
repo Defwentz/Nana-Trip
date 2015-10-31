@@ -56,6 +56,8 @@ void InfoLayer::reset() {
 
 void InfoLayer::update()
 {
+    
+    if(gameStatus == GAME_PAUSE)return;
     if(pos_score > old_pos_score) {
         old_pos_score = pos_score;
     }
@@ -68,18 +70,25 @@ void InfoLayer::update()
 
 void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::ENDED) {
-        utils::captureScreen(CC_CALLBACK_2(InfoLayer::captureScreenCallback, this), "pause");
+        NotificationCenter::getInstance()->postNotification("pause_sign");
+        gameStatus = GAME_PAUSE;
+        Device::setAccelerometerEnabled(false);
+        buttonSwitch(pauseBtn, false);
+        scoreLabel->setVisible(false);
+        CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        this->getParent()->addChild(PauseLayer::create(), ZORDER_PAUSELAYER);
+        //utils::captureScreen(CC_CALLBACK_2(InfoLayer::captureScreenCallback, this), "pause");
         //toPause(0);
-        scheduleOnce(schedule_selector(InfoLayer::toPause), 0.1f);
+        //scheduleOnce(schedule_selector(InfoLayer::toPause), 0.1f);
     }
 }
-void InfoLayer::toPause(float dt) {
-    gameStatus = GAME_PAUSE;
-    Device::setAccelerometerEnabled(false);
-    pauseBtn->setTouchEnabled(false);
-    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-    Director::getInstance()->pushScene(PauseLayer::createScene());
-}
+//void InfoLayer::toPause(float dt) {
+//    gameStatus = GAME_PAUSE;
+//    Device::setAccelerometerEnabled(false);
+//    pauseBtn->setTouchEnabled(false);
+//    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+//    Director::getInstance()->pushScene(PauseLayer::createScene());
+//}
 void InfoLayer::soundCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
     
 }
@@ -87,15 +96,16 @@ void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
     gameStatus = GAME_PLAY;
     Device::setAccelerometerEnabled(true);
     CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-    pauseBtn->setTouchEnabled(true);
+    buttonSwitch(pauseBtn, true);
+    scoreLabel->setVisible(true);
 }
 
-void InfoLayer::captureScreenCallback(bool succeed, const std::string &filename) {
-    if(succeed) {
-        pauseScreen = filename;
-        //        auto sp = Sprite::create(filename);
-        //        Director::getInstance()->getRunningScene()->addChild(sp, 10);
-        //        sp->setPosition(winMidX, winMidY);
-        //        sp->setScale(0.25);
-    }
-}
+//void InfoLayer::captureScreenCallback(bool succeed, const std::string &filename) {
+//    if(succeed) {
+//        pauseScreen = filename;
+//        //        auto sp = Sprite::create(filename);
+//        //        Director::getInstance()->getRunningScene()->addChild(sp, 10);
+//        //        sp->setPosition(winMidX, winMidY);
+//        //        sp->setScale(0.25);
+//    }
+//}

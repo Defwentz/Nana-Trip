@@ -32,7 +32,6 @@ MoverSprite* MoverSprite::create(uint32 flags)
     CC_SAFE_DELETE(sprite);
     return nullptr;
 }
-MoverSprite::MoverSprite() {}
 
 void MoverSprite::setup(b2World *world, b2Body *body, const cocos2d::Vec2 &p, float radius) {
     float round_edge_radius = 25.0/PTM_RATIO;
@@ -80,7 +79,7 @@ void MoverSprite::setup(b2World *world, b2Body *body, const cocos2d::Vec2 &p, fl
 
 void MoverSprite::selfDestruct(b2World *world) {
     world->DestroyJoint(_joint);
-    world->DestroyBody(_body);
+    SpriteWithBody::selfDestruct(world);
 }
 
 void MoverSprite::update() {

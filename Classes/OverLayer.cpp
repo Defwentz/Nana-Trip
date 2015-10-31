@@ -13,13 +13,13 @@
 USING_NS_CC;
 using namespace cocos2d::ui;
 
-Scene* OverLayer::createScene()
-{
-    auto scene = Scene::create();
-    auto layer = OverLayer::create();
-    scene->addChild(layer);
-    return scene;
-}
+//Scene* OverLayer::createScene()
+//{
+//    auto scene = Scene::create();
+//    auto layer = OverLayer::create();
+//    scene->addChild(layer);
+//    return scene;
+//}
 
 bool OverLayer::init()
 {
@@ -31,7 +31,6 @@ bool OverLayer::init()
     auto rootNode = CSLoader::createNode("over/over.csb");
     addChild(rootNode);
     
-    UserDefault *db = UserDefault::getInstance();
     int bestScore = db->getIntegerForKey(key_best_score.c_str(), 0);
     int rating;
     if(bestScore < score) {
@@ -68,6 +67,10 @@ bool OverLayer::init()
     returnBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::returnCallback, this));
     shareBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::shareCallback, this));
     
+    auto listener = EventListenerKeyboard::create();
+    listener->onKeyReleased = CC_CALLBACK_2(OverLayer::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
     return true;
 }
 
@@ -94,21 +97,21 @@ void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchE
  */
 
 void OverLayer::shareCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-    if (type == Widget::TouchEventType::ENDED) {/*
+    if (type == Widget::TouchEventType::ENDED) {
         Dictionary *share_content = Dictionary::create();
         share_content -> setObject(String::create("。。我是一只软软的Nano。。。欢迎来到软蠢萌的世界"), "content");
         share_content -> setObject(String::create(deadScreen.c_str()), "image");
         share_content -> setObject(String::create("Nano Trip"), "title");
         share_content -> setObject(String::create("来自某只Nano的分享"), "description");
-        //content -> setObject(String::create("http://sharesdk.cn"), "url");
+        share_content -> setObject(String::create("http://www.1-xing.com"), "url");
         share_content -> setObject(String::createWithFormat("%d", C2DXContentTypeNews), "type");
-        //content -> setObject(String::create("http://sharesdk.cn"), "siteUrl");
-        //content -> setObject(String::create("ShareSDK"), "site");
-        //content -> setObject(String::create("http://mp3.mwap8.com/destdir/Music/2009/20090601/ZuiXuanMinZuFeng20090601119.mp3"), "musicUrl");
+        share_content -> setObject(String::create("http://www.1-xing.com"), "siteUrl");
+        share_content -> setObject(String::create("1-xing"), "site");
         share_content -> setObject(String::create("extInfo"), "extInfo");
-        C2DXShareSDK::showShareMenu(NULL, share_content, Vec2(100, 100), C2DXMenuArrowDirectionLeft, shareResultHandler);*/
+        
+        C2DXShareSDK::showShareMenu(NULL, share_content, Vec2(100, 100), C2DXMenuArrowDirectionLeft, shareResultHandler);
     }
-}/*
+}
 void OverLayer::shareResultHandler(cn::sharesdk::C2DXResponseState state, cn::sharesdk::C2DXPlatType platType, CCDictionary *shareInfo, CCDictionary *error) {
     switch (state) {
         case cn::sharesdk::C2DXResponseStateSuccess:
@@ -119,4 +122,16 @@ void OverLayer::shareResultHandler(cn::sharesdk::C2DXResponseState state, cn::sh
         default:
             break;
     }
-}*/
+}
+void OverLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+    switch(keyCode)
+    {
+            //监听返回键
+        case EventKeyboard::KeyCode::KEY_ESCAPE:
+            returnCallback(NULL, Widget::TouchEventType::ENDED);
+            break;
+            //监听menu键
+        case EventKeyboard::KeyCode::KEY_MENU:
+            break;
+    }
+}

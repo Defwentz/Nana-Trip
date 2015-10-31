@@ -10,8 +10,9 @@
 #define __nanatrip__StayingBlobSprite__
 
 #include "NanaTrip.h"
+#include "SpriteWithBody.h"
 
-class StayingBlobSprite : public cocos2d::Sprite
+class StayingBlobSprite : public SpriteWithBody
 {
     /**
      * Scale used in gasUp method.
@@ -19,32 +20,30 @@ class StayingBlobSprite : public cocos2d::Sprite
      */
     int hardness = 12;
     
-    Color4F _nanaColor = Color4F(0.347656f, 0.68f, 0.8086f, 1);
-    float radius = screenSiz.width*0.0016f;
-    float inner_radius = screenSiz.width*0.0012f;
+    Color4F _nanaColor = Color4F(0.1171875f, 0.125f, 0.15625f, 1);
+    float radius;
+    float inner_radius;
     float nub_pos = screenSiz.width*1.4/750;
-    float nub_size = screenSiz.width*8./750;
-    float face_offset = -screenSiz.width*28./750;
+    float nub_size;//screenSiz.width*8./750;
+    float face_offset = -screenSiz.width*328/750;
     
-    b2Body *_center_body;
     std::vector<b2Body *> _bodies;
     std::vector<b2RevoluteJoint *> _joints;
     
+    cocos2d::Texture2D *_blobFace;
     cocos2d::CustomCommand _customCommand;
 public:
     static StayingBlobSprite *create();
-    StayingBlobSprite();
+    void setup(b2World *world, b2CircleShape *shape);
+    ~StayingBlobSprite();
+    void selfDestruct(b2World *world);
     
-    /**
-     * _bodies[0]->getPosistion()
-     */
-    cocos2d::Vec2 getPosition();
     cocos2d::Vec2 getCenter();
     /**
      * Gas up the body, apply force with a scale, which is a member variable "hardness".
      * Currently only work with 12 segments. If change, need adjustment.
      */
-    void gasUp();
+    void update();
     
     // draw
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)

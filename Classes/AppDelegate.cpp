@@ -3,11 +3,11 @@
 //#include "LaunchLayer.h"
 #include "GameLayer.h"
 
-//#include "C2DXShareSDK.h"
+#include "../C2DXShareSDK/C2DXShareSDK.h"
 
 USING_NS_CC;
 
-//using namespace cn::sharesdk;
+using namespace cn::sharesdk;
 
 AppDelegate::AppDelegate() {
     
@@ -31,10 +31,16 @@ void AppDelegate::initGLContextAttrs()
 bool AppDelegate::applicationDidFinishLaunching() {
     
     //初始化ShareSDK
-    //C2DXShareSDK::open(CCString::create("api20"), false);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    C2DXShareSDK::open(CCString::create("bc6da0554e0a"), false);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    C2DXShareSDK::open(CCString::create("aa9f47608b90"), false);
+#else
+    C2DXShareSDK::open(CCString::create("api20"), false);
+#endif
     
     //初始化社交平台信息
-    //this -> initPlatformConfig();
+    this -> initPlatformConfig();
     
     // initialize director
     auto director = Director::getInstance();
@@ -82,7 +88,7 @@ void AppDelegate::applicationWillEnterForeground() {
 }
 
 // 初始化平台配置
-/*
+
 void AppDelegate::initPlatformConfig() {
     //新浪微博
     CCDictionary *sinaConfigDict = CCDictionary::create();
@@ -99,7 +105,7 @@ void AppDelegate::initPlatformConfig() {
     C2DXShareSDK::setPlatformConfig(C2DXPlatTypeTencentWeibo, tcConfigDict);
     
     //短信
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeSMS, NULL);
+    //C2DXShareSDK::setPlatformConfig(C2DXPlatTypeSMS, NULL);
     
     //QQ空间
     CCDictionary *qzConfigDict = CCDictionary::create();
@@ -150,7 +156,7 @@ void AppDelegate::initPlatformConfig() {
     C2DXShareSDK::setPlatformConfig(C2DXPlatTypeMail, NULL);
     
     //打印
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeAirPrint, NULL);
+    //C2DXShareSDK::setPlatformConfig(C2DXPlatTypeAirPrint, NULL);
     
     //拷贝
     C2DXShareSDK::setPlatformConfig(C2DXPlatTypeCopy, NULL);
@@ -162,4 +168,4 @@ void AppDelegate::initPlatformConfig() {
     dbConfigDict -> setObject(CCString::create("http://www.sharesdk.cn"), "redirect_uri");
     C2DXShareSDK::setPlatformConfig(C2DXPlatTypeDouBan, dbConfigDict);
 
-}*/
+}

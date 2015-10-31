@@ -24,8 +24,6 @@ class NanaSprite : public cocos2d::Sprite
      */
     bool enableUnbreakable = false;
     
-    b2World *_world;
-    
     Color4F _nanaColor = Color4F(0.347656f, 0.68f, 0.8086f, 1);
     float radius = screenSiz.width*0.0016f;
     float inner_radius = screenSiz.width*0.0012f;

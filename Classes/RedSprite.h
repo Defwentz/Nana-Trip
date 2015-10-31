@@ -25,7 +25,6 @@ public:
     static RedSprite *create();
     RedSprite();
     void setup(b2World *world, b2CircleShape *shape, int type);
-    void selfDestruct(b2World *world);
     
     void update(float dt);
 };

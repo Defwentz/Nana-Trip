@@ -13,6 +13,7 @@
 #include "SpriteWithBody.h"
 #include "MoverSprite.h"
 #include "RedSprite.h"
+#include "StayingBlobSprite.h"
 
 // for general terrain randomer
 #define ITEM_TUNNEL         0
@@ -51,6 +52,7 @@ class TerrainSprite : public cocos2d::Sprite
     std::vector<SpriteWithBody *> dnas;         // yellow guy
     std::vector<MoverSprite *> movers;          // mover
     std::vector<RedSprite *> badguys;           // red guy
+    std::vector<StayingBlobSprite *> blobs;     // blob
     
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
@@ -73,6 +75,7 @@ public:
     void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
+    void createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape);
     
     void update(float nanaY);
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);

@@ -13,3 +13,4 @@ std::string res_mover[] = {"rod_1.png"};
 std::string res_ratings[] = {"result/0.png", "result/1.png", "result/2.png", "result/3.png"};
 
 std::string key_best_score = "best_score";
+std::string key_music_status = "music_status";

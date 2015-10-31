@@ -17,7 +17,6 @@ class SpriteWithBody : public cocos2d::Sprite
     
 public:
     static SpriteWithBody *create(const std::string& filename);
-    SpriteWithBody();
     virtual void selfDestruct(b2World *world);
     
     b2Body *_body;

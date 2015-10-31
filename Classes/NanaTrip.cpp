@@ -14,8 +14,10 @@ cocos2d::Size winSiz;
 float winMidX;
 float winMidY;
 cocos2d::Size screenSiz;
+cocos2d::UserDefault *db;
 
 int score;
+cocos2d::Vec2 nanap;
 int pos_score;
 int eat_score;
 int dna;
@@ -36,6 +38,8 @@ void initWinSiz()
     winMidX = winSiz.width/2;
     winMidY = winSiz.height/2;
     screenSiz = director->getOpenGLView()->getFrameSize();
+    db = UserDefault::getInstance();
+    //audioEngine->preloadBackgroundMusic("BGMusic01.mp3");
 }
 
 b2Vec2 vToB2(cocos2d::Vec2 v)
@@ -60,10 +64,19 @@ bool boolWithOdds(float odds)
     else
         return false;
 }
+void buttonSwitch(cocos2d::ui::Button *button, bool on) {
+    if(on) {
+        button->setTouchEnabled(true);
+        button->setVisible(true);
+    } else {
+        button->setTouchEnabled(false);
+        button->setVisible(false);
+    }
+}
 
 void BackButtonReleased(EventKeyboard::KeyCode code, Event *event) {
     Director::getInstance()->end();
 }
 
 std::string deadScreen;// = "dead.png";
-std::string pauseScreen;// = "dead.png";
+//std::string pauseScreen;// = "dead.png";

@@ -10,13 +10,14 @@
 #define __nanatrip__MoverSprite__
 
 #include "NanaTrip.h"
+#include "SpriteWithBody.h"
 
 // types:
 // single rod
 // single rod with motor
 // double rod, like cross
 // double rod, like cross, with motor
-class MoverSprite : public cocos2d::Sprite
+class MoverSprite : public SpriteWithBody
 {
     uint32 _flags;
 public:
@@ -33,14 +34,12 @@ public:
      *  the flags is by default _randomBit, which means randomly generate a mover
      */
     static MoverSprite *create(uint32 flags = _randomBit);
-    MoverSprite();
     // parameter body is needed, for fixed the mover with the terrain
     void setup(b2World *world, b2Body *body, const cocos2d::Vec2& p, float radius);
     void selfDestruct(b2World *world);
     
     void update();
     
-    b2Body *_body;
     b2Joint *_joint;
 };
 

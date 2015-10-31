@@ -11,22 +11,20 @@
 
 #include "NanaTrip.h"
 
-class RedSprite : public cocos2d::Sprite
+class YellowSprite : public cocos2d::Sprite
 {
-    int _type;
+    cocos2d::CustomCommand _customCommand;
 public:
-    enum
-    {
-        _static             = 0,
-        _moving				= 1,	///< moving red
-        _chasing            = 2
-    };
     
-    static RedSprite *create();
-    RedSprite();
+    static YellowSprite *create();
+    YellowSprite();
     void setup(b2World *world, b2CircleShape *shape, int type);
     
     void update(float dt);
+    // draw
+    virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
+    override;
+    void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
 };
 
 #endif /* defined(__nanatrip__YellowSprite__) */

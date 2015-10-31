@@ -31,13 +31,12 @@
 #ifndef nanatrip_NanaTrip_h
 #define nanatrip_NanaTrip_h
 
-//#include "cocos2d.h"
-#include "SpriteBlur.h"
+#include "cocos2d.h"
 #include "Box2DHelper.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include <SimpleAudioEngine.h>
-//#include "C2DXShareSDK.h"
+#include "../C2DXShareSDK/C2DXShareSDK.h"
 #include "Randomer.h"
 
 #include "Resources.h"
@@ -86,19 +85,22 @@ int randWithBase(int base, int addon);
  * When rand_0_1() < odds, bool switch to true.
  */
 bool boolWithOdds(float odds);
+void buttonSwitch(cocos2d::ui::Button *button, bool on);
 
 void BackButtonReleased(EventKeyboard::KeyCode code, Event *event);
 
 extern std::string deadScreen;
-extern std::string pauseScreen;
+//extern std::string pauseScreen;
 
 extern cocos2d::Size winSiz;
 extern float winMidX;
 extern float winMidY;
 extern cocos2d::Size screenSiz;
+extern cocos2d::UserDefault *db;
 
 // TODO: change
 extern int score;
+extern cocos2d::Vec2 nanap;
 
 extern int pos_score;
 extern int eat_score;

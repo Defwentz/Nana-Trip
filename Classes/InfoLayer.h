@@ -11,6 +11,8 @@
 
 #include "NanaTrip.h"
 
+#define ZORDER_PAUSELAYER 2
+
 class InfoLayer : public cocos2d::Layer
 {
     int old_pos_score;
@@ -25,11 +27,11 @@ public:
     
     void update();
     void pauseCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
-    void toPause(float dt);
+    //void toPause(float dt);
     void soundCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void defaultCallback(cocos2d::Ref *pSender);
     
-    void captureScreenCallback(bool, const std::string &);
+    //void captureScreenCallback(bool, const std::string &);
 };
 
 #endif /* defined(__nanatrip__InfoLayer__) */

@@ -20,6 +20,7 @@ public:
     CREATE_FUNC(AboutLayer);
     
     void backCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 };
 
 #endif /* defined(__nanatrip__AboutLayer__) */

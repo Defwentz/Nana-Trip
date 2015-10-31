@@ -22,9 +22,6 @@ RedSprite* RedSprite::create()
 RedSprite::RedSprite() {
     this->runAction(RepeatForever::create(RotateBy::create(7, 360)));
 }
-void RedSprite::selfDestruct(b2World *world) {
-    
-}
 
 void RedSprite::setup(b2World *world, b2CircleShape *shape, int type) {
     this->setScale(shape->m_radius*PTM_RATIO/36);

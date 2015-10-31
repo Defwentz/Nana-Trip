@@ -40,7 +40,7 @@ GameLayer *GameLayer::create(InfoLayer *infoLayer)
 GameLayer::GameLayer()
 {
     //gameStatus = GAME_PAUSE;
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
+    //CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
     initListeners();
     initBG();
     initPhysics();
@@ -52,10 +52,10 @@ GameLayer::GameLayer()
 
 GameLayer::~GameLayer()
 {
-    Device::setAccelerometerEnabled(false);
+    NotificationCenter::getInstance()->removeObserver(this, "pause_sign");
+    NotificationCenter::getInstance()->removeObserver(this, "defaultCallback");
     delete _debugDraw;
     CC_SAFE_DELETE(_world);
-    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 // Enable Accelerometer and attach listener, enable touch and attach listeners.
@@ -72,6 +72,15 @@ void GameLayer::initListeners() {
     touchlistener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
     touchlistener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
+    
+    keyListener = EventListenerKeyboard::create();
+    keyListener->onKeyReleased = CC_CALLBACK_2(GameLayer::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
+    
+    NotificationCenter::getInstance()->
+    addObserver(this, callfuncO_selector(GameLayer::pauseCallback), "pause_sign", NULL);
+    NotificationCenter::getInstance()->
+    addObserver(this, callfuncO_selector(GameLayer::pauseOverCallback), "defaultCallback", NULL);
 }
 void GameLayer::initBG() {
     if(IS_DEBUGGING)return;
@@ -219,7 +228,11 @@ void GameLayer::update(float dt)
     }
     else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
-        utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead");
+        this->_infoLayer->removeFromParent();
+        this->unscheduleUpdate();
+        Device::setAccelerometerEnabled(false);
+        //CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead.png");
         scheduleOnce(schedule_selector(GameLayer::gameOver), 0.2f);
         return;
     }
@@ -246,6 +259,7 @@ void GameLayer::update(float dt)
     pos_score = (-nanaPos.y + winMidY)/400;
     _infoLayer->update();
     _nana->setPosition(nanaPos);
+    //log("%f\n", nanaPos.y);
     _terrain->update(nanaPos.y);
     
     /*for(b2Body *b = _world->GetBodyList(); b; b = b->GetNext())
@@ -271,9 +285,10 @@ void GameLayer::gameOver(float dt) {
 //    Director::getInstance()->getRunningScene()->visit();
 //    screen->end();
 //    screen->saveToFile(deadScreen);
-    
+    //this->_infoLayer->unscheduleUpdate();
     Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
-    Director::getInstance()->replaceScene(OverLayer::createScene());
+    this->getParent()->addChild(OverLayer::create(), ZORDER_OVERLAYER);
+    //Director::getInstance()->replaceScene(OverLayer::createScene());
 }
 
 void GameLayer::captureScreenCallback(bool succeed, const std::string &filename) {
@@ -362,6 +377,27 @@ void GameLayer::onAcceleration(Acceleration *acc, Event *event)
     _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
     _world->SetGravity(stdGrav + b2Vec2(acc->x * 15, 0));
 }
+void GameLayer::pauseCallback(cocos2d::Ref *pSender) {
+    _eventDispatcher->removeEventListener(keyListener);
+}
+void GameLayer::pauseOverCallback(cocos2d::Ref *pSender) {
+    keyListener = EventListenerKeyboard::create();
+    keyListener->onKeyReleased = CC_CALLBACK_2(GameLayer::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
+}
+void GameLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+    switch(keyCode)
+    {
+            //监听返回键
+        case EventKeyboard::KeyCode::KEY_ESCAPE:
+            pauseCallback(NULL);
+            _infoLayer->pauseCallback(NULL, cocos2d::ui::Widget::TouchEventType::ENDED);
+            break;
+            //监听menu键
+        case EventKeyboard::KeyCode::KEY_MENU:
+            break;
+    }
+}
 
 // Draw
 void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transformFlags)
@@ -372,6 +408,7 @@ void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transfo
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
+    
     _world->DrawDebugData();
     CHECK_GL_ERROR_DEBUG();
     

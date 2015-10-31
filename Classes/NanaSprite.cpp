@@ -135,8 +135,6 @@ NanaSprite::~NanaSprite()
 
 void NanaSprite::initPhysics(b2World *world)
 {
-    _world = world;
-    
     // Center of the circle, set to the center of the screen.
     b2Vec2 center = b2Vec2(winMidX/PTM_RATIO, winMidY/PTM_RATIO);
     
@@ -398,7 +396,8 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     glLineWidth( 5.0f );
     ccDrawColor4F(0.347656f, 0.68f, 0.8086f, 1);
     Vec2 center = this->getCenter();
-    
+    nanap = center;
+    //log("nanapos: %f, %f\n", nanap.x, nanap.y);
     // tiny side burns (...Guesss that one way to call it)
     for(int i = 0; i < _bodies.size(); i++) {
         Vec2 target = (center - vertices[i]) * nub_pos;

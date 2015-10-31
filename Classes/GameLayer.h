@@ -9,6 +9,7 @@
 
 #define ZORDER_GAMELAYER 0
 #define ZORDER_INFOLAYER 1
+#define ZORDER_OVERLAYER 2
 
 #define ZORDER_BG 0
 #define ZORDER_TERRAIN 1
@@ -112,22 +113,27 @@ public:
     void initListeners();
     
     void initPhysics();
-    void update(float dt);
+    void update(float dt) override;
     void gameOver(float dt);
     void reset();
     
     void initBG();
     void updateBG(float topY, float bottomY);
     
-    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
-    void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
-    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
-    virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event);
+    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) override;
+    void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) override;
+    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) override;
+    virtual void onAcceleration(cocos2d::Acceleration *acc, cocos2d::Event *event) override;
     
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t transformFlags)
     override;
     
     void captureScreenCallback(bool, const std::string &);
+    
+    void pauseOverCallback(cocos2d::Ref *pSender);
+    void pauseCallback(cocos2d::Ref *pSender);
+    EventListenerKeyboard *keyListener;
+    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 };
 
 #endif // __GAME_LAYER_H__

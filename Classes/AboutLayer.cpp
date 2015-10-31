@@ -35,6 +35,10 @@ bool AboutLayer::init()
     Button* backBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     backBtn->addTouchEventListener(CC_CALLBACK_2(AboutLayer::backCallback, this));
     
+    auto listener = EventListenerKeyboard::create();
+    listener->onKeyReleased = CC_CALLBACK_2(AboutLayer::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
     return true;
 }
 
@@ -44,5 +48,17 @@ void AboutLayer::backCallback(Ref* sender, Widget::TouchEventType type)
     {
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(StartLayer::createScene());
+    }
+}
+void AboutLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+    switch(keyCode)
+    {
+            //监听返回键
+        case EventKeyboard::KeyCode::KEY_ESCAPE:
+            backCallback(NULL, Widget::TouchEventType::ENDED);
+            break;
+            //监听menu键
+        case EventKeyboard::KeyCode::KEY_MENU:
+            break;
     }
 }
