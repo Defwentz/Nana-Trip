@@ -75,7 +75,7 @@ void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
         Device::setAccelerometerEnabled(false);
         buttonSwitch(pauseBtn, false);
         scoreLabel->setVisible(false);
-        CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        //CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
         this->getParent()->addChild(PauseLayer::create(), ZORDER_PAUSELAYER);
         //utils::captureScreen(CC_CALLBACK_2(InfoLayer::captureScreenCallback, this), "pause");
         //toPause(0);
@@ -95,7 +95,7 @@ void InfoLayer::soundCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEv
 void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
     gameStatus = GAME_PLAY;
     Device::setAccelerometerEnabled(true);
-    CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+    //CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     buttonSwitch(pauseBtn, true);
     scoreLabel->setVisible(true);
 }

@@ -146,7 +146,7 @@ void TerrainSprite::spawnMeteor()
 void TerrainSprite::spawnBelt()
 {
     float lastY = getLastY();
-    int half_length = random(winMidX/20, winMidX);
+    int half_length = random(narrowest_width*2, winMidX-narrowest_width);
     lastY -= half_length;
     // the border vertices
     vertices[0].push_back(Vec2(0, lastY-half_length));
@@ -158,15 +158,16 @@ void TerrainSprite::spawnBelt()
     
     b2CircleShape ball;
     ball.m_p = bpos;
-    ball.m_radius = half_length/PTM_RATIO - DNA_B2RADIUS*2;
-    
+    ball.m_radius = (half_length - narrowest_width)/PTM_RATIO;
+    log("%f", ball.m_radius);
+    //createBlob(pos, &ball);
     float pos_odds_for_badguy = pos_score / 100.0;
     if(pos_odds_for_badguy > 1)
         pos_odds_for_badguy = 1;
     if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
         createBadGuy(pos, &ball, RedSprite::_moving);
     }
-    else if (boolWithOdds(0.5)) {
+    else if (1){///boolWithOdds(0.5)) {
         createBlob(pos, &ball);
     }
     else {
@@ -483,7 +484,7 @@ void TerrainSprite::createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape)
 {
     StayingBlobSprite *blob = StayingBlobSprite::create();
     blob->setPosition(vpos);
-    blob->setup(_world, shape);
+    blob->setup( _world, shape);
     blobs.push_back(blob);
     this->addChild(blob);
 }
@@ -512,11 +513,7 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
 
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 {
-    uint32 flags = 0;
-    if(boolWithOdds(0.5))
-        flags += MoverSprite::_motorBit;
-    flags += MoverSprite::_normalBit;
-    auto mover = MoverSprite::create(flags);
+    auto mover = MoverSprite::create();
     mover->setup(_world, _body, vpos, radius);
     this->addChild(mover);
     movers.push_back(mover);

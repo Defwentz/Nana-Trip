@@ -55,6 +55,12 @@ bool PauseLayer::init()
     anotherBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::anotherCallback, this));
     backBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::backCallback, this));
     
+    musicOnBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_music_on"));
+    musicOffBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_music_off"));
+    switchMusic(db->getBoolForKey(key_music_status.c_str()));
+    musicOnBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::musicOnCallback, this));
+    musicOffBtn->addTouchEventListener(CC_CALLBACK_2(PauseLayer::musicOffCallback, this));
+    
     keyListener = EventListenerKeyboard::create();
     keyListener->onKeyReleased = CC_CALLBACK_2(PauseLayer::onKeyReleased, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
@@ -127,5 +133,35 @@ void PauseLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *e
             //监听menu键
         case EventKeyboard::KeyCode::KEY_MENU:
             break;
+    }
+}
+
+void PauseLayer::switchMusic(bool on) {
+    if(on) {
+        if(isFirst && !CocosDenshion::SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying()) {
+            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3");
+            isFirst = false;
+        } else {
+            CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+        }
+        buttonSwitch(musicOffBtn, false);
+        buttonSwitch(musicOnBtn, true);
+    } else {
+        CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        buttonSwitch(musicOnBtn, false);
+        buttonSwitch(musicOffBtn, true);
+    }
+    db->setBoolForKey(key_music_status.c_str(), on);
+}
+void PauseLayer::musicOnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::ENDED)
+    {
+        switchMusic(false);
+    }
+}
+void PauseLayer::musicOffCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::ENDED)
+    {
+        switchMusic(true);
     }
 }

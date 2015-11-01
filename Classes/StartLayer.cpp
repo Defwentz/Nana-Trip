@@ -130,7 +130,7 @@ void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
 //}
 void StartLayer::switchMusic(bool on) {
     if(on) {
-        if(isFirst) {
+        if(isFirst && !CocosDenshion::SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying()) {
             CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3");
             isFirst = false;
         } else {

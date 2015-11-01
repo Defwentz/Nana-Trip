@@ -52,6 +52,10 @@ cocos2d::Vec2 b2ToV(b2Vec2 b)
     return cocos2d::Vec2(b.x*PTM_RATIO, b.y*PTM_RATIO);
 }
 
+void logVec2(char* name, cocos2d::Vec2 v) {
+    log("%s: (%f, %f)", name, v.x, v.y);
+}
+
 int randWithBase(int base, int addon)
 {
     return base + rand()%addon;

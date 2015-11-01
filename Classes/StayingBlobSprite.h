@@ -12,6 +12,9 @@
 #include "NanaTrip.h"
 #include "SpriteWithBody.h"
 
+#define ZORDER_FACE 1
+#define ZORDER_EYE 2
+
 class StayingBlobSprite : public SpriteWithBody
 {
     /**
@@ -26,11 +29,14 @@ class StayingBlobSprite : public SpriteWithBody
     float nub_pos = screenSiz.width*1.4/750;
     float nub_size;//screenSiz.width*8./750;
     float face_offset = -screenSiz.width*328/750;
+    float eye_radius;
     
     std::vector<b2Body *> _bodies;
     std::vector<b2RevoluteJoint *> _joints;
     
-    cocos2d::Texture2D *_blobFace;
+    Color4F blobColor = Color4F(0.1171875f, 0.125f, 0.15625f, 1);
+    cocos2d::DrawNode *_eyedrawer;
+    cocos2d::Sprite *_face;
     cocos2d::CustomCommand _customCommand;
 public:
     static StayingBlobSprite *create();
@@ -49,6 +55,7 @@ public:
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
     override;
     void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
+    void updateEye();
 };
 
 #endif /* defined(__nanatrip__StayingBlobSprite__) */

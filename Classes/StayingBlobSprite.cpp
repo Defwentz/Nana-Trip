@@ -13,7 +13,8 @@
 StayingBlobSprite* StayingBlobSprite::create()
 {
     StayingBlobSprite *sprite = new (std::nothrow) StayingBlobSprite();
-    
+    sprite->_eyedrawer = DrawNode::create();
+    sprite->addChild(sprite->_eyedrawer, ZORDER_EYE);
     if (sprite && sprite->init())
     {
         sprite->autorelease();
@@ -23,11 +24,14 @@ StayingBlobSprite* StayingBlobSprite::create()
     return nullptr;
 }
 StayingBlobSprite::~StayingBlobSprite() {
-    _blobFace->release();
 }
 void StayingBlobSprite::setup(b2World *world, b2CircleShape *shape) {
-    _blobFace = Director::getInstance()->getTextureCache()->addImage("blob_face_without.png");
-    _blobFace->retain();
+    
+    _face = Sprite::create("blob_face_without.png");
+    _face->setScale(PTM_RATIO*2*shape->m_radius/657.0f);
+    this->addChild(_face, ZORDER_FACE);
+    //this->setPosition(this->getPosition() + Vec2(0, -shape->m_radius*PTM_RATIO));
+    eye_radius = _face->getScale()*30;
     
     // Delta angle to step by
     float deltaAngle = (2.f * M_PI) / NUM_SEGMENTS;
@@ -228,36 +232,37 @@ void StayingBlobSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transfor
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
-    glLineWidth( 5.0f );
-    ccDrawColor4F(0.1171875f, 0.125f, 0.15625f, 1);
-    Vec2 center = this->getCenter();
-    
+    //glLineWidth( 5.0f );
+    //ccDrawColor4F(1.f, 0.125f, 0.15625f, 1);
     // tiny side burns (...Guesss that one way to call it)
-    for(int i = 0; i < _bodies.size(); i++) {
-        Vec2 target = (center - vertices[i]) * nub_pos;
-        target += center;
-        DrawPrimitives::drawSolidCircle(vertices[i], nub_size, CC_DEGREES_TO_RADIANS(360), 30);
-    }
+//    for(int i = 0; i < _bodies.size(); i++) {
+//        Vec2 target = (center - vertices[i]) * nub_pos;
+//        target += center;
+//        DrawPrimitives::drawSolidCircle(vertices[i], nub_size, CC_DEGREES_TO_RADIANS(360), 30);
+//    }
     
     // draw the body
-    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, _nanaColor);
+    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, blobColor);
     
-    Vec2 facepos = center + Vec2(face_offset, face_offset);
-    _blobFace->drawAtPoint(facepos);
-    //log("nanapos: %f, %f\n", nanap.x, nanap.y);
-    Vec2 eh = this->convertToNodeSpace(nanap);
-    Vec2 leftEye = facepos + Vec2(194, 287);
-    Vec2 leftEyeRel =  (eh - Vec2(194 - 540 + facepos.x, -673));
-    leftEyeRel = leftEyeRel/leftEyeRel.length()*37;
-    //leftEyeRel.y*=-1;
-    Vec2 rightEye = facepos + Vec2(416, 292);
-    Vec2 rightEyeRel =  (eh - Vec2(418 - 540 + facepos.x, -670));
-    rightEyeRel = rightEyeRel/rightEyeRel.length()*37;
-    //rightEyeRel.y*=-1;
-    log("left: %f, %f :: right: %f, %f\n", leftEyeRel.x, leftEyeRel.y, rightEyeRel.x, rightEyeRel.y);
-    DrawPrimitives::drawSolidCircle(leftEye + leftEyeRel, 10, CC_DEGREES_TO_RADIANS(360), 30);
-    DrawPrimitives::drawSolidCircle(rightEye + rightEyeRel, 10, CC_DEGREES_TO_RADIANS(360), 30);
+    _face->setPosition(this->getCenter() + Vec2(-30, -100)*_face->getScale());
+    updateEye();
     CHECK_GL_ERROR_DEBUG();
     
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+}
+
+void StayingBlobSprite::updateEye() {
+    Vec2 facepos = _face->getPosition();
+    Vec2 eh = nanap;//this->getParent()->getParent()->convertToWorldSpace(nanap);
+    //logVec2("nana", eh);
+    Vec2 leftEye = facepos + Vec2(-135.5, 118)*_face->getScale();
+    Vec2 rightEye = facepos +Vec2(88.5, 122)*_face->getScale();
+    //logVec2("lefteye", this->convertToWorldSpace(leftEye));
+    Vec2 leftEyeRel =  (eh - this->convertToWorldSpace(leftEye));
+    leftEyeRel = leftEyeRel/leftEyeRel.length()*eye_radius;
+    Vec2 rightEyeRel =  (eh - this->convertToWorldSpace(rightEye));
+    rightEyeRel = rightEyeRel/rightEyeRel.length()*eye_radius;
+    _eyedrawer->clear();
+    _eyedrawer->drawSolidCircle(leftEye + leftEyeRel, 10*this->getScale(), CC_DEGREES_TO_RADIANS(360), 30, blobColor);
+    _eyedrawer->drawSolidCircle(rightEye + rightEyeRel, 10*this->getScale(), CC_DEGREES_TO_RADIANS(360), 30, blobColor);
 }

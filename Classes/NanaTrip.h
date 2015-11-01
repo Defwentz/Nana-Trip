@@ -79,6 +79,7 @@ void initWinSiz();
 
 b2Vec2 vToB2(cocos2d::Vec2 v);
 cocos2d::Vec2 b2ToV(b2Vec2 b);
+void logVec2(char* name, cocos2d::Vec2 v);
 int randWithBase(int base, int addon);
 /**
  * Return false by default.
