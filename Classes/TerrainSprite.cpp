@@ -90,7 +90,6 @@ void TerrainSprite::initPhysics(b2World *_world)
     
     vertices[0].push_back(bl);
     vertices[1].push_back(br);
-    //terrainTypes.push_back(TYPE_DOOR);
     
     // left
     border.Set(vToB2(bl), vToB2(tl));
@@ -103,6 +102,16 @@ void TerrainSprite::initPhysics(b2World *_world)
     std::vector<b2Fixture *> _rfs;
     _rfs.push_back(_body->CreateFixture(&border,0));
     fixtures[1].push_back(_rfs);
+    
+    
+    Vec2 vpos = Vec2(winMidX, winSiz.height);
+    b2CircleShape ball;
+    ball.m_p = vToB2(vpos);
+    ball.m_radius = winMidX/PTM_RATIO;
+    badboss = RedSprite::create();
+    badboss->setPosition(vpos);
+    badboss->setup(_world, &ball, RedSprite::_chasing);
+    this->addChild(badboss);
     
     to[0] = 1;to[1] = 1;
     spawnTerrain();
@@ -159,15 +168,13 @@ void TerrainSprite::spawnBelt()
     b2CircleShape ball;
     ball.m_p = bpos;
     ball.m_radius = (half_length - narrowest_width)/PTM_RATIO;
-    log("%f", ball.m_radius);
-    //createBlob(pos, &ball);
     float pos_odds_for_badguy = pos_score / 100.0;
     if(pos_odds_for_badguy > 1)
         pos_odds_for_badguy = 1;
     if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
         createBadGuy(pos, &ball, RedSprite::_moving);
     }
-    else if (1){///boolWithOdds(0.5)) {
+    else if (boolWithOdds(0.5)) {
         createBlob(pos, &ball);
     }
     else {
@@ -464,7 +471,7 @@ void TerrainSprite::createDNA(cocos2d::Vec2 vpos)
 void TerrainSprite::createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape)
 {
     b2BodyDef bd;
-    bd.position.Set(vpos.x/PTM_RATIO, vpos.y/PTM_RATIO);
+    bd.position = vToB2(vpos);
     bd.type = b2_dynamicBody;
     bd.gravityScale = -1;
     b2Body *b = _world->CreateBody(&bd);
@@ -474,24 +481,24 @@ void TerrainSprite::createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *sha
 
 void TerrainSprite::createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape, int type)
 {
-    RedSprite *redSprite = RedSprite::create();
+    SpriteWithBody *redSprite = RedSprite::create();
     redSprite->setPosition(vpos);
-    redSprite->setup(_world, shape, type);
+    ((RedSprite *)redSprite)->setup(_world, shape, type);
     badguys.push_back(redSprite);
     this->addChild(redSprite);
 }
 void TerrainSprite::createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape)
 {
-    StayingBlobSprite *blob = StayingBlobSprite::create();
+    SpriteWithBody *blob = StayingBlobSprite::create();
     blob->setPosition(vpos);
-    blob->setup( _world, shape);
+    ((StayingBlobSprite *)blob)->setup(_world, shape);
     blobs.push_back(blob);
     this->addChild(blob);
 }
 
 void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA)
 {
-    SpriteWithBody *guy = SpriteWithBody::create("block.png");
+    SpriteWithBody *guy = SpriteWithBody::create("block_5.png");
     guy->setPosition(vpos);
     obstacles.push_back(guy);
     
@@ -513,8 +520,8 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
 
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 {
-    auto mover = MoverSprite::create();
-    mover->setup(_world, _body, vpos, radius);
+    SpriteWithBody *mover = MoverSprite::create();
+    ((MoverSprite *)mover)->setup(_world, _body, vpos, radius);
     this->addChild(mover);
     movers.push_back(mover);
 }
@@ -600,11 +607,7 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
     float x = winSiz.width;
     if(!isRight) {
         x = -winSiz.width;
-        //terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_l.png");
     }
-    //    else {
-    //        terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.png");
-    //    }
     //////////////
     
     int n = floorf(tdy/10);
@@ -675,66 +678,14 @@ void TerrainSprite::update(float nanaY)
     // if so, delete
     spriteCheck(obstacles, topY);
     
-    for(std::vector<SpriteWithBody *>::iterator i = dnas.begin();
-        i != dnas.end();) {
-        auto ud = (Entity *) (*i)->_body->GetUserData();
-        if(ud->type == UD_DESTROYED || (*i)->getPosition().y > topY) {
-            _world->DestroyBody((*i)->_body);
-            (*i)->removeFromParent();
-            i = dnas.erase(i);
-        }
-        else {
-            bool isDestroyed = false;
-            for(b2ContactEdge *ce = (*i)->_body->GetContactList(); ce; ce = ce->next) {
-                b2Body *other = ce->other;
-                auto other_userdata = (Entity *) other->GetUserData();
-                if(other_userdata && other_userdata->type == UD_NANA) {
-                    eat_score += 10;
-                    dna++;
-                    _world->DestroyBody((*i)->_body);
-                    (*i)->removeFromParent();
-                    i = dnas.erase(i);
-                    isDestroyed = true;
-                    break;
-                }
-            }
-            if(!isDestroyed)
-                ++i;
-        }
-    }
-    
-    for(std::vector<RedSprite *>::iterator i = badguys.begin();
-        i != badguys.end();) {
-        if((*i)->getPosition().y > topY) {
-            _world->DestroyBody((*i)->_body);
-            (*i)->removeFromParent();
-            i = badguys.erase(i);
-        }
-        else {
-            (*i)->update(0);
-            for(b2ContactEdge *ce = (*i)->_body->GetContactList(); ce; ce = ce->next) {
-                b2Body *other = ce->other;
-                auto other_userdata = (Entity *) other->GetUserData();
-                if(other_userdata && ce->contact->IsTouching() && other_userdata->type == UD_NANA) {
-                    gameStatus = GAME_OVER;
-                    return;
-                }
-            }
-            ++i;
-        }
-    }
-    for(std::vector<MoverSprite *>::iterator i = movers.begin();
-        i != movers.end();) {
-        if((*i)->getPosition().y > topY) {
-            (*i)->selfDestruct(_world); // TODO!!!!!
-            (*i)->removeFromParent();
-            i = movers.erase(i);
-        }
-        else {
-            (*i)->update();
-            ++i;
-        }
-    }
+    DNASprite::checkDNAs(dnas, _world, topY);
+    badboss->update();
+    badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-10*pos_score/200));
+    // another way: have it appear once in a while, maybe like a minute or so.
+    // and with flashing title: WARNING!!, and a special bgm
+    spriteCheckAndUpdate(badguys, topY);
+    spriteCheckAndUpdate(movers, topY);
+    spriteCheckAndUpdate(blobs, topY);
     
     for(std::vector<b2Body *>::iterator i = littleguys.begin();
         i != littleguys.end();) {
@@ -744,20 +695,6 @@ void TerrainSprite::update(float nanaY)
             i = littleguys.erase(i);
         }
         else {
-            //(*i)->ApplyForce(b2Vec2(0, 16.0f), (*i)->GetWorldCenter(), true);
-            ++i;
-        }
-    }
-    
-    for(std::vector<StayingBlobSprite *>::iterator i = blobs.begin();
-        i != blobs.end();) {
-        if((*i)->getPosition().y > topY) {
-            (*i)->selfDestruct(_world); // TODO!!!!!
-            (*i)->removeFromParent();
-            i = blobs.erase(i);
-        }
-        else {
-            (*i)->update();
             ++i;
         }
     }
@@ -768,12 +705,21 @@ void TerrainSprite::spriteCheck(std::vector<SpriteWithBody *> &sprites, float to
     for(std::vector<SpriteWithBody *>::iterator i = sprites.begin();
         i != sprites.end();) {
         if((*i)->getPosition().y > topY) {
-            (*i)->selfDestruct(_world);
-            //_world->DestroyBody((*i)->_body);
-            (*i)->removeFromParent();
-            i = sprites.erase(i);
+            SpriteWithBody::removeFromVector(sprites, i, _world);
         }
         else break;
+    }
+}
+void TerrainSprite::spriteCheckAndUpdate(std::vector<SpriteWithBody *> &sprites, float topY) {
+    for(std::vector<SpriteWithBody *>::iterator i = sprites.begin();
+        i != sprites.end();) {
+        if((*i)->getPosition().y > topY) {
+            SpriteWithBody::removeFromVector(sprites, i, _world);
+        }
+        else {
+            (*i)->update();
+            ++i;
+        }
     }
 }
 
@@ -814,6 +760,3 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
     CHECK_GL_ERROR_DEBUG();
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
-
-void TerrainSprite::drawSegment(Vec2 p1, Vec2 p2)
-{}

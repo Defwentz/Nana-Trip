@@ -228,7 +228,6 @@ void GameLayer::update(float dt)
     }
     else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
-        this->_infoLayer->removeFromParent();
         this->unscheduleUpdate();
         Device::setAccelerometerEnabled(false);
         //CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
@@ -299,6 +298,7 @@ void GameLayer::captureScreenCallback(bool succeed, const std::string &filename)
 //        sp->setPosition(winMidX, winMidY);
 //        sp->setScale(0.25);
     }
+    this->_infoLayer->removeFromParent();
 }
 
 // problematic, TODO

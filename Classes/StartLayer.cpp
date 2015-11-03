@@ -10,12 +10,6 @@
 #include "GameLayer.h"
 #include "AboutLayer.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include <platform/android/jni/JniHelper.h>
-#include <jni.h>
-#endif
-
-
 USING_NS_CC;
 
 using namespace cocostudio::timeline;
@@ -82,16 +76,7 @@ void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
     if (type == Widget::TouchEventType::ENDED)
     {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        
-        // Andorid
-        log("android platform!");
-        JniMethodInfo t;
-        if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/mz/AppActivity", "hidebar", "()V")) {
-            log("call do nothing succeed!!!!!!!!!!");
-            t.env->CallStaticVoidMethod(t.classID, t.methodID);
-            //t.env->DeleteLocalRef(t.classID);
-        }
-        
+        callJavaMethod("org/cocos2dx/mz/AppActivity", "hidebar", "()V");
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         
         // iOS

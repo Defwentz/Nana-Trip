@@ -26,7 +26,7 @@ public:
     RedSprite();
     void setup(b2World *world, b2CircleShape *shape, int type);
     
-    void update(float dt);
+    void update();
 };
 
 #endif /* defined(__nanatrip__RedSprite__) */

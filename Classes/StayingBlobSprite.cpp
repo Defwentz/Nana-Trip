@@ -29,6 +29,10 @@ void StayingBlobSprite::setup(b2World *world, b2CircleShape *shape) {
     
     _face = Sprite::create("blob_face_without.png");
     _face->setScale(PTM_RATIO*2*shape->m_radius/657.0f);
+    //log("blob: %f", shape->m_radius);
+    if(shape->m_radius < 8.f && shape->m_radius > 6.f && boolWithOdds(0.1)) {
+        _face->setScale(1);
+    }
     this->addChild(_face, ZORDER_FACE);
     //this->setPosition(this->getPosition() + Vec2(0, -shape->m_radius*PTM_RATIO));
     eye_radius = _face->getScale()*30;
@@ -253,16 +257,14 @@ void StayingBlobSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transfor
 
 void StayingBlobSprite::updateEye() {
     Vec2 facepos = _face->getPosition();
-    Vec2 eh = nanap;//this->getParent()->getParent()->convertToWorldSpace(nanap);
-    //logVec2("nana", eh);
+    Vec2 eh = nanap;
     Vec2 leftEye = facepos + Vec2(-135.5, 118)*_face->getScale();
     Vec2 rightEye = facepos +Vec2(88.5, 122)*_face->getScale();
-    //logVec2("lefteye", this->convertToWorldSpace(leftEye));
     Vec2 leftEyeRel =  (eh - this->convertToWorldSpace(leftEye));
     leftEyeRel = leftEyeRel/leftEyeRel.length()*eye_radius;
     Vec2 rightEyeRel =  (eh - this->convertToWorldSpace(rightEye));
     rightEyeRel = rightEyeRel/rightEyeRel.length()*eye_radius;
     _eyedrawer->clear();
-    _eyedrawer->drawSolidCircle(leftEye + leftEyeRel, 10*this->getScale(), CC_DEGREES_TO_RADIANS(360), 30, blobColor);
-    _eyedrawer->drawSolidCircle(rightEye + rightEyeRel, 10*this->getScale(), CC_DEGREES_TO_RADIANS(360), 30, blobColor);
+    _eyedrawer->drawSolidCircle(leftEye + leftEyeRel, 6*this->getScale(), CC_DEGREES_TO_RADIANS(360), 30, blobColor);
+    _eyedrawer->drawSolidCircle(rightEye + rightEyeRel, 6*this->getScale(), CC_DEGREES_TO_RADIANS(360), 30, blobColor);
 }

@@ -76,7 +76,7 @@ void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
     // if you use SimpleAudioEngine, it must be pause
-    // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+    CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
@@ -84,7 +84,7 @@ void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 
     // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+    CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }
 
 // 初始化平台配置
@@ -126,24 +126,24 @@ void AppDelegate::initPlatformConfig() {
     C2DXShareSDK::setPlatformConfig(C2DXPlatTypeQQ, qqConfigDict);
     
     //Facebook
-    CCDictionary *fbConfigDict = CCDictionary::create();
-    fbConfigDict -> setObject(CCString::create("107704292745179"), "api_key");
-    fbConfigDict -> setObject(CCString::create("38053202e1a5fe26c80c753071f0b573"), "app_secret");
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeFacebook, fbConfigDict);
+//    CCDictionary *fbConfigDict = CCDictionary::create();
+//    fbConfigDict -> setObject(CCString::create("107704292745179"), "api_key");
+//    fbConfigDict -> setObject(CCString::create("38053202e1a5fe26c80c753071f0b573"), "app_secret");
+//    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeFacebook, fbConfigDict);
     
     //Twitter
-    CCDictionary *twConfigDict = CCDictionary::create();
-    twConfigDict -> setObject(CCString::create("mnTGqtXk0TYMXYTN7qUxg"), "consumer_key");
-    twConfigDict -> setObject(CCString::create("ROkFqr8c3m1HXqS3rm3TJ0WkAJuwBOSaWhPbZ9Ojuc"), "consumer_secret");
-    twConfigDict -> setObject(CCString::create("http://www.sharesdk.cn"), "redirect_uri");
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeTwitter, twConfigDict);
+//    CCDictionary *twConfigDict = CCDictionary::create();
+//    twConfigDict -> setObject(CCString::create("mnTGqtXk0TYMXYTN7qUxg"), "consumer_key");
+//    twConfigDict -> setObject(CCString::create("ROkFqr8c3m1HXqS3rm3TJ0WkAJuwBOSaWhPbZ9Ojuc"), "consumer_secret");
+//    twConfigDict -> setObject(CCString::create("http://www.sharesdk.cn"), "redirect_uri");
+//    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeTwitter, twConfigDict);
     
     //Google+
-    CCDictionary *gpConfigDict = CCDictionary::create();
-    gpConfigDict -> setObject(CCString::create("232554794995.apps.googleusercontent.com"), "client_id");
-    gpConfigDict -> setObject(CCString::create("PEdFgtrMw97aCvf0joQj7EMk"), "client_secret");
-    gpConfigDict -> setObject(CCString::create("http://localhost"), "redirect_uri");
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeGooglePlus, gpConfigDict);
+//    CCDictionary *gpConfigDict = CCDictionary::create();
+//    gpConfigDict -> setObject(CCString::create("232554794995.apps.googleusercontent.com"), "client_id");
+//    gpConfigDict -> setObject(CCString::create("PEdFgtrMw97aCvf0joQj7EMk"), "client_secret");
+//    gpConfigDict -> setObject(CCString::create("http://localhost"), "redirect_uri");
+//    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeGooglePlus, gpConfigDict);
     
     //人人网
     CCDictionary *rrConfigDict = CCDictionary::create();

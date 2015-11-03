@@ -24,6 +24,7 @@ public:
     void anotherCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void returnCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void shareCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
+    void rankCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     static void shareResultHandler(C2DXResponseState state, C2DXPlatType platType, CCDictionary *shareInfo, CCDictionary *error);
     void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 };

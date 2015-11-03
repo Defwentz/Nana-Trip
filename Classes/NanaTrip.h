@@ -87,8 +87,12 @@ int randWithBase(int base, int addon);
  */
 bool boolWithOdds(float odds);
 void buttonSwitch(cocos2d::ui::Button *button, bool on);
-
 void BackButtonReleased(EventKeyboard::KeyCode code, Event *event);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include <platform/android/jni/JniHelper.h>
+#include <jni.h>
+bool callJavaMethod(char * className, char * method, char * parameter);
+#endif
 
 extern std::string deadScreen;
 //extern std::string pauseScreen;

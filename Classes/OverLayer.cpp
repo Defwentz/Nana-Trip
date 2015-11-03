@@ -9,6 +9,10 @@
 #include "OverLayer.h"
 #include "StartLayer.h"
 #include "GameLayer.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include <platform/android/jni/JniHelper.h>
+#include <jni.h>
+#endif
 
 USING_NS_CC;
 using namespace cocos2d::ui;
@@ -63,9 +67,11 @@ bool OverLayer::init()
     Button* anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_newgame"));
     Button* returnBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     Button* shareBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_share"));
+    Button* rankBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_rank"));
     anotherBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::anotherCallback, this));
     returnBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::returnCallback, this));
     shareBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::shareCallback, this));
+    rankBtn->addTouchEventListener(CC_CALLBACK_2(OverLayer::rankCallback, this));
     
     auto listener = EventListenerKeyboard::create();
     listener->onKeyReleased = CC_CALLBACK_2(OverLayer::onKeyReleased, this);
@@ -90,6 +96,26 @@ void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchE
     if (type == Widget::TouchEventType::ENDED) {
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(StartLayer::createScene());
+    }
+}
+/**
+ * call when return-to-menu button is clicked.
+ */
+void OverLayer::rankCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::ENDED) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+        JniMethodInfo mi;
+        bool isHave = JniHelper::getStaticMethodInfo(mi, "org/cocos2dx/mz/AppActivity", "makeToast", "(Ljava/lang/String;)V");
+        if (!isHave) {
+            return;
+        }
+        
+        jstring msg = mi.env->NewStringUTF("先放着。。别着急");
+        mi.env->CallStaticVoidMethod(mi.classID, mi.methodID, msg);
+        mi.env->DeleteLocalRef(mi.classID);
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        
+#endif
     }
 }
 /**

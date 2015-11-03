@@ -33,10 +33,14 @@ MoverSprite* MoverSprite::create(uint32 flags)
     return nullptr;
 }
 
-void MoverSprite::setup(b2World *world, b2Body *body, const cocos2d::Vec2 &p, float radius) {
-    float round_edge_radius = 25.0/PTM_RATIO;
+void MoverSprite::setup(b2World *world, b2Body *mother, const cocos2d::Vec2 &p, float radius) {
+    float round_edge_radius_px = random(15, 20);
+    if(boolWithOdds(0.01)) {
+        round_edge_radius_px = 5;
+    }
+    float round_edge_radius = round_edge_radius_px/PTM_RATIO;
     
-    this->setScale(radius*PTM_RATIO/216.5, 25/99.5);
+    this->setScale(radius*PTM_RATIO/216.5, round_edge_radius_px/59.5);
     this->setPosition(p);
     
     b2BodyDef bd;
@@ -66,10 +70,9 @@ void MoverSprite::setup(b2World *world, b2Body *body, const cocos2d::Vec2 &p, fl
         mover->CreateFixture(&round_edge, 0.2f);
     }
     b2RevoluteJointDef jd;
-    jd.Initialize(body, mover, vToB2(p));
+    jd.Initialize(mother, mover, vToB2(p));
     if(_flags & _motorBit) {
-        // TODO: set motor, or have it relevent to size
-        jd.maxMotorTorque = 3.0f;
+        jd.maxMotorTorque = 3.5f;
         jd.motorSpeed = 3.0f;
         jd.enableMotor = true;
     }

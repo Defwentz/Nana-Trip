@@ -81,6 +81,16 @@ void buttonSwitch(cocos2d::ui::Button *button, bool on) {
 void BackButtonReleased(EventKeyboard::KeyCode code, Event *event) {
     Director::getInstance()->end();
 }
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+bool callJavaMethod(char * className, char * method, char * paramCode) {
+    JniMethodInfo mi;
+    if(JniHelper::getStaticMethodInfo(mi, className, method, paramCode)) {
+        log("call %s", method);
+        mi.env->CallStaticVoidMethod(mi.classID, mi.methodID);
+        return true;
+    } else return false;
+}
+#endif
 
 std::string deadScreen;// = "dead.png";
 //std::string pauseScreen;// = "dead.png";

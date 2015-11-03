@@ -14,6 +14,7 @@
 #include "MoverSprite.h"
 #include "RedSprite.h"
 #include "StayingBlobSprite.h"
+#include "DNASprite.h"
 
 // for general terrain randomer
 #define ITEM_TUNNEL         0
@@ -50,9 +51,10 @@ class TerrainSprite : public cocos2d::Sprite
     std::vector<b2Body *> littleguys;           // those yellow ball
     std::vector<SpriteWithBody *> obstacles;    // those brown round thing
     std::vector<SpriteWithBody *> dnas;         // yellow guy
-    std::vector<MoverSprite *> movers;          // mover
-    std::vector<RedSprite *> badguys;           // red guy
-    std::vector<StayingBlobSprite *> blobs;     // blob
+    std::vector<SpriteWithBody *> movers;          // mover
+    std::vector<SpriteWithBody *> badguys;           // red guy
+    std::vector<SpriteWithBody *> blobs;     // blob
+    RedSprite *badboss;
     
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
@@ -79,6 +81,7 @@ public:
     
     void update(float nanaY);
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);
+    void spriteCheckAndUpdate(std::vector<SpriteWithBody *> &sprites, float topY);
     
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight);
     void drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight);
@@ -87,7 +90,6 @@ public:
     virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
     override;
     void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
-    void drawSegment(cocos2d::Vec2 p1, cocos2d::Vec2 p2);
     
     static TerrainSprite *create(b2World *world);
     

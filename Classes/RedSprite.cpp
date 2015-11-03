@@ -20,22 +20,44 @@ RedSprite* RedSprite::create()
     return nullptr;
 }
 RedSprite::RedSprite() {
-    this->runAction(RepeatForever::create(RotateBy::create(7, 360)));
+    float duration = random(6, 7);
+    if(boolWithOdds(0.01)) {
+        duration = 0.5;
+    }
+    this->runAction(RepeatForever::create(RotateBy::create(duration, 360)));
 }
 
 void RedSprite::setup(b2World *world, b2CircleShape *shape, int type) {
     this->setScale(shape->m_radius*PTM_RATIO/36);
-    b2Body *body = Box2DHelper::getBallWithShape(world, shape, b2_dynamicBody);
+    b2Body *body;
+    if(type == _chasing) {
+        body = Box2DHelper::getBallWithShape(world, shape, b2_kinematicBody);
+    } else {
+        body = Box2DHelper::getBallWithShape(world, shape, b2_dynamicBody);
+    }
     body->SetGravityScale(0);
     body->SetUserData(new Entity(UD_BADGUY));
-    if(type == _moving)
+    if(type == _moving) {
         body->ApplyForce(b2Vec2(random(-30, 30), random(-30, 30)), body->GetPosition(), true);
+    }else if (type == _chasing) {
+        body->SetLinearVelocity(b2Vec2(0, -6));
+    }
+        
     this->_body = body;
     this->_type = type;
 }
-void RedSprite::update(float dt) {
+void RedSprite::update() {
     b2CircleShape *shape = (b2CircleShape *) _body->GetFixtureList()->GetShape();
     this->setPosition(b2ToV(shape->m_p + _body->GetPosition()));
+    
+    for(b2ContactEdge *ce = _body->GetContactList(); ce; ce = ce->next) {
+        b2Body *other = ce->other;
+        auto other_userdata = (Entity *) other->GetUserData();
+        if(other_userdata && ce->contact->IsTouching() && other_userdata->type == UD_NANA) {
+            gameStatus = GAME_OVER;
+            return;
+        }
+    }
 }
 
 

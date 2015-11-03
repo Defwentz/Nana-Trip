@@ -35,7 +35,7 @@ public:
      */
     static MoverSprite *create(uint32 flags = _randomBit);
     // parameter body is needed, for fixed the mover with the terrain
-    void setup(b2World *world, b2Body *body, const cocos2d::Vec2& p, float radius);
+    void setup(b2World *world, b2Body *mother, const cocos2d::Vec2& p, float radius);
     void selfDestruct(b2World *world);
     
     void update();

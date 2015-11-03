@@ -22,3 +22,9 @@ SpriteWithBody* SpriteWithBody::create(const std::string& filename)
 void SpriteWithBody::selfDestruct(b2World *world) {
     world->DestroyBody(_body);
 }
+void SpriteWithBody::removeFromVector(std::vector<SpriteWithBody *> &sprites, std::vector<SpriteWithBody *>::iterator &i, b2World *world) {
+    (*i)->selfDestruct(world);
+    (*i)->removeFromParent();
+    i = sprites.erase(i);
+}
+void SpriteWithBody::update(){}
