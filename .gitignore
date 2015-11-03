@@ -11,3 +11,4 @@ Resources/res/.DS_Store
 Resources/res/fonts/.DS_Store
 .DS_Store
 Resources/
+.cocos-project.json
