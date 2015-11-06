@@ -18,6 +18,7 @@ cocos2d::UserDefault *db;
 
 int score;
 cocos2d::Vec2 nanap;
+b2Vec2 grav;
 int pos_score;
 int eat_score;
 int dna;

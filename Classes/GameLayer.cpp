@@ -128,36 +128,6 @@ void GameLayer::initPhysics()
     //    flags += b2Draw::e_centerOfMassBit;
     //    flags += b2Draw::e_particleBit;
     _debugDraw->SetFlags(flags);
-    /*{
-        // Define the ground body.
-        b2BodyDef groundBodyDef;
-        groundBodyDef.position.Set(0, 0); // bottom-left corner
-
-        // Call the body factory which allocates memory for the ground body
-        // from a pool and creates the ground box shape (also from a pool).
-        // The body is also added to the world.
-        b2Body* groundBody = _world->CreateBody(&groundBodyDef);
-
-        // Define the ground box shape.
-        b2EdgeShape groundBox;
-
-        auto s = Director::getInstance()->getWinSize();
-        // bottom
-        groundBox.Set(b2Vec2(0/PTM_RATIO,0/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,0/PTM_RATIO));
-        groundBody->CreateFixture(&groundBox,0);
-
-        // top
-        groundBox.Set(b2Vec2(0/PTM_RATIO,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO));
-        groundBody->CreateFixture(&groundBox,0);
-
-        // left
-        groundBox.Set(b2Vec2(0/PTM_RATIO,0/PTM_RATIO), b2Vec2(0/PTM_RATIO,s.height/PTM_RATIO));
-        groundBody->CreateFixture(&groundBox,0);
-
-        // right
-        groundBox.Set(b2Vec2(s.width/PTM_RATIO,0/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO));
-        groundBody->CreateFixture(&groundBox,0);
-    }*/
     
 //    {
 //        b2Vec2 center = b2Vec2(winMidX/PTM_RATIO, (winMidY+100)/PTM_RATIO);
@@ -260,20 +230,6 @@ void GameLayer::update(float dt)
     _nana->setPosition(nanaPos);
     //log("%f\n", nanaPos.y);
     _terrain->update(nanaPos.y);
-    
-    /*for(b2Body *b = _world->GetBodyList(); b; b = b->GetNext())
-    {
-        if(b->GetUserData()!=NULL)
-        {
-            //CCLOG("ab");
-            Sprite *sprite=(Sprite*)b->GetUserData();
-            
-            sprite->setPosition(b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
-            sprite->setRotation((-1)*CC_RADIANS_TO_DEGREES(b->GetAngle()));
-            //CCLOG("%f,%f",sprite->getPositionX(),sprite->getPositionY());
-            
-        }
-    }*/
 }
 
 
@@ -374,7 +330,7 @@ void GameLayer::destroyDrawFixtures(float dt) {
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    _nana->ApplyForce(b2Vec2(acc->x * 5, 0));
+    //grav = stdGrav + b2Vec2(acc->x * 15, 0);
     _world->SetGravity(stdGrav + b2Vec2(acc->x * 15, 0));
 }
 void GameLayer::pauseCallback(cocos2d::Ref *pSender) {

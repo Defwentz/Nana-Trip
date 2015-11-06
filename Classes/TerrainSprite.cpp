@@ -346,6 +346,7 @@ void TerrainSprite::spawnBumps()
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
             
             bool isFirst = true;
+            int old_dx = 0, old_dy = 0;
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
                 int dx = random(winMidX/3, winMidX - narrowest_width/2);
@@ -358,6 +359,14 @@ void TerrainSprite::spawnBumps()
                 }
                 
                 lastY = getLastY();
+                if(old_dx != 0 && dx < old_dx) {
+                    Vec2 vpos = Vec2(winMidX, lastY - dy/2);
+                    b2CircleShape ball;
+                    ball.m_p = vToB2(vpos);
+                    ball.m_radius = (winMidX - old_dx)/PTM_RATIO;
+                    createSlower(vpos, &ball);
+                }
+                old_dx = dx; old_dy = dy;
             }
             int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
             vertices[0].push_back(Vec2(0, lastY - dy));
@@ -516,6 +525,13 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
             createDNA(vpos + Vec2(vr*cosf(theta), vr*sinf(theta)));
         }
     }
+}
+
+void TerrainSprite::createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape) {
+    SpriteWithBody *slower = SlowerSprite::create();
+    ((SlowerSprite *)slower)->setup(_world, shape);
+    this->addChild(slower);
+    slowers.push_back(slower);
 }
 
 void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
@@ -686,6 +702,7 @@ void TerrainSprite::update(float nanaY)
     spriteCheckAndUpdate(badguys, topY);
     spriteCheckAndUpdate(movers, topY);
     spriteCheckAndUpdate(blobs, topY);
+    spriteCheckAndUpdate(slowers, topY);
     
     for(std::vector<b2Body *>::iterator i = littleguys.begin();
         i != littleguys.end();) {
@@ -717,7 +734,8 @@ void TerrainSprite::spriteCheckAndUpdate(std::vector<SpriteWithBody *> &sprites,
             SpriteWithBody::removeFromVector(sprites, i, _world);
         }
         else {
-            (*i)->update();
+            SpriteWithBody *sprite = (*i);
+            sprite->update();
             ++i;
         }
     }

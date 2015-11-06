@@ -33,5 +33,31 @@ public:
     static b2Body* getBallWithShape(b2World* _world, b2CircleShape *shape, b2BodyType type);
 };
 
+class _b2Contact : public b2Contact {
+public:
+    enum
+    {
+        // Used when crawling contact graph when forming islands.
+        islandFlag		= 0x0001,
+        
+        // Set when the shapes are touching.
+        touchingFlag		= 0x0002,
+        
+        // This contact can be disabled (by user)
+        enabledFlag		= 0x0004,
+        
+        // This contact needs filtering because a fixture filter was changed.
+        filterFlag		= 0x0008,
+        
+        // This bullet contact had a TOI event
+        bulletHitFlag		= 0x0010,
+        
+        // This contact has a valid TOI in m_toi
+        toiFlag			= 0x0020
+    };
+    
+    uint32 getm_flags(){return m_flags;}
+};
+
 
 #endif /* defined(__nanatrip__Box2DHelper__) */

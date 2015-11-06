@@ -15,6 +15,7 @@
 #include "RedSprite.h"
 #include "StayingBlobSprite.h"
 #include "DNASprite.h"
+#include "SlowerSprite.hpp"
 
 // for general terrain randomer
 #define ITEM_TUNNEL         0
@@ -51,9 +52,10 @@ class TerrainSprite : public cocos2d::Sprite
     std::vector<b2Body *> littleguys;           // those yellow ball
     std::vector<SpriteWithBody *> obstacles;    // those brown round thing
     std::vector<SpriteWithBody *> dnas;         // yellow guy
-    std::vector<SpriteWithBody *> movers;          // mover
-    std::vector<SpriteWithBody *> badguys;           // red guy
-    std::vector<SpriteWithBody *> blobs;     // blob
+    std::vector<SpriteWithBody *> movers;       // mover
+    std::vector<SpriteWithBody *> badguys;      // red guy
+    std::vector<SpriteWithBody *> blobs;        // blob
+    std::vector<SpriteWithBody *> slowers;      // slower
     RedSprite *badboss;
     
     Randomer *terrainRdmr;  // general terrain randomer
@@ -76,6 +78,7 @@ public:
     void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
     void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA);
+    void createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     void createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape);
     

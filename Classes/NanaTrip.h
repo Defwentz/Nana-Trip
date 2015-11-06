@@ -27,6 +27,9 @@
 // music control
 // keep screen on
 
+// Need from graph:
+// gameplay instruction
+
 
 #ifndef nanatrip_NanaTrip_h
 #define nanatrip_NanaTrip_h
@@ -106,6 +109,7 @@ extern cocos2d::UserDefault *db;
 // TODO: change
 extern int score;
 extern cocos2d::Vec2 nanap;
+extern b2Vec2 grav;
 
 extern int pos_score;
 extern int eat_score;
