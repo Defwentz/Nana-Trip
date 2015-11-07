@@ -28,7 +28,7 @@ RedSprite::RedSprite() {
 }
 
 void RedSprite::setup(b2World *world, b2CircleShape *shape, int type) {
-    this->setScale(shape->m_radius*PTM_RATIO/36);
+    this->setScale(shape->m_radius*PTM_RATIO/407.5);
     b2Body *body;
     if(type == _chasing) {
         body = Box2DHelper::getBallWithShape(world, shape, b2_kinematicBody);

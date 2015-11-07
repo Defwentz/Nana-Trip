@@ -20,7 +20,13 @@
 class SlowerSprite : public SpriteWithBody
 {
 public:
-    static SlowerSprite *create();
+    enum
+    {
+        _slow             = 0,
+        _bouncy             = 1
+    };
+    int _type;
+    static SlowerSprite *create(int type);
     void setup(b2World *world, b2CircleShape *shape);
     
     void update();

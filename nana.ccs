@@ -1,0 +1,109 @@
+<Solution>
+  <PropertyGroup Name="nana" Version="2.3.2.3" Type="CocosStudio" />
+  <SolutionFolder>
+    <Group ctype="ResourceGroup">
+      <RootFolder Name=".">
+        <Folder Name="about">
+          <Project Name="about.csd" Type="Scene" />
+          <Image Name="bg_about_1.png" />
+          <Image Name="button_back.png" />
+        </Folder>
+        <Folder Name="character">
+          <Project Name="character.csd" Type="Scene" />
+          <Image Name="10.png" />
+          <Image Name="20.png" />
+          <Image Name="30.png" />
+          <Image Name="bubble.png" />
+          <Image Name="character.png" />
+          <Image Name="choose.png" />
+          <Image Name="choosen.png" />
+        </Folder>
+        <Folder Name="homepage">
+          <Project Name="homepage.csd" Type="Scene" />
+          <Image Name="bg_title.png" />
+          <Image Name="button_about.png" />
+          <Image Name="button_nano.png" />
+          <Image Name="button_sound_off.png" />
+          <Image Name="button_sound_on.png" />
+          <Image Name="button_start.png" />
+          <Image Name="button_store.png" />
+          <Image Name="dna.png" />
+          <Image Name="flag.png" />
+        </Folder>
+        <Folder Name="loading">
+          <Project Name="loading.csd" Type="Scene" />
+          <Image Name="bg_loading.png" />
+          <Image Name="sign_touchbegin.png" />
+        </Folder>
+        <Folder Name="pause">
+          <Project Name="pause.csd" Type="Scene" />
+          <Image Name="bg_pause.png" />
+          <Image Name="button_back.png" />
+          <Image Name="button_continue.png" />
+          <Image Name="button_continue_1.png" />
+          <Image Name="button_new.png" />
+          <Image Name="star.png" />
+        </Folder>
+        <Folder Name="result">
+          <Project Name="result.csd" Type="Scene" />
+          <Image Name="6.png" />
+          <Image Name="bg_result.png" />
+          <Image Name="newgame.png" />
+          <Image Name="share.png" />
+          <Image Name="sign_highsource.png" />
+          <Image Name="0.png" />
+          <Image Name="1.png" />
+          <Image Name="2.png" />
+          <Image Name="3.png" />
+        </Folder>
+        <Folder Name="store">
+          <Project Name="store.csd" Type="Scene" />
+          <Image Name="button_buynow.png" />
+          <Image Name="store_1.png" />
+        </Folder>
+        <Image Name="bg.png" />
+        <Folder Name="start">
+          <Project Name="start.csd" Type="Layer" />
+          <Image Name="begin.jpg" />
+          <Image Name="start.png" />
+          <Image Name="begin_2.jpg" />
+          <Image Name="nano_title.png" />
+          <Image Name="setting.png" />
+          <Image Name="music.png" />
+          <Image Name="start_2.png" />
+          <Image Name="about.png" />
+          <Image Name="music_off.png" />
+          <Image Name="music_on.png" />
+        </Folder>
+        <Folder Name="over">
+          <Project Name="over.csd" Type="Layer" />
+          <Image Name="game over.jpg" />
+          <Image Name="big back.png" />
+          <Image Name="big-zan.png" />
+          <Image Name="restart.png" />
+          <Image Name="share.png" />
+          <Image Name="top.png" />
+          <Image Name="big-restart.png" />
+          <Image Name="big-share.png" />
+          <Image Name="big-top.png" />
+          <Image Name="big-back.png" />
+          <Image Name="game_over_word.png" />
+        </Folder>
+        <Folder Name="another_pause">
+          <Image Name="button_big.png" />
+          <Image Name="button_newgame.png" />
+          <Image Name="button_pause.png" />
+          <Image Name="pause_layer.jpg" />
+          <Project Name="NewPauseLayer.csd" Type="Scene" />
+          <Image Name="new_bg.png" />
+          <Image Name="continue_2.png" />
+          <Image Name="replay.png" />
+        </Folder>
+        <Image Name="maoboli.png" />
+        <Folder Name="fonts">
+          <TTF Name="Marker Felt.ttf" />
+        </Folder>
+      </RootFolder>
+    </Group>
+  </SolutionFolder>
+</Solution>

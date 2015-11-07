@@ -364,7 +364,7 @@ void TerrainSprite::spawnBumps()
                     b2CircleShape ball;
                     ball.m_p = vToB2(vpos);
                     ball.m_radius = (winMidX - old_dx)/PTM_RATIO;
-                    createSlower(vpos, &ball);
+                    createSlower(vpos, &ball, SlowerSprite::_slow);
                 }
                 old_dx = dx; old_dy = dy;
             }
@@ -419,6 +419,9 @@ void TerrainSprite::spawnChessboard()
                 pos_odds_for_badguy = 1;
             if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
                 createBadGuy(pos, &ball, RedSprite::_moving);
+            }
+            else if(boolWithOdds(0.5)) {
+                createSlower(pos, &ball, SlowerSprite::_bouncy);
             }
             else if(boolWithOdds(0.5)) {
                 createMoverObstacle(pos, radius);
@@ -527,8 +530,8 @@ void TerrainSprite::createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape,
     }
 }
 
-void TerrainSprite::createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape) {
-    SpriteWithBody *slower = SlowerSprite::create();
+void TerrainSprite::createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape, int type) {
+    SpriteWithBody *slower = SlowerSprite::create(type);
     ((SlowerSprite *)slower)->setup(_world, shape);
     this->addChild(slower);
     slowers.push_back(slower);
@@ -613,12 +616,12 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
 void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
 {
     Texture2D *terrainTxture = Director::getInstance()->getTextureCache()->addImage("terrain_attempt_r.jpg");
-    
+    p1.y++;
     float tdy = p1.y - p2.y;
     //////////////
-    if(tdy == 0) {
-        ccDrawLine(p1, p2);
-    }
+//    if(tdy == 0) {
+//        ccDrawLine(p1, p2);
+//    }
     
     float x = winSiz.width;
     if(!isRight) {
@@ -667,7 +670,7 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
 void TerrainSprite::update(float nanaY)
 {
     float topY = nanaY + winSiz.height;
-    float bottomY = nanaY - winSiz.height;
+    float bottomY = nanaY - winMidY;
     
     for(int n =0; n < 2; n++) {
         if (vertices[n][1].y > topY) {

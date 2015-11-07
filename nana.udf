@@ -1,0 +1,42 @@
+<UserData Version="2.3.2.3">
+  <Properties>
+    <Item Key="PackageParamsKey">
+      <Value ctype="PackageParams">
+        <LuaIsEncrypt Value="False" />
+        <LuaEncryptKey Value="" />
+        <LuaEncryptSign Value="" />
+        <Android_PackageName Value="org.cocos.nanatrip" />
+        <AndroidkeyStore Value="" />
+        <AndroidVersion Value="" />
+        <iOS_Target Value="nanatrip iOS" />
+        <iOS_BundleID Value="iPhone Developer: Linus Zhu (ZC7696ZE9N)" />
+        <Platform Value="None" />
+        <RunPlatform Value="None" />
+        <FrameworkVersion Value="cocos2d-x-3.6" />
+        <IsDebugKeystore Value="True" />
+        <KeystorePassword Value="" />
+        <KeystoreAliasName Value="" />
+        <KeystoreAliasPassword Value="" />
+        <EnableSourceMap Value="False" />
+        <EnableHTML5Advanced Value="False" />
+      </Value>
+    </Item>
+    <Item Key="CocosRecentOperation">
+      <Value ctype="CocosRecentOperation">
+        <LastPublishType Value="XCode" />
+        <IsLastPublish Value="True" />
+        <LastRunType Value="Mac" />
+      </Value>
+    </Item>
+    <Item Key="TabsParamsKey">
+      <Value ctype="TabsInfo">
+        <OpenedDocuments>
+          <FilePathData Path="over/over.csd" />
+          <FilePathData Path="another_pause/NewPauseLayer.csd" />
+          <FilePathData Path="start/start.csd" />
+        </OpenedDocuments>
+        <ActiveDocument Path="another_pause/NewPauseLayer.csd" />
+      </Value>
+    </Item>
+  </Properties>
+</UserData>

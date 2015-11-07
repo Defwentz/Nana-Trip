@@ -78,7 +78,7 @@ public:
     void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
     void createBadGuy(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createBallObstacle(cocos2d::Vec2 vpos, b2CircleShape *shape, bool withDNA);
-    void createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape);
+    void createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     void createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape);
     

@@ -198,6 +198,7 @@ void GameLayer::update(float dt)
     }
     else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
+        _nana->removeFromParent();
         this->unscheduleUpdate();
         Device::setAccelerometerEnabled(false);
         //CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
@@ -330,8 +331,8 @@ void GameLayer::destroyDrawFixtures(float dt) {
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    //grav = stdGrav + b2Vec2(acc->x * 15, 0);
-    _world->SetGravity(stdGrav + b2Vec2(acc->x * 15, 0));
+    grav = stdGrav + b2Vec2(acc->x * 15, 0);
+    _world->SetGravity(grav);//stdGrav + b2Vec2(acc->x * 15, 0));
 }
 void GameLayer::pauseCallback(cocos2d::Ref *pSender) {
     _eventDispatcher->removeEventListener(keyListener);
