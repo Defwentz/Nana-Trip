@@ -1,5 +1,6 @@
 #include "GameLayer.h"
 #include "OverLayer.h"
+#include "InterestingLayer.h"
 
 USING_NS_CC;
 
@@ -195,8 +196,7 @@ void GameLayer::update(float dt)
 {
     if(gameStatus == GAME_PAUSE) {
         return;
-    }
-    else if(gameStatus == GAME_OVER) {
+    } else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
         _nana->removeFromParent();
         this->unscheduleUpdate();
@@ -205,6 +205,10 @@ void GameLayer::update(float dt)
         utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead.png");
         scheduleOnce(schedule_selector(GameLayer::gameOver), 0.2f);
         return;
+    } else if(gameStatus == GAME_INTERESTING) {
+        //Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+        this->unscheduleUpdate();
+        this->getParent()->addChild(InterestingLayer::create(), ZORDER_OVERLAYER);
     }
     
     // It is recommended that a fixed time step is used with Box2D for stability
@@ -219,7 +223,8 @@ void GameLayer::update(float dt)
     _world->Step(dt, velocityIterations, positionIterations);
     _nana->gasUp();
     
-    Vec2 nanaPos = _nana->getPosition();
+    Vec2 nanaPos = Vec2(winMidX, _nana->getpy());//_nana->getPosition0();
+    //log("pos0: %f, posc: %f", nanaPos.y, _nana->getpy());
     float topY = nanaPos.y + winSiz.height;
     float bottomY = nanaPos.y - winSiz.height;
     
@@ -228,6 +233,8 @@ void GameLayer::update(float dt)
     // update score
     pos_score = (-nanaPos.y + winMidY)/400;
     _infoLayer->update();
+    //log("nana: %f",  _nana->getPosition().y - nanaPos.y);
+    //_nana->runAction(MoveBy::create(dt, nanaPos - _nana->getPosition()));
     _nana->setPosition(nanaPos);
     //log("%f\n", nanaPos.y);
     _terrain->update(nanaPos.y);
@@ -278,7 +285,6 @@ void GameLayer::reset()
     eat_score = 0;
     _infoLayer->reset();
     this->initPhysics();
-    //Director::getInstance()->resume();
     gameStatus = GAME_PLAY;
 }
 
@@ -366,6 +372,7 @@ void GameLayer::draw(Renderer *renderer, const Mat4 &transform, uint32_t transfo
     
     GL::enableVertexAttribs( cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION );
     
+    if(IS_DEBUGGING)
     _world->DrawDebugData();
     CHECK_GL_ERROR_DEBUG();
     

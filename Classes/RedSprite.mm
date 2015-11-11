@@ -46,6 +46,10 @@ void RedSprite::setup(b2World *world, b2CircleShape *shape, int type) {
     this->_body = body;
     this->_type = type;
 }
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#include "ABGameKitHelper.h"
+#endif
 void RedSprite::update() {
     b2CircleShape *shape = (b2CircleShape *) _body->GetFixtureList()->GetShape();
     this->setPosition(b2ToV(shape->m_p + _body->GetPosition()));
@@ -53,8 +57,19 @@ void RedSprite::update() {
     for(b2ContactEdge *ce = _body->GetContactList(); ce; ce = ce->next) {
         b2Body *other = ce->other;
         auto other_userdata = (Entity *) other->GetUserData();
-        if(other_userdata && ce->contact->IsTouching() && other_userdata->type == UD_NANA) {
+        if(other_userdata &&
+           ce->contact->IsTouching() &&
+           other_userdata->type == UD_NANA) {
             gameStatus = GAME_OVER;
+            
+            auto self_userdata = (Entity *) _body->GetUserData();
+            if(self_userdata->type != UD_BADBOSS) {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                [[ABGameKitHelper sharedHelper] reportAchievement:@"nana_gameover_first" percentComplete:100.0f];
+                [[ABGameKitHelper sharedHelper] showNotification:@"碰到了小红" message:@"碰到了小红..挂掉了" identifier:@"nana_gameover_first"];
+#endif
+            }
             return;
         }
     }

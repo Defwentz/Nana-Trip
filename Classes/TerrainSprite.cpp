@@ -35,6 +35,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
+    terrainRdmr->add(ITEM_POCKET, 3);
     
     // initalize the tunnel randomer
     tnlRdmr = new Randomer();
@@ -125,13 +126,38 @@ void TerrainSprite::spawnTerrain()
         case ITEM_CHESSBOARD:   spawnChessboard();break;
         case ITEM_BELT:         spawnBelt();break;
         case ITEM_METEOR:       spawnMeteor();break;
+        case ITEM_POCKET:       spawnPockect();break;
         default:break;
+    }
+}
+
+/**
+ * which_side == 1, right; == 0, left
+ */
+void TerrainSprite::spawnPockect(int which_side)
+{
+    float lasty = getLastY();
+    float new_lasty = lasty - winMidY/2;
+    bool need_manage = false;
+    if(which_side == -1) {
+        need_manage = true;
+        which_side = (int)boolWithOdds(0.5);
+    }
+    int pocket_x = -winMidX + which_side*winSiz.width*2;
+    // 有pocket的那一边
+    vertices[which_side].push_back(Vec2(pocket_x, lasty));
+    vertices[which_side].push_back(Vec2(pocket_x, new_lasty));
+    vertices[which_side].push_back(Vec2(which_side * winSiz.width, new_lasty));
+    
+    if(need_manage) {
+        int other_side = !which_side;
+        vertices[other_side].push_back(Vec2(other_side * winSiz.width, new_lasty));
     }
 }
 
 void TerrainSprite::spawnMeteor()
 {
-    float lastY = getLastY() - winMidY/8;
+    float lastY = getLastY() - winMidY/32;// - winMidY/8;
     // the border vertices
     vertices[0].push_back(Vec2(0, lastY));
     vertices[1].push_back(Vec2(winSiz.width, lastY));
@@ -485,7 +511,7 @@ void TerrainSprite::createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *sha
     b2BodyDef bd;
     bd.position = vToB2(vpos);
     bd.type = b2_dynamicBody;
-    bd.gravityScale = -1;
+    bd.gravityScale = -2;
     b2Body *b = _world->CreateBody(&bd);
     b->CreateFixture(shape, 0);
     littleguys.push_back(b);
@@ -579,13 +605,14 @@ void TerrainSprite::connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
     float tdy = p1.y - p2.y;
     std::vector<b2Fixture *> _fixtures;
     //////////////
-    if(tdy == 0) {
+    if(tdy == 0 || p1.x - p2.x == 0) {
         b2EdgeShape border;
         b2Vec2 _bp1 = vToB2(p1);
         b2Vec2 _bp2 = vToB2(p2);
         border.Set(_bp1, _bp2);
         _fixtures.push_back(_body->CreateFixture(&border,0));
         fixtures[isRight].push_back(_fixtures);
+        return;
     };
     //////////////
     
@@ -619,9 +646,6 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
     p1.y++;
     float tdy = p1.y - p2.y;
     //////////////
-//    if(tdy == 0) {
-//        ccDrawLine(p1, p2);
-//    }
     
     float x = winSiz.width;
     if(!isRight) {
@@ -666,7 +690,6 @@ void TerrainSprite::drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight)
         _p1 = _p2;
     }
 }
-
 void TerrainSprite::update(float nanaY)
 {
     float topY = nanaY + winSiz.height;
@@ -696,10 +719,17 @@ void TerrainSprite::update(float nanaY)
     // check if there are sprites with b2body out of sight
     // if so, delete
     spriteCheck(obstacles, topY);
-    
     DNASprite::checkDNAs(dnas, _world, topY);
-    badboss->update();
-    badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-10*pos_score/200));
+    
+    if(badboss != NULL) {
+        badboss->update();
+        badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-10*pos_score/200));
+        if(badboss->getPosition().y < bottomY - winMidY) {
+            badboss->selfDestruct(_world);
+            badboss->removeFromParent();
+            badboss = NULL;
+        }
+    }
     // another way: have it appear once in a while, maybe like a minute or so.
     // and with flashing title: WARNING!!, and a special bgm
     spriteCheckAndUpdate(badguys, topY);
@@ -711,12 +741,16 @@ void TerrainSprite::update(float nanaY)
         i != littleguys.end();) {
         Vec2 p = b2ToV((*i)->GetPosition());
         if((*i)->GetPosition().y*PTM_RATIO > topY) {
-            _world->DestroyBody((*i));
+            _world->DestroyBody(*i);
             i = littleguys.erase(i);
         }
         else {
             ++i;
         }
+    }
+    
+    if(nanaY - vertices[0][0].y - winMidY> 0) {
+        gameStatus = GAME_INTERESTING;
     }
 }
 
@@ -754,7 +788,7 @@ void TerrainSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transf
 }
 
 // drawing the same spot over and over again, bad idea.
-// TODO: fix this
+// I think all the implementation are like this, yeah.
 void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
 {
     Director* director = Director::getInstance();
@@ -769,6 +803,7 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
                           littleguys[i]->GetFixtureList()->GetShape()->m_radius * PTM_RATIO,
                           CC_DEGREES_TO_RADIANS(360), 30);
     }
+    if(!IS_DEBUGGING)
     for(int n = 0; n < 2; n++) {
         for(int i = 1; i < to[n]; i++) {
             Vec2 lp1, lp2;

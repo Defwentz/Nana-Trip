@@ -52,6 +52,7 @@
 #define GAME_PLAY 1
 #define GAME_PAUSE 2
 #define GAME_OVER 3
+#define GAME_INTERESTING 4
 extern int gameStatus;
 
 // for example, this is a row on the screen [ xxx ]
@@ -66,6 +67,7 @@ extern int gameStatus;
 #define UD_BADGUY 2
 #define UD_DNA 3
 #define UD_HAND 4
+#define UD_BADBOSS 5
 #define UD_DESTROYED 99
 
 #define IS_DEBUGGING 0

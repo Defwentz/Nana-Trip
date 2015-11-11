@@ -211,7 +211,7 @@ void NanaSprite::initPhysics(b2World *world)
                                   // 0.4*sinf(next_theta - deltaAngle/2))
                             //);
         // don't know exact effect
-        bodyDef.linearDamping = 0.1f;
+        bodyDef.linearDamping = 0.f;
         
         b2Body *body = world->CreateBody(&bodyDef);
         body->CreateFixture(&shell, 1.0f);
@@ -264,7 +264,7 @@ void NanaSprite::initPhysics(b2World *world)
                             inner_joint );
         jointDef.collideConnected = true;
         jointDef.frequencyHz = 4.0f;
-        jointDef.dampingRatio = 0.5f;
+        jointDef.dampingRatio = 0.f;
         
         world->CreateJoint(&jointDef);
         /*
@@ -288,28 +288,32 @@ bool NanaSprite::isNana(b2Body *body)
     return false;
 }
 
-Vec2 NanaSprite::getPosition()
+Vec2 NanaSprite::getPosition0()
 {
     return Vec2(winMidX, _bodies[0]->GetPosition().y*PTM_RATIO);
+}
+
+float NanaSprite::getpy() {
+    float py;
+    for(int i = 0; i < _bodies.size(); i++) {
+        py += _bodies[i]->GetPosition().y;
+    }
+    py = py/_bodies.size()*PTM_RATIO;
+    return py;
+}
+float NanaSprite::getpx() {
+    float px;
+    for(int i = 0; i < _bodies.size(); i++) {
+        px += _bodies[i]->GetPosition().x;
+    }
+    px = px/_bodies.size()*PTM_RATIO;
+    return px;
 }
 
 Vec2 NanaSprite::getCenter()
 {
     float x = 0, y = 0;//, x2 =0,y2=0,x3=0,y3=0;
-
-//    for(int i = 0; i < _bodies.size(); i++) {
-//        b2Vec2 pos = _bodies[i]->GetWorldCenter();
-//        b2Vec2 pos2 = _bodies[i]->GetPosition();
-//        b2Vec2 pos3 = _bodies[i]->GetLocalCenter();
-//        x += pos.x;
-//        y += pos.y;
-//        x2+=pos2.x;y2+=pos2.y;
-//        x3+=pos3.x;y3+=pos3.y;
-//    }
-//    Vec2 vertices[NUM_SEGMENTS];
-    
     Vec2 opos = this->getPosition();
-    
     for(int i = 0; i < _bodies.size(); i++) {
         b2PolygonShape *shape = (b2PolygonShape *) _bodies[i]->GetFixtureList()->GetShape();
         b2Vec2 point;
@@ -399,6 +403,7 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     nanap = this->convertToWorldSpace(center);
     //log("nanapos: %f, %f\n", nanap.x, nanap.y);
     // tiny side burns (...Guesss that one way to call it)
+    if(!IS_DEBUGGING)
     for(int i = 0; i < _bodies.size(); i++) {
         Vec2 target = (center - vertices[i]) * nub_pos;
         target += center;
@@ -406,6 +411,7 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     }
     
     // draw the body
+    if(!IS_DEBUGGING)
     DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, _nanaColor);
     
     //center.x-=12;center.y-=12;

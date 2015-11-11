@@ -23,12 +23,23 @@ Scene* StartLayer::createScene()
     return scene;
 }
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#include "ABGameKitHelper.h"
+#endif
+
 bool StartLayer::init()
 {
     if ( !Layer::init() )
     {
         return false;
     }
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    // game center
+    [ABGameKitHelper sharedHelper];
+#endif
     
     auto rootNode = CSLoader::createNode("start/start.csb");
     addChild(rootNode);

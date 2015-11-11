@@ -24,6 +24,7 @@
 #define ITEM_CHESSBOARD     3
 #define ITEM_BELT           4
 #define ITEM_METEOR         5
+#define ITEM_POCKET         6
 
 #define ITEM_TUNNEL_NR      10
 #define ITEM_TUNNEL_BRD     11
@@ -56,7 +57,7 @@ class TerrainSprite : public cocos2d::Sprite
     std::vector<SpriteWithBody *> badguys;      // red guy
     std::vector<SpriteWithBody *> blobs;        // blob
     std::vector<SpriteWithBody *> slowers;      // slower
-    RedSprite *badboss;
+    RedSprite *badboss = NULL;
     
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
@@ -73,6 +74,7 @@ public:
     void spawnBumps();
     void spawnCurve();
     void spawnChessboard();
+    void spawnPockect(int which_side = -1);            // great tiny hidden pocket
     
     void createDNA(cocos2d::Vec2 vpos);
     void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);

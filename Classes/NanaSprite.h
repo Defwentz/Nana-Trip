@@ -37,7 +37,9 @@ public:
     /**
      * _bodies[0]->getPosistion()
      */
-    cocos2d::Vec2 getPosition();
+    cocos2d::Vec2 getPosition0();
+    float getpy();
+    float getpx();
     cocos2d::Vec2 getCenter();
     bool isNana(b2Body *body);
     

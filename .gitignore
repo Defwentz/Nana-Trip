@@ -1,6 +1,12 @@
 proj.win32
 proj.android
-proj.ios_mac
+proj.ios_mac/libraries
+proj.ios_mac/mac
+proj.ios_mac/ShareSDK
+proj.ios_mac/nana.xcodeproj
+proj.ios_mac/.DS_Store
+proj.ios_mac/ios/*.png
+proj.ios_mac/ios/Info.plist
 cocosstudio
 nana.ccs
 nana.cfg

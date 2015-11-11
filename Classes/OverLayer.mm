@@ -12,6 +12,9 @@
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <platform/android/jni/JniHelper.h>
 #include <jni.h>
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//#include "../proj.ios_mac/ios/OCHelper.h"
+#include "ABGameKitHelper.h"
 #endif
 
 USING_NS_CC;
@@ -36,20 +39,30 @@ bool OverLayer::init()
     addChild(rootNode);
     
     int bestScore = db->getIntegerForKey(key_best_score.c_str(), 0);
-    int rating;
+    // 判断是否是新纪录
     if(bestScore < score) {
-        rating = 3;
         bestScore = score;
         db->setIntegerForKey(key_best_score.c_str(), score);
         db->flush();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        [[ABGameKitHelper sharedHelper] reportScore:bestScore forLeaderboard:@"nana_leaderboard"];
+#endif
     }
-    else if (score > bestScore*2.0/3){
-        rating = 2;
-    }
-    else if (score > bestScore*1.0/3) {
-        rating = 1;
-    }
-    else rating = 0;
+//    int rating;
+//    if(bestScore < score) {
+//        rating = 3;
+//        bestScore = score;
+//        db->setIntegerForKey(key_best_score.c_str(), score);
+//        db->flush();
+//    }
+//    else if (score > bestScore*2.0/3){
+//        rating = 2;
+//    }
+//    else if (score > bestScore*1.0/3) {
+//        rating = 1;
+//    }
+//    else rating = 0;
     
     Text* scoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_score"));
     scoreTxt->setString(StringUtils::format("%d", score));
@@ -63,7 +76,6 @@ bool OverLayer::init()
 //        newRatingTexture = Director::getInstance()->getTextureCache()->addImage(res_ratings[rating]);
 //        ratingSprite->setTexture(newRatingTexture);
 //    }
-    
     Button* anotherBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_newgame"));
     Button* returnBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     Button* shareBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_share"));
@@ -104,17 +116,17 @@ void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchE
 void OverLayer::rankCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::ENDED) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        JniMethodInfo mi;
-        bool isHave = JniHelper::getStaticMethodInfo(mi, "org/cocos2dx/mz/AppActivity", "makeToast", "(Ljava/lang/String;)V");
-        if (!isHave) {
-            return;
-        }
-        
-        jstring msg = mi.env->NewStringUTF("先放着。。别着急");
-        mi.env->CallStaticVoidMethod(mi.classID, mi.methodID, msg);
-        mi.env->DeleteLocalRef(mi.classID);
+    JniMethodInfo mi;
+    bool isHave = JniHelper::getStaticMethodInfo(mi, "org/cocos2dx/mz/AppActivity", "makeToast", "(Ljava/lang/String;)V");
+    if (!isHave) {
+        return;
+    }
+    jstring msg = mi.env->NewStringUTF("先放着。。不着急");
+    mi.env->CallStaticVoidMethod(mi.classID, mi.methodID, msg);
+    mi.env->DeleteLocalRef(mi.classID);
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        
+        [[ABGameKitHelper sharedHelper] showLeaderboard:@"nana_leaderboard"];
+        //[OCHelper MessageBox:@"调" title:@"hihi"];
 #endif
     }
 }
