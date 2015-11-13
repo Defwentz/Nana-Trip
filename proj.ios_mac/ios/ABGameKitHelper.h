@@ -67,6 +67,8 @@
 -(void) showNotification:(NSString*)title message:(NSString*)message identifier:(NSString*)achievementId;
 
 
++(void) MessageBox:(NSString *)pszMsg title:(NSString *)pszTitle;
+
 @property (nonatomic, assign, getter = isAuthenticated) BOOL authenticated;
 
 @end

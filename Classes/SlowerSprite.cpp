@@ -50,7 +50,7 @@ void SlowerSprite::update() {
                 b2Vec2 v = other->GetLinearVelocity();
                 other->SetLinearVelocity(b2Vec2(v.x*0.5, v.y*0.5));
             } else if (_type == _bouncy) {
-                other->ApplyForceToCenter(b2Vec2(grav.x*-1, grav.y*-1), true);
+                other->ApplyForceToCenter(b2Vec2(0, stdGrav.y*-1), true);
             }
         }
     }

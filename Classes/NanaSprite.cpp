@@ -137,6 +137,9 @@ void NanaSprite::initPhysics(b2World *world)
 {
     // Center of the circle, set to the center of the screen.
     b2Vec2 center = b2Vec2(winMidX/PTM_RATIO, winMidY/PTM_RATIO);
+    if(IS_DEBUGGING_TERRAIN) {
+        center = b2Vec2(-winMidX/PTM_RATIO, winMidY/PTM_RATIO);
+    }
     
     /*b2CircleShape circleShape;
     circleShape.m_radius = 0.25f;

@@ -31,7 +31,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 10);
-    terrainRdmr->add(ITEM_BUMPS, 10);
+    terrainRdmr->add(ITEM_BUMPS, 20);
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
@@ -44,15 +44,24 @@ TerrainSprite::TerrainSprite(b2World *world)
     
     // initalize the bump randomer
     bumpRdmr = new Randomer();
-    bumpRdmr->add(ITEM_BUMPS_1, 10);
+    bumpRdmr->add(ITEM_BUMPS_1, 20);
     bumpRdmr->add(ITEM_BUMPS_2, 10);
-    bumpRdmr->add(ITEM_BUMPS_3, 30);
+    bumpRdmr->add(ITEM_BUMPS_3, 10);
     
-    crvRdmr = new Randomer();
-    crvRdmr->add(ITEM_CURVE_BL, 10);
-    crvRdmr->add(ITEM_CURVE_BR, 10);
-    crvRdmr->add(ITEM_CURVE_TL, 10);
-    crvRdmr->add(ITEM_CURVE_TR, 10);
+//    crvRdmr = new Randomer();
+//    crvRdmr->add(ITEM_CURVE_BL, 10);
+//    crvRdmr->add(ITEM_CURVE_BR, 10);
+//    crvRdmr->add(ITEM_CURVE_TL, 10);
+//    crvRdmr->add(ITEM_CURVE_TR, 10);
+    
+    ballRdmr = new Randomer();
+    ballRdmr->add(ITEM_BALL_DNA, 9);
+    ballRdmr->add(ITEM_BALL_METEOR, 7);
+    ballRdmr->add(ITEM_BALL_BLOB, 9);
+    ballRdmr->add(ITEM_BALL_BADGUY, 4);
+    ballRdmr->add(ITEM_BALL_MOVER, 7);
+    ballRdmr->add(ITEM_BALL_OBSTACLE, 6);
+    ballRdmr->add(ITEM_BALL_SLOWER, 8);
     
     initPhysics(world);
 }
@@ -61,7 +70,8 @@ TerrainSprite::~TerrainSprite()
     delete terrainRdmr;
     delete tnlRdmr;
     delete bumpRdmr;
-    delete crvRdmr;
+//    delete crvRdmr;
+    delete ballRdmr;
 }
 
 float TerrainSprite::getLastY()
@@ -131,18 +141,39 @@ void TerrainSprite::spawnTerrain()
     }
 }
 
+void TerrainSprite::spawnBallshapething(cocos2d::Vec2 vpos, float radius) {
+    b2CircleShape shape;
+    shape.m_p = vToB2(vpos);
+    shape.m_radius = radius/PTM_RATIO;
+    switch (ballRdmr->getRandomItem()) {
+        case ITEM_BALL_DNA:             createDNA(vpos);break;
+        case ITEM_BALL_METEOR:          createMovingLittleGuy(vpos, &shape);break;
+        case ITEM_BALL_BLOB:            createBlob(vpos, &shape);break;
+        case ITEM_BALL_BADGUY:          createBadGuy(vpos, &shape, RedSprite::_moving);break;
+        case ITEM_BALL_MOVER:           createMoverObstacle(vpos, shape.m_radius);break;
+        case ITEM_BALL_OBSTACLE:        createBallObstacle(vpos, &shape, boolWithOdds(0.5));break;
+        case ITEM_BALL_SLOWER:          createSlower(vpos, &shape, SlowerSprite::_bouncy);break;
+        default:break;
+    }
+}
+
 /**
- * which_side == 1, right; == 0, left
+ * which_side == 1, right
+ * which_side == 0, left
  */
-void TerrainSprite::spawnPockect(int which_side)
+void TerrainSprite::spawnPockect(int which_side, int pocket_size)
 {
-    float lasty = getLastY();
-    float new_lasty = lasty - winMidY/2;
+    float lasty;
     bool need_manage = false;
     if(which_side == -1) {
         need_manage = true;
         which_side = (int)boolWithOdds(0.5);
+        lasty = getLastY();
+    } else {
+        lasty = vertices[which_side].back().y;
     }
+    float new_lasty = lasty - pocket_size;
+    // 避难所固定宽 winMidX
     int pocket_x = -winMidX + which_side*winSiz.width*2;
     // 有pocket的那一边
     vertices[which_side].push_back(Vec2(pocket_x, lasty));
@@ -301,48 +332,72 @@ void TerrainSprite::spawnBumps()
         {
             int n = rand()%5;
             
-            float min_bump_length = winSiz.height / 3;
-            float max_bump_length = winSiz.height;
+            float min_single_bump_length = winSiz.height / 3;
+            float max_single_bump_length = winSiz.height;
             for(int i = 0; i < n; i++) {
-                // I think same total x,y difference will look better than different
-                int bump_length = random(min_bump_length, max_bump_length);
-                int bump_peak_tdy = random(bump_length/2, bump_length*2/3);
+                /** the first side **/
+                
+                //  _ lastY
+                // |                } bump_peak_tdy  ]
+                // |- bump_peak_y_1                  } bump_length
+                // |_ bump_end_y_1                   ]
+                int bump_length = random(min_single_bump_length, max_single_bump_length);
+                int bump_peak_tdy = random(bump_length/2, bump_length*3/4);
                 int bump_peak_tdx = random((float)narrowest_width, winSiz.width - narrowest_width);
                 int bump_peak_y_1 = lastY - bump_peak_tdy;
                 int bump_end_y_1 = lastY - bump_length;
                 
-                bool leftFirst = boolWithOdds(0.5);
-                if(leftFirst) {
-                    if(vertices[0].back().y > lastY)
-                        vertices[0].push_back(Vec2(0, lastY));
-                    vertices[0].push_back(Vec2(bump_peak_tdx, bump_peak_y_1));
-                    vertices[0].push_back(Vec2(0, bump_end_y_1));
+                bool rightFirst = boolWithOdds(0.5);
+                int which_side = (int)(rightFirst);
+                int side_x = which_side * winSiz.width;
+                int empty_space = vertices[which_side].back().y - lastY;
+                if(empty_space > 0) {// 空隙哟
+                    if(boolWithOdds(0.1)) {
+                        spawnPockect(which_side, empty_space);
+                    } else {
+                        vertices[which_side].push_back(Vec2(side_x, lastY));
+                    }
                 }
-                else {
-                    if(vertices[1].back().y > lastY)
-                        vertices[1].push_back(Vec2(winSiz.width, lastY));
-                    vertices[1].push_back(Vec2(winSiz.width - bump_peak_tdx, bump_peak_y_1));
-                    vertices[1].push_back(Vec2(winSiz.width, bump_end_y_1));
-                }
+                // push the vertices of a single side into vertices[]
+                vertices[which_side].push_back(Vec2(which_side*(winSiz.width - 2*bump_peak_tdx) + bump_peak_tdx, bump_peak_y_1));
+                vertices[which_side].push_back(Vec2(side_x, bump_end_y_1));
                 
-                lastY = bump_end_y_1;
-                int margin = random(0.0f, bump_peak_tdy - bump_peak_tdy + narrowest_width);
+                /** the other side **/
+                int margin = random(0.f, bump_length - bump_peak_tdy + narrowest_width);
+                //  _ bump_peak_y_1
+                // |_ bump_begin_y_2} margin
+                // |                } bump_peak_tdy  ]
+                // |- bump_peak_y_2                  } bump_length
+                // |_ bump_end_y_2                   ]
+                
+                // also, I think same total x,y difference will look better
+                // than if they looked different
                 int bump_begin_y_2 = bump_peak_y_1 - margin;
                 int bump_peak_y_2 = bump_begin_y_2 - bump_peak_tdy;
+                int other_side = (int)(!rightFirst);
+                int other_side_x = other_side * winSiz.width;
+                
+                /** stuff in the middle **/
+                float space_left = winMidX - bump_peak_tdx - narrowest_width;
+                if(space_left > 0 && boolWithOdds(0.6)) {
+                    spawnBallshapething(Vec2(winMidX, (bump_peak_y_1 + bump_peak_y_2)/2),
+                                        space_left);
+                }
+                
+                if(boolWithOdds(0.1)) {
+                    spawnPockect(other_side, bump_peak_tdy + margin);
+                    if(vertices[other_side].back().y > bump_begin_y_2)
+                        vertices[other_side].push_back(Vec2(other_side_x, bump_begin_y_2));
+                } else {
+                    vertices[other_side].push_back(Vec2(other_side_x, bump_begin_y_2));
+                }
+                vertices[other_side].push_back(Vec2(other_side*(winSiz.width - 2*bump_peak_tdx) + bump_peak_tdx, bump_peak_y_2));
+                // update lastY for the next pair of bump
                 lastY = bump_begin_y_2 - bump_length;
-                // lastY now is still the frist bump's door y
-                if(leftFirst) {
-                    vertices[1].push_back(Vec2(winSiz.width, bump_begin_y_2));
-                    vertices[1].push_back(Vec2(winSiz.width - bump_peak_tdx, bump_peak_y_2));
-                    vertices[1].push_back(Vec2(winSiz.width, lastY));
-                }
-                else {
-                    vertices[0].push_back(Vec2(0, bump_begin_y_2));
-                    vertices[0].push_back(Vec2(bump_peak_tdx, bump_peak_y_2));
-                    vertices[0].push_back(Vec2(0, lastY));
-                }
+                vertices[other_side].push_back(Vec2(other_side_x, lastY));
             }
         }break;
+        // 下面两种比较相似, 与上面这种不同
         case ITEM_BUMPS_2:
         {
             int min_wrinkle = random(1, 3);
@@ -372,7 +427,7 @@ void TerrainSprite::spawnBumps()
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
             
             bool isFirst = true;
-            int old_dx = 0, old_dy = 0;
+//            int old_dx = 0, old_dy = 0;
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
                 int dx = random(winMidX/3, winMidX - narrowest_width/2);
@@ -381,18 +436,19 @@ void TerrainSprite::spawnBumps()
                 
                 if(isFirst) {
                     isFirst = false;
-                    createMoverObstacle(Vec2(winMidX, lastY), dx/2.0/PTM_RATIO);
+                    if(boolWithOdds(0.6))
+                        createMoverObstacle(Vec2(winMidX, lastY), dx/2.0/PTM_RATIO);
                 }
                 
                 lastY = getLastY();
-                if(old_dx != 0 && dx < old_dx) {
-                    Vec2 vpos = Vec2(winMidX, lastY - dy/2);
-                    b2CircleShape ball;
-                    ball.m_p = vToB2(vpos);
-                    ball.m_radius = (winMidX - old_dx)/PTM_RATIO;
-                    createSlower(vpos, &ball, SlowerSprite::_slow);
-                }
-                old_dx = dx; old_dy = dy;
+//                if(old_dx != 0 && dx < old_dx) {
+//                    Vec2 vpos = Vec2(winMidX, lastY - dy/2);
+//                    b2CircleShape ball;
+//                    ball.m_p = vToB2(vpos);
+//                    ball.m_radius = (winMidX - old_dx)/PTM_RATIO;
+//                    createSlower(vpos, &ball, SlowerSprite::_slow);
+//                }
+//                old_dx = dx; old_dy = dy;
             }
             int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
             vertices[0].push_back(Vec2(0, lastY - dy));
@@ -401,9 +457,6 @@ void TerrainSprite::spawnBumps()
         default:break;
     }
 }
-
-//int max_radius = winSize.width / (MIN_COL-1) - margin;
-//int min_radius = winSize.width / (MAX_COL-1) - margin;
 // TODO: bug fix: some sort of empty space
 void TerrainSprite::spawnChessboard()
 {
@@ -423,7 +476,7 @@ void TerrainSprite::spawnChessboard()
     int row = (margin + length) / (2*max_radius + margin);
     lastY -= max_radius;
     
-    float odds = rand_0_1();
+    float odds = random(0.2, 1.);
     for(int i = 0; i < row; i++) {
         float x = random(-max_radius/2, max_radius/2);
         for(int j = 0; j < col; j++, x += (2*max_radius + margin)) {
@@ -468,28 +521,28 @@ void TerrainSprite::spawnChessboard()
 
 void TerrainSprite::spawnCurve()
 {
-    float lastY = getLastY();
-    int length = randWithBase(winMidY,
-                              winSiz.height);
-    // the border vertices
-    vertices[0].push_back(Vec2(0, lastY-length));
-    vertices[1].push_back(Vec2(winSiz.width, lastY-length));
-    
-    //int margin_x = randWithBase(narrowest_width, narrowest_width);
-    //int big_radius = random(winMidX - margin_x*2, winSiz.width - margin_x*2);
-    
-    switch (crvRdmr->getRandomItem()) {
-        case ITEM_CURVE_BR:
-            //Vec2 origin = Vec2(winSiz.width - , float yy);
-            break;
-        case ITEM_CURVE_BL:
-            break;
-        case ITEM_CURVE_TR:
-            break;
-        case ITEM_CURVE_TL:
-            break;
-        default:break;
-    }
+//    float lastY = getLastY();
+//    int length = randWithBase(winMidY,
+//                              winSiz.height);
+//    // the border vertices
+//    vertices[0].push_back(Vec2(0, lastY-length));
+//    vertices[1].push_back(Vec2(winSiz.width, lastY-length));
+//    
+//    //int margin_x = randWithBase(narrowest_width, narrowest_width);
+//    //int big_radius = random(winMidX - margin_x*2, winSiz.width - margin_x*2);
+//    
+//    switch (crvRdmr->getRandomItem()) {
+//        case ITEM_CURVE_BR:
+//            //Vec2 origin = Vec2(winSiz.width - , float yy);
+//            break;
+//        case ITEM_CURVE_BL:
+//            break;
+//        case ITEM_CURVE_TR:
+//            break;
+//        case ITEM_CURVE_TL:
+//            break;
+//        default:break;
+//    }
     
 }
 

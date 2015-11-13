@@ -9,6 +9,7 @@
 #include "NanaTrip.h"
 
 int gameStatus;
+bool vaultDiscovering;
 
 cocos2d::Size winSiz;
 float winMidX;
@@ -18,7 +19,11 @@ cocos2d::UserDefault *db;
 
 int score;
 cocos2d::Vec2 nanap;
-b2Vec2 grav;
+/**
+ * Default gravity, b2Vec2(0, -8)
+ */
+b2Vec2 stdGrav = b2Vec2(0, -9);
+//b2Vec2 grav;
 int pos_score;
 int eat_score;
 int dna;
@@ -30,6 +35,7 @@ void initStatistic()
     eat_score = 0;
     dna = 0;
     gameStatus = GAME_PLAY;
+    
 }
 
 void initWinSiz()
@@ -40,6 +46,7 @@ void initWinSiz()
     winMidY = winSiz.height/2;
     screenSiz = director->getOpenGLView()->getFrameSize();
     db = UserDefault::getInstance();
+    vaultDiscovering = true;
     //audioEngine->preloadBackgroundMusic("BGMusic01.mp3");
 }
 
@@ -82,16 +89,6 @@ void buttonSwitch(cocos2d::ui::Button *button, bool on) {
 void BackButtonReleased(EventKeyboard::KeyCode code, Event *event) {
     Director::getInstance()->end();
 }
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-bool callJavaMethod(char * className, char * method, char * paramCode) {
-    JniMethodInfo mi;
-    if(JniHelper::getStaticMethodInfo(mi, className, method, paramCode)) {
-        log("call %s", method);
-        mi.env->CallStaticVoidMethod(mi.classID, mi.methodID);
-        return true;
-    } else return false;
-}
-#endif
 
 std::string deadScreen;// = "dead.png";
 //std::string pauseScreen;// = "dead.png";

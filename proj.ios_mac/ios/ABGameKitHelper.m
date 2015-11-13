@@ -527,4 +527,15 @@
     return NO;
 }
 
+// mixing stuff..
++(void) MessageBox:(NSString *)pszMsg title:(NSString *)pszTitle {
+    UIAlertView *msgBox = [[UIAlertView alloc] initWithTitle:pszTitle
+                                                     message:pszMsg
+                                                     delegate:nil
+                                           cancelButtonTitle:@"OK"
+                                           otherButtonTitles:nil, nil];
+    [msgBox autorelease];
+    [msgBox show];
+}
+
 @end

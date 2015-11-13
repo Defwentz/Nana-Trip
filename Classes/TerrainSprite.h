@@ -38,6 +38,14 @@
 #define ITEM_CURVE_TL       32
 #define ITEM_CURVE_TR       33
 
+#define ITEM_BALL_DNA       40
+#define ITEM_BALL_METEOR    41
+#define ITEM_BALL_BADGUY    42
+#define ITEM_BALL_OBSTACLE  43
+#define ITEM_BALL_SLOWER    44
+#define ITEM_BALL_MOVER     45
+#define ITEM_BALL_BLOB      46
+
 class TerrainSprite : public cocos2d::Sprite
 {
     b2World *_world;
@@ -62,7 +70,8 @@ class TerrainSprite : public cocos2d::Sprite
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
     Randomer *bumpRdmr;
-    Randomer *crvRdmr;
+    //Randomer *crvRdmr;
+    Randomer *ballRdmr;
     
     cocos2d::CustomCommand _customCommand;
 public:
@@ -74,7 +83,9 @@ public:
     void spawnBumps();
     void spawnCurve();
     void spawnChessboard();
-    void spawnPockect(int which_side = -1);            // great tiny hidden pocket
+    // great tiny hidden pocket
+    void spawnPockect(int which_side = -1, int pokect_size = winMidY/2);
+    void spawnBallshapething(cocos2d::Vec2 vpos, float radius);
     
     void createDNA(cocos2d::Vec2 vpos);
     void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
@@ -101,6 +112,8 @@ public:
     TerrainSprite(b2World *world);
     ~TerrainSprite();
     void initPhysics(b2World *_world);
+    
+    float vault_switch[2] = {-narrowest_width, winSiz.width + narrowest_width};
 };
 
 #endif /* defined(__nanatrip__TerrainSprite__) */

@@ -224,6 +224,13 @@ void GameLayer::update(float dt)
     _nana->gasUp();
     
     Vec2 nanaPos = Vec2(winMidX, _nana->getpy());//_nana->getPosition0();
+    float nanapx = _nana->getpx();
+    if(vaultDiscovering && (nanapx < _terrain->vault_switch[0] || nanapx > _terrain->vault_switch[1])) {
+        vaultDiscovering = false;
+        JavaOCer::reportAchievement(100.f, "nana_discover_vault");
+        JavaOCer::showAchievementNotification("发现避难所", "发现了隐藏的避难所, 可以躲过大红了!", "nana_discover_vault");
+    }
+    
     //log("pos0: %f, posc: %f", nanaPos.y, _nana->getpy());
     float topY = nanaPos.y + winSiz.height;
     float bottomY = nanaPos.y - winSiz.height;
@@ -337,8 +344,8 @@ void GameLayer::destroyDrawFixtures(float dt) {
 
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
-    grav = stdGrav + b2Vec2(acc->x * 15, 0);
-    _world->SetGravity(grav);//stdGrav + b2Vec2(acc->x * 15, 0));
+//    grav = stdGrav + b2Vec2(acc->x * 15, 0);
+    _world->SetGravity(stdGrav + b2Vec2(acc->x * 15, 0));
 }
 void GameLayer::pauseCallback(cocos2d::Ref *pSender) {
     _eventDispatcher->removeEventListener(keyListener);

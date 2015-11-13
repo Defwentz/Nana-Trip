@@ -41,6 +41,7 @@
 #include <SimpleAudioEngine.h>
 #include "../C2DXShareSDK/C2DXShareSDK.h"
 #include "Randomer.h"
+#include "JavaOCer.hpp"
 
 #include "Resources.h"
 #include <base/CCUserDefault.h>
@@ -53,7 +54,9 @@
 #define GAME_PAUSE 2
 #define GAME_OVER 3
 #define GAME_INTERESTING 4
+#define GAME_VAULTDISCOVERY 5
 extern int gameStatus;
+extern bool vaultDiscovering;
 
 // for example, this is a row on the screen [ xxx ]
 // when minium colums it would be           [ O O O ]
@@ -71,6 +74,7 @@ extern int gameStatus;
 #define UD_DESTROYED 99
 
 #define IS_DEBUGGING 0
+#define IS_DEBUGGING_TERRAIN 0
 
 class Entity
 {
@@ -93,11 +97,6 @@ int randWithBase(int base, int addon);
 bool boolWithOdds(float odds);
 void buttonSwitch(cocos2d::ui::Button *button, bool on);
 void BackButtonReleased(EventKeyboard::KeyCode code, Event *event);
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include <platform/android/jni/JniHelper.h>
-#include <jni.h>
-bool callJavaMethod(char * className, char * method, char * parameter);
-#endif
 
 extern std::string deadScreen;
 //extern std::string pauseScreen;
@@ -111,7 +110,8 @@ extern cocos2d::UserDefault *db;
 // TODO: change
 extern int score;
 extern cocos2d::Vec2 nanap;
-extern b2Vec2 grav;
+//extern b2Vec2 grav;
+extern b2Vec2 stdGrav;
 
 extern int pos_score;
 extern int eat_score;

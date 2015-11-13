@@ -9,13 +9,6 @@
 #include "OverLayer.h"
 #include "StartLayer.h"
 #include "GameLayer.h"
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include <platform/android/jni/JniHelper.h>
-#include <jni.h>
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//#include "../proj.ios_mac/ios/OCHelper.h"
-#include "ABGameKitHelper.h"
-#endif
 
 USING_NS_CC;
 using namespace cocos2d::ui;
@@ -44,10 +37,8 @@ bool OverLayer::init()
         bestScore = score;
         db->setIntegerForKey(key_best_score.c_str(), score);
         db->flush();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        [[ABGameKitHelper sharedHelper] reportScore:bestScore forLeaderboard:@"nana_leaderboard"];
-#endif
+        
+        JavaOCer::reportScore4Leaderboard(bestScore, "nana_leaderboard");
     }
 //    int rating;
 //    if(bestScore < score) {
@@ -115,19 +106,7 @@ void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchE
  */
 void OverLayer::rankCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::ENDED) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    JniMethodInfo mi;
-    bool isHave = JniHelper::getStaticMethodInfo(mi, "org/cocos2dx/mz/AppActivity", "makeToast", "(Ljava/lang/String;)V");
-    if (!isHave) {
-        return;
-    }
-    jstring msg = mi.env->NewStringUTF("先放着。。不着急");
-    mi.env->CallStaticVoidMethod(mi.classID, mi.methodID, msg);
-    mi.env->DeleteLocalRef(mi.classID);
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        [[ABGameKitHelper sharedHelper] showLeaderboard:@"nana_leaderboard"];
-        //[OCHelper MessageBox:@"调" title:@"hihi"];
-#endif
+        JavaOCer::showLeaderboard("nana_leaderboard");
     }
 }
 /**
@@ -171,5 +150,6 @@ void OverLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *ev
             //监听menu键
         case EventKeyboard::KeyCode::KEY_MENU:
             break;
+        default:return;
     }
 }
