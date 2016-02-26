@@ -13,11 +13,11 @@ nana.cfg
 nana.udf
 Classes/.DS_Store
 doc/.DS_Store
-Resources/.DS_Store
-Resources/res/.DS_Store
-Resources/res/fonts/.DS_Store
 .DS_Store
 Resources
+Resources/.DS_Store
+Resources/res
 .cocos-project.json
 bin
 package
+.gitignore~

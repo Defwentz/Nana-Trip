@@ -17,5 +17,6 @@ extern std::string res_ratings[];
 
 extern std::string key_best_score;
 extern std::string key_music_status;
+extern std::string key_play_time;
 
 #endif /* defined(__nanatrip__Resources__) */

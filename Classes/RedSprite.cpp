@@ -62,11 +62,10 @@ void RedSprite::update() {
             if(self_userdata->type != UD_BADBOSS) {
                 JavaOCer::reportAchievement(100.f, "nana_gameover_first");
                 JavaOCer::showAchievementNotification("碰到了小红", "碰到了小红..挂掉了", "nana_gameover_first");
+                return;
             }
+            log("killed by bad boss");
             return;
         }
     }
 }
-
-
-

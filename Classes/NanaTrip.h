@@ -24,8 +24,8 @@
 // character change
 // * terrain change and other
 // scoring detail
-// music control
-// keep screen on
+// * music control
+// * keep screen on
 
 // Need from graph:
 // gameplay instruction
@@ -73,8 +73,9 @@ extern bool vaultDiscovering;
 #define UD_BADBOSS 5
 #define UD_DESTROYED 99
 
-#define IS_DEBUGGING 0
+#define IS_DEBUGGING 1
 #define IS_DEBUGGING_TERRAIN 0
+#define IS_DEBUGGING_WITHOUTCHASER 1
 
 class Entity
 {
@@ -96,7 +97,7 @@ int randWithBase(int base, int addon);
  */
 bool boolWithOdds(float odds);
 void buttonSwitch(cocos2d::ui::Button *button, bool on);
-void BackButtonReleased(EventKeyboard::KeyCode code, Event *event);
+long getTime();
 
 extern std::string deadScreen;
 //extern std::string pauseScreen;

@@ -13,6 +13,7 @@
 
 class NanaSprite : public cocos2d::Sprite
 {
+//    b2Body *innerCircleBody;
     /**
      * Scale used in gasUp method.
      * default 12, 10 is ok, 20 is a bit much, get stuck sometime.
@@ -34,6 +35,9 @@ class NanaSprite : public cocos2d::Sprite
     cocos2d::Texture2D *_nanaFace;
     cocos2d::CustomCommand _customCommand;
 public:
+//    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) ;
+//    void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) ;
+//    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) ;
     /**
      * _bodies[0]->getPosistion()
      */

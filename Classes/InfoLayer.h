@@ -31,6 +31,8 @@ public:
     void soundCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void defaultCallback(cocos2d::Ref *pSender);
     
+    void anotherPauseCallback(cocos2d::Ref *pSender);
+    
     //void captureScreenCallback(bool, const std::string &);
 };
 

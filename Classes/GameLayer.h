@@ -16,9 +16,12 @@
 #define ZORDER_NANA 2
 #define ZORDER_HANDDRAW 4
 
-
+void changeTexture(Sprite *sp, Texture2D* txture);
 class GameLayer : public cocos2d::Layer
 {
+    
+    float acc_parameter = 0.0234375 * screenSiz.width;
+    
     /**
      * helper class for Box2D, to debug
      */
@@ -95,6 +98,7 @@ class GameLayer : public cocos2d::Layer
      */
     void destroyDrawFixtures(float dt);
 public:
+    
     static cocos2d::Scene* createScene();
     static GameLayer *create(InfoLayer *infoLayer);
     GameLayer();

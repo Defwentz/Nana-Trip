@@ -19,7 +19,30 @@ Scene* GameLayer::createScene()
     auto layer = GameLayer::create(infoLayer);
     scene->addChild(layer, ZORDER_GAMELAYER);
     
+    int playTime = db->getIntegerForKey(key_play_time.c_str(), 0);
+    if(playTime == 0) {
+        auto suggestionSprite = Sprite::create("draw.png");
+        Texture2D* shktexture = Director::getInstance()->getTextureCache()->addImage("shake.png");
+        suggestionSprite->setPosition(winMidX, winSiz.height/3);
+        scene->addChild(suggestionSprite, 6);
+        suggestionSprite->runAction(Sequence::
+                                    create(FadeIn::create(1),
+                                           FadeOut::create(1),
+                                           CallFunc::create
+                                           (std::bind(changeTexture,
+                                                      suggestionSprite,
+                                                      shktexture)),
+                                           FadeIn::create(1),
+                                           FadeOut::create(1),
+                                           CallFunc::create
+                                            (CC_CALLBACK_0(Sprite::removeFromParent,
+                                                           suggestionSprite)),
+                                           NULL));
+    }
     return scene;
+}
+void changeTexture(Sprite *sp, Texture2D* txture) {
+    sp->setTexture(txture);
 }
 
 GameLayer *GameLayer::create(InfoLayer *infoLayer)
@@ -123,7 +146,7 @@ void GameLayer::initPhysics()
     uint32 flags = 0;
     if(IS_DEBUGGING)
         flags += b2Draw::e_shapeBit;
-//        flags += b2Draw::e_jointBit;
+        flags += b2Draw::e_jointBit;
     //    flags += b2Draw::e_aabbBit;
     //    flags += b2Draw::e_pairBit;
     //    flags += b2Draw::e_centerOfMassBit;
@@ -198,12 +221,12 @@ void GameLayer::update(float dt)
         return;
     } else if(gameStatus == GAME_OVER) {
         gameStatus = GAME_PAUSE;
-        _nana->removeFromParent();
+        JavaOCer::loadInterAd();
         this->unscheduleUpdate();
         Device::setAccelerometerEnabled(false);
         //CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
         utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead.png");
-        scheduleOnce(schedule_selector(GameLayer::gameOver), 0.2f);
+        //scheduleOnce(schedule_selector(GameLayer::gameOver), 0.2f);
         return;
     } else if(gameStatus == GAME_INTERESTING) {
         //Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
@@ -225,7 +248,9 @@ void GameLayer::update(float dt)
     
     Vec2 nanaPos = Vec2(winMidX, _nana->getpy());//_nana->getPosition0();
     float nanapx = _nana->getpx();
+    //log("nana px: %f", nanapx);
     if(vaultDiscovering && (nanapx < _terrain->vault_switch[0] || nanapx > _terrain->vault_switch[1])) {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("discover_vault.mp3");
         vaultDiscovering = false;
         JavaOCer::reportAchievement(100.f, "nana_discover_vault");
         JavaOCer::showAchievementNotification("发现避难所", "发现了隐藏的避难所, 可以躲过大红了!", "nana_discover_vault");
@@ -245,6 +270,18 @@ void GameLayer::update(float dt)
     _nana->setPosition(nanaPos);
     //log("%f\n", nanaPos.y);
     _terrain->update(nanaPos.y);
+    
+//    for(int i = 0; i < _nana->_bodies.size(); i++) {
+//        for(b2ContactEdge *ce = _nana->_bodies[i]->GetContactList(); ce; ce = ce->next) {
+//            b2Body *other = ce->other;
+//            auto other_userdata = (Entity *) other->GetUserData();
+//            if(!other_userdata || (ce->contact->IsTouching() &&
+//                                   other_userdata->type != UD_NANA)) {
+//                CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("touch_sound.mp3");
+//                return;
+//            }
+//        }
+//    }
 }
 
 
@@ -264,12 +301,15 @@ void GameLayer::gameOver(float dt) {
 void GameLayer::captureScreenCallback(bool succeed, const std::string &filename) {
     if(succeed) {
         deadScreen = filename;
+        if(_nana)
+            _nana->removeFromParent();
 //        auto sp = Sprite::create(filename);
 //        Director::getInstance()->getRunningScene()->addChild(sp, 10);
 //        sp->setPosition(winMidX, winMidY);
 //        sp->setScale(0.25);
     }
     this->_infoLayer->removeFromParent();
+    gameOver(0);
 }
 
 // problematic, TODO
@@ -297,7 +337,7 @@ void GameLayer::reset()
 
 bool GameLayer::onTouchBegan(Touch* touch, Event* event) {
     if(isCounting2Destroy || _drawVertices.size() != 0)
-        return true;
+        return false;
     _drawVertices.push_back(this->convertTouchToNodeSpace(touch));
     return true;
 }
@@ -345,7 +385,7 @@ void GameLayer::destroyDrawFixtures(float dt) {
 void GameLayer::onAcceleration(Acceleration *acc, Event *event)
 {
 //    grav = stdGrav + b2Vec2(acc->x * 15, 0);
-    _world->SetGravity(stdGrav + b2Vec2(acc->x * 15, 0));
+    _world->SetGravity(stdGrav + b2Vec2(acc->x * acc_parameter, 0));
 }
 void GameLayer::pauseCallback(cocos2d::Ref *pSender) {
     _eventDispatcher->removeEventListener(keyListener);
@@ -358,14 +398,13 @@ void GameLayer::pauseOverCallback(cocos2d::Ref *pSender) {
 void GameLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
     switch(keyCode)
     {
-            //监听返回键
-        case EventKeyboard::KeyCode::KEY_ESCAPE:
-            pauseCallback(NULL);
+        case EventKeyboard::KeyCode::KEY_ESCAPE://监听返回键
+            //pauseCallback(NULL);
             _infoLayer->pauseCallback(NULL, cocos2d::ui::Widget::TouchEventType::ENDED);
             break;
-            //监听menu键
-        case EventKeyboard::KeyCode::KEY_MENU:
+        case EventKeyboard::KeyCode::KEY_MENU://监听menu键
             break;
+        default:break;
     }
 }
 

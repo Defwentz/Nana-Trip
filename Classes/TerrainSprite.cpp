@@ -31,7 +31,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 10);
-    terrainRdmr->add(ITEM_BUMPS, 20);
+    terrainRdmr->add(ITEM_BUMPS, 2000000);
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
@@ -44,9 +44,9 @@ TerrainSprite::TerrainSprite(b2World *world)
     
     // initalize the bump randomer
     bumpRdmr = new Randomer();
-    bumpRdmr->add(ITEM_BUMPS_1, 20);
-    bumpRdmr->add(ITEM_BUMPS_2, 10);
-    bumpRdmr->add(ITEM_BUMPS_3, 10);
+    bumpRdmr->add(ITEM_BUMPS_1, 18);
+    bumpRdmr->add(ITEM_BUMPS_2, 6);
+    bumpRdmr->add(ITEM_BUMPS_3, 60000);
     
 //    crvRdmr = new Randomer();
 //    crvRdmr->add(ITEM_CURVE_BL, 10);
@@ -55,13 +55,13 @@ TerrainSprite::TerrainSprite(b2World *world)
 //    crvRdmr->add(ITEM_CURVE_TR, 10);
     
     ballRdmr = new Randomer();
-    ballRdmr->add(ITEM_BALL_DNA, 9);
+    //ballRdmr->add(ITEM_BALL_DNA, 9);
     ballRdmr->add(ITEM_BALL_METEOR, 7);
-    ballRdmr->add(ITEM_BALL_BLOB, 9);
+    ballRdmr->add(ITEM_BALL_BLOB, 8);
     ballRdmr->add(ITEM_BALL_BADGUY, 4);
     ballRdmr->add(ITEM_BALL_MOVER, 7);
     ballRdmr->add(ITEM_BALL_OBSTACLE, 6);
-    ballRdmr->add(ITEM_BALL_SLOWER, 8);
+    ballRdmr->add(ITEM_BALL_SLOWER, 7);
     
     initPhysics(world);
 }
@@ -114,15 +114,20 @@ void TerrainSprite::initPhysics(b2World *_world)
     _rfs.push_back(_body->CreateFixture(&border,0));
     fixtures[1].push_back(_rfs);
     
+    ///// bottom
+//    border.Set(vToB2(bl), vToB2(br));
+//    _body->CreateFixture(&border, 0);
     
     Vec2 vpos = Vec2(winMidX, winSiz.height);
     b2CircleShape ball;
     ball.m_p = vToB2(vpos);
     ball.m_radius = winMidX/PTM_RATIO;
-    badboss = RedSprite::create();
-    badboss->setPosition(vpos);
-    badboss->setup(_world, &ball, RedSprite::_chasing);
-    this->addChild(badboss);
+    if(!IS_DEBUGGING_WITHOUTCHASER) {
+        badboss = RedSprite::create();
+        badboss->setPosition(vpos);
+        badboss->setup(_world, &ball, RedSprite::_chasing);
+        this->addChild(badboss);
+    }
     
     to[0] = 1;to[1] = 1;
     spawnTerrain();
@@ -141,13 +146,13 @@ void TerrainSprite::spawnTerrain()
     }
 }
 
-void TerrainSprite::spawnBallshapething(cocos2d::Vec2 vpos, float radius) {
+void TerrainSprite::spawnBallshapething(cocos2d::Vec2 vpos, float vradius) {
     b2CircleShape shape;
     shape.m_p = vToB2(vpos);
-    shape.m_radius = radius/PTM_RATIO;
+    shape.m_radius = vradius/PTM_RATIO;
     switch (ballRdmr->getRandomItem()) {
-        case ITEM_BALL_DNA:             createDNA(vpos);break;
-        case ITEM_BALL_METEOR:          createMovingLittleGuy(vpos, &shape);break;
+        //case ITEM_BALL_DNA:             createDNA(vpos);break;
+        case ITEM_BALL_METEOR:          shape.m_p.SetZero(); createMovingLittleGuy(vpos, &shape);break;
         case ITEM_BALL_BLOB:            createBlob(vpos, &shape);break;
         case ITEM_BALL_BADGUY:          createBadGuy(vpos, &shape, RedSprite::_moving);break;
         case ITEM_BALL_MOVER:           createMoverObstacle(vpos, shape.m_radius);break;
@@ -362,6 +367,10 @@ void TerrainSprite::spawnBumps()
                 vertices[which_side].push_back(Vec2(which_side*(winSiz.width - 2*bump_peak_tdx) + bump_peak_tdx, bump_peak_y_1));
                 vertices[which_side].push_back(Vec2(side_x, bump_end_y_1));
                 
+                float vpos_1_y = (3*lastY + bump_peak_y_1)/4.;
+                float vradius = lastY - vpos_1_y;
+                spawnBallshapething(Vec2(which_side*(2*vradius - winSiz.width) + winSiz.width - vradius, vpos_1_y), vradius);
+                
                 /** the other side **/
                 int margin = random(0.f, bump_length - bump_peak_tdy + narrowest_width);
                 //  _ bump_peak_y_1
@@ -395,9 +404,18 @@ void TerrainSprite::spawnBumps()
                 // update lastY for the next pair of bump
                 lastY = bump_begin_y_2 - bump_length;
                 vertices[other_side].push_back(Vec2(other_side_x, lastY));
+                
+                float vradius_2 = (bump_end_y_1 + bump_peak_y_2)/2. - narrowest_width*2;
+                if(vradius_2 < 0) {
+                    log("bad");
+                    continue;
+                }
+                float vpos_2_y = (bump_end_y_1 + bump_peak_y_2)/2.;
+                spawnBallshapething(Vec2(other_side*(-winSiz.width) + winSiz.width, vpos_2_y), vradius_2);
             }
         }break;
         // 下面两种比较相似, 与上面这种不同
+        // 左右不同
         case ITEM_BUMPS_2:
         {
             int min_wrinkle = random(1, 3);
@@ -419,6 +437,7 @@ void TerrainSprite::spawnBumps()
             vertices[0].push_back(Vec2(0, lastY - dy));
             vertices[1].push_back(Vec2(winSiz.width, lastY - dy));
         }break;
+        // 左右相同
         case ITEM_BUMPS_3:
         {
             int min_wrinkle = random(1, 3);
@@ -438,6 +457,10 @@ void TerrainSprite::spawnBumps()
                     isFirst = false;
                     if(boolWithOdds(0.6))
                         createMoverObstacle(Vec2(winMidX, lastY), dx/2.0/PTM_RATIO);
+                } else {
+                    Vec2 mp = vertices[0].back();
+                    createFur(mp, winMidX - mp.x, 0);
+                    createFur(vertices[1].back(), winMidX - mp.x, 1);
                 }
                 
                 lastY = getLastY();
@@ -499,10 +522,10 @@ void TerrainSprite::spawnChessboard()
             if(boolWithOdds(0.5 * pos_odds_for_badguy)) {
                 createBadGuy(pos, &ball, RedSprite::_moving);
             }
-            else if(boolWithOdds(0.5)) {
+            else if(boolWithOdds(0.3)) {
                 createSlower(pos, &ball, SlowerSprite::_bouncy);
             }
-            else if(boolWithOdds(0.5)) {
+            else if(boolWithOdds(0.3)) {
                 createMoverObstacle(pos, radius);
             }
             else {
@@ -622,6 +645,13 @@ void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
     ((MoverSprite *)mover)->setup(_world, _body, vpos, radius);
     this->addChild(mover);
     movers.push_back(mover);
+}
+void TerrainSprite::createFur(cocos2d::Vec2 root, int length, int isRight)
+{
+    SpriteWithBody *fur = FurSprite::create();
+    ((FurSprite *)fur)->setup(_world, vToB2(root), length, isRight);
+    this->addChild(fur);
+    furs.push_back(fur);
 }
 
 void TerrainSprite::doVertices(cocos2d::Vec2 p1, cocos2d::Vec2 p2,
@@ -776,7 +806,7 @@ void TerrainSprite::update(float nanaY)
     
     if(badboss != NULL) {
         badboss->update();
-        badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-10*pos_score/200));
+        badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-23*pos_score/200));
         if(badboss->getPosition().y < bottomY - winMidY) {
             badboss->selfDestruct(_world);
             badboss->removeFromParent();
@@ -789,6 +819,7 @@ void TerrainSprite::update(float nanaY)
     spriteCheckAndUpdate(movers, topY);
     spriteCheckAndUpdate(blobs, topY);
     spriteCheckAndUpdate(slowers, topY);
+    spriteCheckAndUpdate(furs, topY);
     
     for(std::vector<b2Body *>::iterator i = littleguys.begin();
         i != littleguys.end();) {
@@ -802,7 +833,7 @@ void TerrainSprite::update(float nanaY)
         }
     }
     
-    if(nanaY - vertices[0][0].y - winMidY> 0) {
+    if(nanaY - vertices[0][0].y - winSiz.height - narrowest_width > 0) {
         gameStatus = GAME_INTERESTING;
     }
 }
@@ -831,6 +862,9 @@ void TerrainSprite::spriteCheckAndUpdate(std::vector<SpriteWithBody *> &sprites,
     }
 }
 
+void TerrainSprite::noMorePockets() {
+    terrainRdmr->rmvItem(ITEM_POCKET);
+}
 // Draw
 
 void TerrainSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)

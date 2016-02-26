@@ -16,6 +16,7 @@
 #include "StayingBlobSprite.h"
 #include "DNASprite.h"
 #include "SlowerSprite.hpp"
+#include "FurSprite.h"
 
 // for general terrain randomer
 #define ITEM_TUNNEL         0
@@ -65,6 +66,7 @@ class TerrainSprite : public cocos2d::Sprite
     std::vector<SpriteWithBody *> badguys;      // red guy
     std::vector<SpriteWithBody *> blobs;        // blob
     std::vector<SpriteWithBody *> slowers;      // slower
+    std::vector<SpriteWithBody *> furs;
     RedSprite *badboss = NULL;
     
     Randomer *terrainRdmr;  // general terrain randomer
@@ -85,7 +87,7 @@ public:
     void spawnChessboard();
     // great tiny hidden pocket
     void spawnPockect(int which_side = -1, int pokect_size = winMidY/2);
-    void spawnBallshapething(cocos2d::Vec2 vpos, float radius);
+    void spawnBallshapething(cocos2d::Vec2 vpos, float vradius);
     
     void createDNA(cocos2d::Vec2 vpos);
     void createMovingLittleGuy(cocos2d::Vec2 vpos, b2CircleShape *shape);
@@ -94,10 +96,13 @@ public:
     void createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     void createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape);
+    void createFur(cocos2d::Vec2 root, int length, int isRight);
     
     void update(float nanaY);
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);
     void spriteCheckAndUpdate(std::vector<SpriteWithBody *> &sprites, float topY);
+    
+    void noMorePockets();
     
     void connectEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight);
     void drawEdge(cocos2d::Vec2 p1, cocos2d::Vec2 p2, int isRight);

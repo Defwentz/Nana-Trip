@@ -31,15 +31,25 @@ bool OverLayer::init()
     auto rootNode = CSLoader::createNode("over/over.csb");
     addChild(rootNode);
     
+    int playTime = db->getIntegerForKey(key_play_time.c_str(), 0);
+    // show ad every thrid game over
+    if(playTime%3 == 0) {
+        // place it in GameLayer when game over
+        //JavaOCer::loadInterAd();
+        JavaOCer::showInterAd();
+    }
+    playTime++;
+    db->setIntegerForKey(key_play_time.c_str(), playTime);
+    
     int bestScore = db->getIntegerForKey(key_best_score.c_str(), 0);
     // 判断是否是新纪录
     if(bestScore < score) {
         bestScore = score;
         db->setIntegerForKey(key_best_score.c_str(), score);
-        db->flush();
         
         JavaOCer::reportScore4Leaderboard(bestScore, "nana_leaderboard");
     }
+    db->flush();
 //    int rating;
 //    if(bestScore < score) {
 //        rating = 3;
@@ -87,6 +97,10 @@ bool OverLayer::init()
  * call when new-game button is clicked.
  */
 void OverLayer::anotherCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED) {
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(GameLayer::createScene());
@@ -96,6 +110,10 @@ void OverLayer::anotherCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::Touch
  * call when return-to-menu button is clicked.
  */
 void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED) {
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(StartLayer::createScene());
@@ -105,6 +123,10 @@ void OverLayer::returnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchE
  * call when return-to-menu button is clicked.
  */
 void OverLayer::rankCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED) {
         JavaOCer::showLeaderboard("nana_leaderboard");
     }
@@ -114,6 +136,10 @@ void OverLayer::rankCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEve
  */
 
 void OverLayer::shareCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED) {
         Dictionary *share_content = Dictionary::create();
         share_content -> setObject(String::create("。。我是一只软软的Nano。。。欢迎来到软蠢萌的世界"), "content");

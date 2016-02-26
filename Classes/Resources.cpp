@@ -15,3 +15,4 @@ std::string res_ratings[] = {"result/0.png", "result/1.png", "result/2.png", "re
 
 std::string key_best_score = "best_score";
 std::string key_music_status = "music_status";
+std::string key_play_time = "play_time";

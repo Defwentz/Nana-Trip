@@ -35,7 +35,7 @@ void initStatistic()
     eat_score = 0;
     dna = 0;
     gameStatus = GAME_PLAY;
-    
+    vaultDiscovering = true;
 }
 
 void initWinSiz()
@@ -46,7 +46,6 @@ void initWinSiz()
     winMidY = winSiz.height/2;
     screenSiz = director->getOpenGLView()->getFrameSize();
     db = UserDefault::getInstance();
-    vaultDiscovering = true;
     //audioEngine->preloadBackgroundMusic("BGMusic01.mp3");
 }
 
@@ -85,9 +84,10 @@ void buttonSwitch(cocos2d::ui::Button *button, bool on) {
         button->setVisible(false);
     }
 }
-
-void BackButtonReleased(EventKeyboard::KeyCode code, Event *event) {
-    Director::getInstance()->end();
+long getTime() {
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
 std::string deadScreen;// = "dead.png";

@@ -7,107 +7,117 @@
 //
 
 #include "NanaSprite.h"
+#include "GameLayer.h"
 
 USING_NS_CC;
 
 #define NUM_SEGMENTS 12
 
-/*
-b2Body *NanaSprite::createPhysicsObject(b2World *world) {
-    
-    // Center is the position of circle that is in the center
-    b2Vec2 center = b2Vec2(240/PTM_RATIO, 260/PTM_RATIO);
-    
-    b2CircleShape circleShape;
-    circleShape.m_radius = 0.25f;
-    
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &circleShape;
-    fixtureDef.density = 0.1;
-    fixtureDef.restitution = 0.05;
-    fixtureDef.friction = 1.0;
-    
-    // The greater the number, the more springy
-    float springiness = 4.0;
-    
-    // Delta angle to step by
-    float deltaAngle = (2.f * M_PI) / NUM_SEGMENTS;
-    
-    // Radius of the wheel
-    float radius = 50;
-    
-    // Need to store the bodies so that we can refer back
-    // to it when we connect the joints
-    std::vector<b2Body *> bodies;
-    
-    // For each segment...
-    for (int i = 0; i < NUM_SEGMENTS; i++) {
-        // Current angle
-        float theta = deltaAngle*i;
-        
-        // Calcualte the x and y based on theta
-        float x = radius*cosf(theta);
-        float y = radius*sinf(theta);
-        
-        // Remember to divide by PTM_RATIO to convert to Box2d coordinates
-        b2Vec2 circlePosition = b2Vec2(x/PTM_RATIO, y/PTM_RATIO);
-        
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
-        // Position should be relative to the center
-        bodyDef.position = (center + circlePosition);
-        
-        // Create the body and fixture
-        b2Body *body;
-        body = world->CreateBody(&bodyDef);
-        body->CreateFixture(&fixtureDef);
-        
-        // Add the body to the array to connect joints to it
-        // later. b2Body is a C++ object, so must wrap it
-        // in NSValue when inserting into it NSMutableArray
-        
-        bodies.push_back(body);//[bodies addObject:[NSValue valueWithPointer:body]];
-    }
-    
-    // Circle at the center (inner circle)
-    b2BodyDef innerCircleBodyDef;
-    innerCircleBodyDef.type = b2_dynamicBody;
-    // Position is at the center
-    innerCircleBodyDef.position = center;
-    b2Body *innerCircleBody = world->CreateBody(&innerCircleBodyDef);
-    innerCircleBody->CreateFixture(&fixtureDef);
-    
-    // Connect the joints
-    b2DistanceJointDef jointDef;
-    for (int i = 0; i < NUM_SEGMENTS; i++) {
-        // The neighbor.
-        int neighborIndex = (i + 1) % NUM_SEGMENTS;
-        
-        // Get the current body and the neighbor
-        b2Body *currentBody = bodies.at(i);//(b2Body*)[[bodies objectAtIndex:i] pointerValue];
-        b2Body *neighborBody = bodies.at(neighborIndex);//(b2Body*)[[bodies objectAtIndex:neighborIndex] pointerValue];
-        
-        // Connect the outer circles to each other
-        jointDef.Initialize(currentBody, neighborBody,
-                            currentBody->GetWorldCenter(),
-                            neighborBody->GetWorldCenter() );
-        jointDef.collideConnected = true;
-        jointDef.frequencyHz = springiness*10;
-        jointDef.dampingRatio = 0.5f;
-        
-        world->CreateJoint(&jointDef);
-        
-        // Connect the center circle with other circles
-        jointDef.Initialize(currentBody, innerCircleBody, currentBody->GetWorldCenter(), center);
-        jointDef.collideConnected = true;
-        jointDef.frequencyHz = springiness;
-        jointDef.dampingRatio = 0.5;
-        
-        world->CreateJoint(&jointDef);
-    }
-    return innerCircleBody;
-}
-*/
+//void NanaSprite::initPhysics(b2World *world) {
+//    
+//    // Center is the position of circle that is in the center
+//    b2Vec2 center = b2Vec2(winMidX/PTM_RATIO, winMidY/PTM_RATIO);
+//    
+//    b2CircleShape circleShape;
+//    circleShape.m_radius = 0.25f;
+//    
+//    b2FixtureDef fixtureDef;
+//    fixtureDef.shape = &circleShape;
+//    fixtureDef.density = 0.1;
+//    fixtureDef.restitution = 0.05;
+//    fixtureDef.friction = 1.0;
+//    
+//    // The greater the number, the more springy
+//    float springiness = 2.0;
+//    
+//    // Delta angle to step by
+//    float deltaAngle = (2.f * M_PI) / NUM_SEGMENTS;
+//    
+//    // Radius of the wheel
+//    float radius = 4.f;
+//    
+//    // Need to store the bodies so that we can refer back
+//    // to it when we connect the joints
+//    std::vector<b2Body *> bodies;
+////    
+////        auto touchlistener = EventListenerTouchOneByOne::create();
+////        touchlistener->setSwallowTouches(true);
+////        touchlistener->onTouchBegan = CC_CALLBACK_2(NanaSprite::onTouchBegan, this);
+////        touchlistener->onTouchMoved = CC_CALLBACK_2(NanaSprite::onTouchMoved, this);
+////        touchlistener->onTouchEnded = CC_CALLBACK_2(NanaSprite::onTouchEnded, this);
+////        _eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
+//    // For each segment...
+//    for (int i = 0; i < NUM_SEGMENTS; i++) {
+//        // Current angle
+//        float theta = deltaAngle*i;
+//        
+//        // Calcualte the x and y based on theta
+//        float x = radius*cosf(theta);
+//        float y = radius*sinf(theta);
+//        
+//        b2BodyDef bodyDef;
+//        bodyDef.type = b2_dynamicBody;
+//        // Position should be relative to the center
+//        bodyDef.position = (center + b2Vec2(x, y));
+//        
+//        // Create the body and fixture
+//        b2Body *body;
+//        body = world->CreateBody(&bodyDef);
+//        body->CreateFixture(&fixtureDef);
+//        bodies.push_back(body);
+//    }
+//    
+//    // Circle at the center (inner circle)
+//    b2BodyDef innerCircleBodyDef;
+//    innerCircleBodyDef.type = b2_dynamicBody;
+//    // Position is at the center
+//    innerCircleBodyDef.position = center;
+//    b2Body *innerCircleBody = world->CreateBody(&innerCircleBodyDef);
+//    circleShape.m_radius = 1.f;
+//    innerCircleBody->CreateFixture(&fixtureDef);
+//    
+//    // Connect the joints
+//    b2DistanceJointDef jointDef;
+//    for (int i = 0; i < NUM_SEGMENTS; i++) {
+//        // The neighbor.
+//        int neighborIndex = (i + 1) % NUM_SEGMENTS;
+//        
+//        // Get the current body and the neighbor
+//        b2Body *currentBody = bodies.at(i);//(b2Body*)[[bodies objectAtIndex:i] pointerValue];
+//        b2Body *neighborBody = bodies.at(neighborIndex);//(b2Body*)[[bodies objectAtIndex:neighborIndex] pointerValue];
+//        
+//        // Connect the outer circles to each other
+//        jointDef.Initialize(currentBody, neighborBody,
+//                            currentBody->GetWorldCenter(),
+//                            neighborBody->GetWorldCenter() );
+//        jointDef.collideConnected = true;
+//        jointDef.frequencyHz = springiness*10;
+//        jointDef.dampingRatio = 0.5f;
+//        
+//        world->CreateJoint(&jointDef);
+//        
+//        // Connect the center circle with other circles
+//        jointDef.Initialize(currentBody, innerCircleBody, currentBody->GetWorldCenter(), center);
+//        jointDef.collideConnected = true;
+//        jointDef.frequencyHz = springiness;
+//        jointDef.dampingRatio = 0.5;
+//        
+//        world->CreateJoint(&jointDef);
+//    }
+//    _bodies = bodies;
+//}
+//
+//bool NanaSprite::onTouchBegan(Touch* touch, Event* event) {
+//    return true;
+//}
+//void NanaSprite::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event) {
+//    Point nodePos = this->convertTouchToNodeSpace(touch);
+//    b2Vec2 mMouseWorldPos = b2Vec2(nodePos.x, nodePos.y);
+//    innerCircleBody->ApplyForceToCenter(mMouseWorldPos - b2Vec2(0, 0), true);
+//}
+//void NanaSprite::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event) {
+//
+//}
 
 NanaSprite* NanaSprite::create(b2World *world)
 {
@@ -297,7 +307,7 @@ Vec2 NanaSprite::getPosition0()
 }
 
 float NanaSprite::getpy() {
-    float py;
+    float py = 0;
     for(int i = 0; i < _bodies.size(); i++) {
         py += _bodies[i]->GetPosition().y;
     }
@@ -305,7 +315,7 @@ float NanaSprite::getpy() {
     return py;
 }
 float NanaSprite::getpx() {
-    float px;
+    float px = 0;
     for(int i = 0; i < _bodies.size(); i++) {
         px += _bodies[i]->GetPosition().x;
     }
@@ -414,12 +424,12 @@ void NanaSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
     }
     
     // draw the body
-    if(!IS_DEBUGGING)
+    if(!IS_DEBUGGING) {
     DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, _nanaColor);
     
     //center.x-=12;center.y-=12;
     _nanaFace->drawAtPoint(center + Vec2(face_offset, face_offset));
-    
+    }
     CHECK_GL_ERROR_DEBUG();
     
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);

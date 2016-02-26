@@ -30,8 +30,6 @@ bool StartLayer::init()
         return false;
     }
     
-    JavaOCer::init();
-    
     auto rootNode = CSLoader::createNode("start/start.csb");
     addChild(rootNode);
     
@@ -57,33 +55,18 @@ bool StartLayer::init()
     listener->onKeyReleased = CC_CALLBACK_2(StartLayer::onKeyReleased, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-
-    JniMethodInfo t;
-    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/mz/AppActivity", "showbar", "()V")) {
-        log("call do nothing succeed!!!!!!!!!!");
-        t.env->CallStaticVoidMethod(t.classID, t.methodID);
-        //t.env->DeleteLocalRef(t.classID);
-    }
-    
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    
-#endif
-    
     return true;
 }
 
 void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
 {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        callJavaMethod("org/cocos2dx/mz/AppActivity", "hidebar", "()V");
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        
-        // iOS
-        
-#endif
+        JavaOCer::leavingStartLayer();
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
@@ -98,6 +81,10 @@ void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
 //}
 void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
 {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
@@ -118,7 +105,7 @@ void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
 void StartLayer::switchMusic(bool on) {
     if(on) {
         if(isFirst && !CocosDenshion::SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying()) {
-            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
             isFirst = false;
         } else {
             CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
@@ -133,27 +120,45 @@ void StartLayer::switchMusic(bool on) {
     db->setBoolForKey(key_music_status.c_str(), on);
 }
 void StartLayer::musicOnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         switchMusic(false);
     }
 }
 void StartLayer::musicOffCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         switchMusic(true);
     }
 }
-
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 void StartLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
     switch(keyCode)
     {
             //监听返回键
         case EventKeyboard::KeyCode::KEY_ESCAPE:
-            Director::getInstance()->end();
+            _exit();
             break;
             //监听menu键
-        case EventKeyboard::KeyCode::KEY_MENU:
-            break;
+//        case EventKeyboard::KeyCode::KEY_MENU:
+//            break;
+        default:break;
     }
 }
+void StartLayer::_exit() {
+    if((getTime() - _exitTime) > 2000) {
+        JavaOCer::showMsg("再按一次退出程序");
+        _exitTime = getTime();
+    } else {
+        Director::getInstance()->end();
+    }
+}
+#endif

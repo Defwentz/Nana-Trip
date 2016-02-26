@@ -10,11 +10,6 @@
 #include "GameLayer.h"
 #include "StartLayer.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include <platform/android/jni/JniHelper.h>
-#include <jni.h>
-#endif
-
 USING_NS_CC;
 
 using namespace cocostudio::timeline;
@@ -64,23 +59,7 @@ bool PauseLayer::init()
     keyListener = EventListenerKeyboard::create();
     keyListener->onKeyReleased = CC_CALLBACK_2(PauseLayer::onKeyReleased, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
-    
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    
-    // Andorid
-    log("android platform!");
-    JniMethodInfo t;
-    if(JniHelper::getStaticMethodInfo(t, "org/cocos2dx/mz/AppActivity", "dosth", "()V")) {
-        log("call function succeed!!!!!!!!!!");
-        t.env->CallStaticVoidMethod(t.classID, t.methodID);
-        //t.env->DeleteLocalRef(t.classID);
-    }
-    
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    
-    // iOS
-    
-#endif
+
     return true;
 }
 
@@ -95,6 +74,10 @@ void PauseLayer::disableAllBtn() {
 }
 
 void PauseLayer::continueCallback(Ref *sender, Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         disableAllBtn();
@@ -105,6 +88,10 @@ void PauseLayer::continueCallback(Ref *sender, Widget::TouchEventType type) {
     }
 }
 void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         // I don't know what to do. Do I reset it? Do simply don't care about it?
@@ -116,6 +103,10 @@ void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
 }
 void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
 {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         //Director::getInstance()->popScene();
@@ -133,13 +124,14 @@ void PauseLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *e
             //监听menu键
         case EventKeyboard::KeyCode::KEY_MENU:
             break;
+            
     }
 }
 
 void PauseLayer::switchMusic(bool on) {
     if(on) {
         if(isFirst && !CocosDenshion::SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying()) {
-            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
             isFirst = false;
         } else {
             CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
@@ -154,12 +146,20 @@ void PauseLayer::switchMusic(bool on) {
     db->setBoolForKey(key_music_status.c_str(), on);
 }
 void PauseLayer::musicOnCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         switchMusic(false);
     }
 }
 void PauseLayer::musicOffCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         switchMusic(true);

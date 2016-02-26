@@ -21,6 +21,7 @@ void DNASprite::checkDNAs(std::vector<SpriteWithBody *> &sprites, b2World *world
                 b2Body *other = ce->other;
                 auto other_userdata = (Entity *) other->GetUserData();
                 if(other_userdata && other_userdata->type == UD_NANA) {
+                    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("eat_sound.mp3");
                     eat_score += 10;
                     dna++;
                     SpriteWithBody::removeFromVector(sprites, i, world);

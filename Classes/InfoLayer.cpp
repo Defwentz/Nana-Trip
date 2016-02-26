@@ -43,11 +43,14 @@ bool InfoLayer::init()
     
     NotificationCenter::getInstance()->
     addObserver(this, callfuncO_selector(InfoLayer::defaultCallback), "defaultCallback", NULL);
+    NotificationCenter::getInstance()->
+    addObserver(this, callfuncO_selector(InfoLayer::anotherPauseCallback), "another_pause", NULL);
     
     return true;
 }
 InfoLayer::~InfoLayer() {
     NotificationCenter::getInstance()->removeObserver(this, "defaultCallback");
+    NotificationCenter::getInstance()->removeObserver(this, "another_pause");
 }
 void InfoLayer::reset() {
     old_pos_score = 0;
@@ -69,6 +72,10 @@ void InfoLayer::update()
 }
 
 void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED) {
         NotificationCenter::getInstance()->postNotification("pause_sign");
         gameStatus = GAME_PAUSE;
@@ -100,6 +107,9 @@ void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
     scoreLabel->setVisible(true);
 }
 
+void InfoLayer::anotherPauseCallback(cocos2d::Ref *pSender) {
+    pauseCallback(NULL, cocos2d::ui::Widget::TouchEventType::ENDED);
+}
 //void InfoLayer::captureScreenCallback(bool succeed, const std::string &filename) {
 //    if(succeed) {
 //        pauseScreen = filename;

@@ -16,6 +16,7 @@ using namespace cocos2d::ui;
 
 Scene* AboutLayer::createScene()
 {
+    JavaOCer::loadInterAd();
     auto scene = Scene::create();
     auto layer = AboutLayer::create();
     scene->addChild(layer);
@@ -34,6 +35,8 @@ bool AboutLayer::init()
     
     Button* backBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_back"));
     backBtn->addTouchEventListener(CC_CALLBACK_2(AboutLayer::backCallback, this));
+    Button* adBtn = dynamic_cast<Button*>(rootNode->getChildByName("button_ad"));
+    adBtn->addTouchEventListener(CC_CALLBACK_2(AboutLayer::adCallback, this));
     
     auto listener = EventListenerKeyboard::create();
     listener->onKeyReleased = CC_CALLBACK_2(AboutLayer::onKeyReleased, this);
@@ -42,8 +45,20 @@ bool AboutLayer::init()
     return true;
 }
 
+void AboutLayer::adCallback(Ref* sender, Widget::TouchEventType type)
+{
+    if (type == Widget::TouchEventType::ENDED)
+    {
+        JavaOCer::showInterAd();
+    }
+}
+
 void AboutLayer::backCallback(Ref* sender, Widget::TouchEventType type)
 {
+    if (type == Widget::TouchEventType::BEGAN)
+    {
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
+    }
     if (type == Widget::TouchEventType::ENDED)
     {
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();

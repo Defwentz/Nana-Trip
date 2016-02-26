@@ -19,6 +19,7 @@ public:
     virtual bool init();
     CREATE_FUNC(AboutLayer);
     
+    void adCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void backCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 };

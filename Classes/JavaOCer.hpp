@@ -11,6 +11,12 @@
 
 class JavaOCer {
 public:
+    static void leavingStartLayer();
+    
+    static void loadInterAd();
+    static void showInterAd();
+    
+    // achievements and things
     static void init();
     static bool showMsg(char *msg);
     static void showLeaderboard(char *leaderboardId);

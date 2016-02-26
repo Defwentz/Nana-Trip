@@ -33,7 +33,11 @@ public:
     void musicOnCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     void musicOffCallback(Ref* sender, cocos2d::ui::Widget::TouchEventType type);
     
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+    void _exit();
+    long _exitTime = 0;
+#endif
     
     void switchMusic(bool on);
 };

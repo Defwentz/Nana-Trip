@@ -1,7 +1,6 @@
 #include "AppDelegate.h"
 #include "StartLayer.h"
-//#include "LaunchLayer.h"
-#include "GameLayer.h"
+#include "SplashLayer.h"
 
 #include "../C2DXShareSDK/C2DXShareSDK.h"
 
@@ -30,6 +29,7 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching() {
     
+    JavaOCer::init();
     //初始化ShareSDK
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     C2DXShareSDK::open(CCString::create("bc6da0554e0a"), false);
@@ -61,20 +61,23 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // initalize the global stuff in NanaTrip.h
     initWinSiz();
     
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    auto scene = SplashLayer::createScene();
+#else
     // create a scene. it's an autorelease object
     //auto scene = GameLayer::createScene();
     auto scene = StartLayer::createScene();
- 
+#endif
     // run
     director->runWithScene(scene);
-    
     return true;
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
-
+    if(gameStatus == GAME_PLAY)
+        NotificationCenter::getInstance()->postNotification("another_pause");
     // if you use SimpleAudioEngine, it must be pause
     CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
@@ -146,26 +149,26 @@ void AppDelegate::initPlatformConfig() {
 //    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeGooglePlus, gpConfigDict);
     
     //人人网
-    CCDictionary *rrConfigDict = CCDictionary::create();
-    rrConfigDict -> setObject(CCString::create("226427"), "app_id");
-    rrConfigDict -> setObject(CCString::create("fc5b8aed373c4c27a05b712acba0f8c3"), "app_key");
-    rrConfigDict -> setObject(CCString::create("f29df781abdd4f49beca5a2194676ca4"), "secret_key");
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeRenren, rrConfigDict);
+//    CCDictionary *rrConfigDict = CCDictionary::create();
+//    rrConfigDict -> setObject(CCString::create("226427"), "app_id");
+//    rrConfigDict -> setObject(CCString::create("fc5b8aed373c4c27a05b712acba0f8c3"), "app_key");
+//    rrConfigDict -> setObject(CCString::create("f29df781abdd4f49beca5a2194676ca4"), "secret_key");
+//    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeRenren, rrConfigDict);
     
     //邮件
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeMail, NULL);
+    //C2DXShareSDK::setPlatformConfig(C2DXPlatTypeMail, NULL);
     
     //打印
     //C2DXShareSDK::setPlatformConfig(C2DXPlatTypeAirPrint, NULL);
     
     //拷贝
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeCopy, NULL);
+    //C2DXShareSDK::setPlatformConfig(C2DXPlatTypeCopy, NULL);
     
     //豆瓣
-    CCDictionary *dbConfigDict = CCDictionary::create();
-    dbConfigDict -> setObject(CCString::create("02e2cbe5ca06de5908a863b15e149b0b"), "api_key");
-    dbConfigDict -> setObject(CCString::create("9f1e7b4f71304f2f"), "secret");
-    dbConfigDict -> setObject(CCString::create("http://www.sharesdk.cn"), "redirect_uri");
-    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeDouBan, dbConfigDict);
+//    CCDictionary *dbConfigDict = CCDictionary::create();
+//    dbConfigDict -> setObject(CCString::create("02e2cbe5ca06de5908a863b15e149b0b"), "api_key");
+//    dbConfigDict -> setObject(CCString::create("9f1e7b4f71304f2f"), "secret");
+//    dbConfigDict -> setObject(CCString::create("http://www.sharesdk.cn"), "redirect_uri");
+//    C2DXShareSDK::setPlatformConfig(C2DXPlatTypeDouBan, dbConfigDict);
 
 }

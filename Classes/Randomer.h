@@ -48,6 +48,8 @@ public:
      */
     void updateOdds(int item, int newOdds);
     
+    void rmvItem(int item);
+    
     /**
      *  @brief	get random item
      *
