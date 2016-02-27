@@ -19,7 +19,8 @@ FurSprite* FurSprite::create()
     return nullptr;
 }
 
-void FurSprite::setup(b2World *world, b2Vec2 root, int length, int isRight) {
+void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int length, int isRight) {
+    this->setPosition(b2ToV(root));
     // __ __ __
     //   |  |  |
     // __|__|__|
@@ -29,12 +30,9 @@ void FurSprite::setup(b2World *world, b2Vec2 root, int length, int isRight) {
     
     for(int i = 0; i < 3; i++) {
         b2BodyDef bd;
+        bd.gravityScale = 0;
         bd.position = root;
-        if(i == 0) {
-            bd.type = b2_staticBody;
-        } else {
-            bd.type = b2_dynamicBody;
-        }
+        bd.type = b2_dynamicBody;
         b2Body *body = world->CreateBody(&bd);
         
         b2PolygonShape stick;
@@ -73,55 +71,95 @@ void FurSprite::setup(b2World *world, b2Vec2 root, int length, int isRight) {
         
         _joints.push_back((b2DistanceJoint*)(world->CreateJoint(&jointDef)));
     }
+    b2RevoluteJointDef rjointDef;
+    rjointDef.Initialize(ground, _bodies[0], root);
+    if(true) {
+        rjointDef.collideConnected = true;
+        rjointDef.upperAngle = 0 * b2_pi;
+        rjointDef.lowerAngle = -7/6.0 * b2_pi;
+        rjointDef.enableLimit = true;
+    }
     
-    
-//    float round_edge_radius_px = random(15, 20);
-//    if(boolWithOdds(0.01)) {
-//        round_edge_radius_px = 5;
-//    }
-//    float round_edge_radius = round_edge_radius_px/PTM_RATIO;
-//    
-//    this->setScale(radius*PTM_RATIO/216.5, round_edge_radius_px/59.5);
-//    this->setPosition(p);
-//    
-//    b2BodyDef bd;
-//    bd.position = vToB2(p);
-//    bd.type = b2_dynamicBody;
-//    b2Body *mover = world->CreateBody(&bd);
-//    
-//    b2PolygonShape stick_1;
-//    b2Vec2 vertices[4] = {
-//        b2Vec2(round_edge_radius - radius, -round_edge_radius),
-//        b2Vec2(round_edge_radius - radius, round_edge_radius),
-//        b2Vec2(radius - round_edge_radius, round_edge_radius),
-//        b2Vec2(radius - round_edge_radius, -round_edge_radius)
-//    };
-//    stick_1.Set(vertices, 4);
-//    mover->CreateFixture(&stick_1, 0.2f);   // trying something
-//    {
-//        b2CircleShape round_edge;
-//        round_edge.m_p.Set(round_edge_radius - radius, 0);
-//        round_edge.m_radius = round_edge_radius;
-//        mover->CreateFixture(&round_edge, 0.2f);
-//    }
-//    {
-//        b2CircleShape round_edge;
-//        round_edge.m_p.Set(radius - round_edge_radius, 0);
-//        round_edge.m_radius = round_edge_radius;
-//        mover->CreateFixture(&round_edge, 0.2f);
-//    }
-//    b2RevoluteJointDef jd;
-//    jd.Initialize(mother, mover, vToB2(p));
-//    if(_flags & _motorBit) {
-//        jd.maxMotorTorque = 3.5f;
-//        jd.motorSpeed = 3.0f;
-//        jd.enableMotor = true;
-//    }
-//    _joint = world->CreateJoint(&jd);
-//    _body = mover;
+    _rjoint = (b2RevoluteJoint *) world->CreateJoint(&rjointDef);
 }
 FurSprite::~FurSprite(){}
 void FurSprite::selfDestruct(b2World *world){
+    for(int i = 0; i < _joints.size(); i++) {
+        world->DestroyJoint(_joints[i]);
+    }
+    _joints.clear();
+    for(int i = 0; i < _bodies.size(); i++) {
+        world->DestroyBody(_bodies[i]);
+    }
+    _bodies.clear();
 }
-void FurSprite::update(){
+void FurSprite::update(){}
+
+// Draw
+
+void FurSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
+{
+    _customCommand.init(_globalZOrder);
+    _customCommand.func = CC_CALLBACK_0(FurSprite::onDraw, this, transform, flags);
+    renderer->addCommand(&_customCommand);
+}
+
+//Vec2 FurSprite::getPosition() {
+//    return b2ToV(_bodies[0]->GetPosition());
+//}
+
+void FurSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
+{
+//    Vec2 vertices[12];
+//    Vec2 root = b2ToV(_bodies[0]->GetPosition());
+//    
+//    
+//    int i = 0;
+//    for(int j = 0; j < 3; j++) {
+//        b2PolygonShape *shape = (b2PolygonShape *) _bodies[j]->GetFixtureList()->GetShape();
+//        b2Vec2 dp = _bodies[j]->GetWorldVector(shape->GetVertex(3));
+//        log("v0: %f, %f", _bodies[j]->GetWorldVector(shape->GetVertex(0)).x, _bodies[j]->GetWorldVector(shape->GetVertex(0)).y);
+//        log("v1: %f, %f", _bodies[j]->GetWorldVector(shape->GetVertex(1)).x, _bodies[j]->GetWorldVector(shape->GetVertex(1)).y);
+//        log("v2: %f, %f", _bodies[j]->GetWorldVector(shape->GetVertex(2)).x, _bodies[j]->GetWorldVector(shape->GetVertex(2)).y);
+//        log("v3: %f, %f", dp.x, dp.y);
+//        vertices[i++] = root + b2ToV(dp);
+//        dp = _bodies[j]->GetWorldVector(shape->GetVertex(0));
+//        vertices[i++] = root + b2ToV(dp);
+//    }
+//    for(int j = 2; j > -1; j--) {
+//        b2PolygonShape *shape = (b2PolygonShape *) _bodies[j]->GetFixtureList()->GetShape();
+//        b2Vec2 dp = _bodies[j]->GetWorldVector(shape->GetVertex(1));
+//        vertices[i++] = root + b2ToV(dp);
+//        dp = _bodies[j]->GetWorldVector(shape->GetVertex(2));
+//        vertices[i++] = root + b2ToV(dp);
+//    }
+    Director* director = Director::getInstance();
+    director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
+//
+//    //glLineWidth( 5.0f );
+//    //ccDrawColor4F(1.f, 0.125f, 0.15625f, 1);
+//    // tiny side burns (...Guesss that one way to call it)
+//    //    for(int i = 0; i < _bodies.size(); i++) {
+//    //        Vec2 target = (center - vertices[i]) * nub_pos;
+//    //        target += center;
+//    //        DrawPrimitives::drawSolidCircle(vertices[i], nub_size, CC_DEGREES_TO_RADIANS(360), 30);
+//    //    }
+//    
+//    // draw the body
+//    DrawPrimitives::drawSolidPoly(vertices, 12, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+    for (int i = 0; i < _bodies.size(); i++) {
+        Vec2 root = b2ToV(_bodies[i]->GetPosition()) - this->getPosition();
+        b2PolygonShape *shape = (b2PolygonShape *) _bodies[i]->GetFixtureList()->GetShape();
+        Vec2 vertices[4] = {
+            root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(3))),
+            root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(0))),
+            root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(1))),
+            root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(2)))
+        };
+        DrawPrimitives::drawSolidPoly(vertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+    }
+    CHECK_GL_ERROR_DEBUG();
+    
+    director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }

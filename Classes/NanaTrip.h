@@ -73,9 +73,9 @@ extern bool vaultDiscovering;
 #define UD_BADBOSS 5
 #define UD_DESTROYED 99
 
-#define IS_DEBUGGING 1
+#define IS_DEBUGGING 0
 #define IS_DEBUGGING_TERRAIN 0
-#define IS_DEBUGGING_WITHOUTCHASER 1
+#define IS_DEBUGGING_WITHOUTCHASER 0
 
 class Entity
 {

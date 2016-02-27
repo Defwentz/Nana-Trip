@@ -52,7 +52,7 @@ class TerrainSprite : public cocos2d::Sprite
     b2World *_world;
     b2Body *_body;
     
-    float narrowest_width = screenSiz.width * 0.06;
+    float narrowest_width = screenSiz.width * 0.07;
     
     std::vector<std::vector<b2Fixture *>> fixtures[2];
     std::vector<cocos2d::Vec2> vertices[2];

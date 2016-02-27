@@ -254,6 +254,7 @@ void GameLayer::update(float dt)
         vaultDiscovering = false;
         JavaOCer::reportAchievement(100.f, "nana_discover_vault");
         JavaOCer::showAchievementNotification("发现避难所", "发现了隐藏的避难所, 可以躲过大红了!", "nana_discover_vault");
+        _terrain->noMorePockets();
     }
     
     //log("pos0: %f, posc: %f", nanaPos.y, _nana->getpy());

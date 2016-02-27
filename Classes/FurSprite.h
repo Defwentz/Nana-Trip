@@ -15,20 +15,21 @@ class FurSprite : public SpriteWithBody
 {
     std::vector<b2Body *> _bodies;
     std::vector<b2DistanceJoint *> _joints;
-//
-//    cocos2d::CustomCommand _customCommand;
+    b2RevoluteJoint *_rjoint;
+
+    cocos2d::CustomCommand _customCommand;
 public:
     static FurSprite *create();
-    void setup(b2World *world, b2Vec2 root, int length, int isRight);
+    void setup(b2World *world, b2Body *ground, b2Vec2 root, int length, int isRight);
     ~FurSprite();
     void selfDestruct(b2World *world);
     void update();
     
+//    Vec2 getPosition();
     // draw
-//    virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
-//    override;
-//    void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
-//    void updateEye();
+    virtual void draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,uint32_t flags)
+    override;
+    void onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags);
 };
 
 #endif /* FurSprite_hpp */

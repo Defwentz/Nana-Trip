@@ -31,7 +31,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 10);
-    terrainRdmr->add(ITEM_BUMPS, 2000000);
+    terrainRdmr->add(ITEM_BUMPS, 20);
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
@@ -44,9 +44,9 @@ TerrainSprite::TerrainSprite(b2World *world)
     
     // initalize the bump randomer
     bumpRdmr = new Randomer();
-    bumpRdmr->add(ITEM_BUMPS_1, 18);
+    bumpRdmr->add(ITEM_BUMPS_1, 15);
     bumpRdmr->add(ITEM_BUMPS_2, 6);
-    bumpRdmr->add(ITEM_BUMPS_3, 60000);
+    bumpRdmr->add(ITEM_BUMPS_3, 6);
     
 //    crvRdmr = new Randomer();
 //    crvRdmr->add(ITEM_CURVE_BL, 10);
@@ -459,8 +459,16 @@ void TerrainSprite::spawnBumps()
                         createMoverObstacle(Vec2(winMidX, lastY), dx/2.0/PTM_RATIO);
                 } else {
                     Vec2 mp = vertices[0].back();
-                    createFur(mp, winMidX - mp.x, 0);
-                    createFur(vertices[1].back(), winMidX - mp.x, 1);
+                    int length = winMidX - mp.x;
+                    if(length > narrowest_width) {
+                        createFur(mp, length, 0);
+                        createFur(vertices[1].back(), length, 1);
+//                        if(boolWithOdds(0.5)) {
+//                            createFur(mp, length + random(0, length)*0.7, 0);
+//                        } else {
+//                            createFur(vertices[1].back(), length + random(0, length)*0.7, 1);
+//                        }
+                    }
                 }
                 
                 lastY = getLastY();
@@ -649,7 +657,7 @@ void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
 void TerrainSprite::createFur(cocos2d::Vec2 root, int length, int isRight)
 {
     SpriteWithBody *fur = FurSprite::create();
-    ((FurSprite *)fur)->setup(_world, vToB2(root), length, isRight);
+    ((FurSprite *)fur)->setup(_world, _body, vToB2(root), length, isRight);
     this->addChild(fur);
     furs.push_back(fur);
 }
@@ -883,7 +891,7 @@ void TerrainSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFla
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
     
     glLineWidth( 5.0f );
-    ccDrawColor4F(0.9, 0.83, 0.62, 1.0);
+    ccDrawColor4F(0.94921875, 0.859375, 0.55078125, 1.0);
     for(int i = 0; i < littleguys.size(); i++) {
         Vec2 pos = b2ToV(littleguys[i]->GetPosition());
         ccDrawSolidCircle(b2ToV(littleguys[i]->GetPosition()),
