@@ -68,6 +68,7 @@ class TerrainSprite : public cocos2d::Sprite
     std::vector<SpriteWithBody *> slowers;      // slower
     std::vector<SpriteWithBody *> furs;
     RedSprite *badboss = NULL;
+    unsigned int boss_sound;
     
     Randomer *terrainRdmr;  // general terrain randomer
     Randomer *tnlRdmr;
@@ -96,7 +97,7 @@ public:
     void createSlower(cocos2d::Vec2 vpos, b2CircleShape *shape, int type);
     void createMoverObstacle(cocos2d::Vec2 vpos, float radius);
     void createBlob(cocos2d::Vec2 vpos, b2CircleShape *shape);
-    void createFur(cocos2d::Vec2 root, int length, int isRight);
+    void createFur(cocos2d::Vec2 root, int isRight, int length = 100);
     
     void update(float nanaY);
     void spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY);

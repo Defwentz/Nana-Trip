@@ -272,19 +272,47 @@ void GameLayer::update(float dt)
     //log("%f\n", nanaPos.y);
     _terrain->update(nanaPos.y);
     
-//    for(int i = 0; i < _nana->_bodies.size(); i++) {
-//        for(b2ContactEdge *ce = _nana->_bodies[i]->GetContactList(); ce; ce = ce->next) {
-//            b2Body *other = ce->other;
-//            auto other_userdata = (Entity *) other->GetUserData();
-//            if(!other_userdata || (ce->contact->IsTouching() &&
-//                                   other_userdata->type != UD_NANA)) {
-//                CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("touch_sound.mp3");
-//                return;
-//            }
-//        }
-//    }
+    for(int i = 0; i < _nana->_bodies.size(); i++) {
+        for(b2ContactEdge *ce = _nana->_bodies[i]->GetContactList(); ce; ce = ce->next) {
+            b2Body *other = ce->other;
+            auto other_userdata = (Entity *) other->GetUserData();
+            if(!other_userdata || (ce->contact->IsTouching() &&
+                                   other_userdata->type != UD_NANA)) {
+                if(!inTouchingLst(other)) {
+                    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("touch_sound.mp3");
+                    touchingLst.push_back(other);
+                    return;
+                }
+            }
+        }
+    }
+    std::vector<b2Body *>::iterator it = touchingLst.begin();
+    while(it != touchingLst.end()) {
+        bool noLongerTouching = true;
+        for(int i = 0; i < _nana->_bodies.size(); i++) {
+            for(b2ContactEdge *ce = _nana->_bodies[i]->GetContactList(); ce; ce = ce->next) {
+                if(ce->other == *it) {
+                    noLongerTouching = false;
+                }
+            }
+        }
+        if(noLongerTouching) {
+            it = touchingLst.erase(it);
+        } else {
+            it++;
+        }
+    }
 }
-
+bool GameLayer::inTouchingLst(b2Body *obj) {
+    std::vector<b2Body *>::iterator it = touchingLst.begin();
+    while(it != touchingLst.end()) {
+        if(obj == *it)
+            return true;
+        else
+            it++;
+    }
+    return false;
+}
 
 void GameLayer::gameOver(float dt) {
 //    RenderTexture *screen = RenderTexture::create(winSiz.width, winSiz.height);

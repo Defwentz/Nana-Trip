@@ -77,6 +77,7 @@ void InfoLayer::pauseCallback(Ref *sender, Widget::TouchEventType type) {
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("button_sound.mp3");
     }
     if (type == Widget::TouchEventType::ENDED) {
+        CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
         NotificationCenter::getInstance()->postNotification("pause_sign");
         gameStatus = GAME_PAUSE;
         Device::setAccelerometerEnabled(false);
@@ -100,6 +101,7 @@ void InfoLayer::soundCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEv
     
 }
 void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
+    CocosDenshion::SimpleAudioEngine::getInstance()->resumeAllEffects();
     gameStatus = GAME_PLAY;
     Device::setAccelerometerEnabled(true);
     //CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();

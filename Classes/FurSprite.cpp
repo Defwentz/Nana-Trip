@@ -19,16 +19,19 @@ FurSprite* FurSprite::create()
     return nullptr;
 }
 
-void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int length, int isRight) {
+void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int isRight, int length) {
     this->setPosition(b2ToV(root));
+    _isRight = isRight;
     // __ __ __
     //   |  |  |
     // __|__|__|
-    float width = length / PTM_RATIO / 3.;
-    float hheight = 30. / PTM_RATIO / 2.;
+    float width = length / PTM_RATIO / (float)parts;
+    float hheight = 40. / PTM_RATIO / 2.;
     int sign = -2 * isRight + 1;
+    float round_edge_radius = hheight;
+    b2Vec2 round_edge_p;
     
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < parts; i++) {
         b2BodyDef bd;
         bd.gravityScale = 0;
         bd.position = root;
@@ -42,12 +45,25 @@ void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int length, i
             b2Vec2(sign*(i*width+width), hheight),
             b2Vec2(sign*(i*width+width), -hheight)
         };
+        if(i == parts-1) {
+            vertices[2].x -= round_edge_radius;
+            vertices[3].x -= round_edge_radius;
+            round_edge_p = b2Vec2(vertices[2].x, 0);
+        }
+        hheight = vertices[2].y;
+        
         stick.Set(vertices, 4);
         body->CreateFixture(&stick, 0.2f);   // trying something
         _bodies.push_back(body);
     }
+    
+    b2CircleShape round_edge;
+    round_edge.m_p = round_edge_p;
+    round_edge.m_radius = round_edge_radius;
+    _bodies.back()->CreateFixture(&round_edge, 0.2f);
+    
     b2DistanceJointDef jointDef;
-    for(int i = 1; i < 3; i++) {
+    for(int i = 1; i < parts; i++) {
         // Get the current body and the neighbor
         b2Body *currentBody = _bodies[i-1];
         b2Body *neighborBody = _bodies[i];
@@ -104,61 +120,60 @@ void FurSprite::draw(cocos2d::Renderer *renderer,const cocos2d::Mat4& transform,
     renderer->addCommand(&_customCommand);
 }
 
-//Vec2 FurSprite::getPosition() {
-//    return b2ToV(_bodies[0]->GetPosition());
-//}
-
 void FurSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
 {
-//    Vec2 vertices[12];
-//    Vec2 root = b2ToV(_bodies[0]->GetPosition());
-//    
-//    
-//    int i = 0;
-//    for(int j = 0; j < 3; j++) {
-//        b2PolygonShape *shape = (b2PolygonShape *) _bodies[j]->GetFixtureList()->GetShape();
-//        b2Vec2 dp = _bodies[j]->GetWorldVector(shape->GetVertex(3));
-//        log("v0: %f, %f", _bodies[j]->GetWorldVector(shape->GetVertex(0)).x, _bodies[j]->GetWorldVector(shape->GetVertex(0)).y);
-//        log("v1: %f, %f", _bodies[j]->GetWorldVector(shape->GetVertex(1)).x, _bodies[j]->GetWorldVector(shape->GetVertex(1)).y);
-//        log("v2: %f, %f", _bodies[j]->GetWorldVector(shape->GetVertex(2)).x, _bodies[j]->GetWorldVector(shape->GetVertex(2)).y);
-//        log("v3: %f, %f", dp.x, dp.y);
-//        vertices[i++] = root + b2ToV(dp);
-//        dp = _bodies[j]->GetWorldVector(shape->GetVertex(0));
-//        vertices[i++] = root + b2ToV(dp);
-//    }
-//    for(int j = 2; j > -1; j--) {
-//        b2PolygonShape *shape = (b2PolygonShape *) _bodies[j]->GetFixtureList()->GetShape();
-//        b2Vec2 dp = _bodies[j]->GetWorldVector(shape->GetVertex(1));
-//        vertices[i++] = root + b2ToV(dp);
-//        dp = _bodies[j]->GetWorldVector(shape->GetVertex(2));
-//        vertices[i++] = root + b2ToV(dp);
-//    }
     Director* director = Director::getInstance();
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, transform);
-//
-//    //glLineWidth( 5.0f );
-//    //ccDrawColor4F(1.f, 0.125f, 0.15625f, 1);
-//    // tiny side burns (...Guesss that one way to call it)
-//    //    for(int i = 0; i < _bodies.size(); i++) {
-//    //        Vec2 target = (center - vertices[i]) * nub_pos;
-//    //        target += center;
-//    //        DrawPrimitives::drawSolidCircle(vertices[i], nub_size, CC_DEGREES_TO_RADIANS(360), 30);
-//    //    }
-//    
-//    // draw the body
-//    DrawPrimitives::drawSolidPoly(vertices, 12, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+
+    Vec2 midvertices[4];
     for (int i = 0; i < _bodies.size(); i++) {
         Vec2 root = b2ToV(_bodies[i]->GetPosition()) - this->getPosition();
         b2PolygonShape *shape = (b2PolygonShape *) _bodies[i]->GetFixtureList()->GetShape();
+        if(i == parts-1) {
+            shape = (b2PolygonShape *) _bodies[i]->GetFixtureList()->GetNext()->GetShape();
+        }
         Vec2 vertices[4] = {
             root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(3))),
             root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(0))),
             root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(1))),
             root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(2)))
         };
+
         DrawPrimitives::drawSolidPoly(vertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+        
+        if(_isRight == 0) {
+            if(i == 0) {
+                midvertices[0] = vertices[1];
+                midvertices[1] = vertices[2];
+            } else {
+                midvertices[2] = vertices[3];
+                midvertices[3] = vertices[0];
+                DrawPrimitives::drawSolidPoly(midvertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+                midvertices[0] = vertices[1];
+                midvertices[1] = vertices[2];
+            }
+        } else {
+            if(i == 0) {
+                midvertices[0] = vertices[3];
+                midvertices[1] = vertices[0];
+            } else {
+                midvertices[2] = vertices[1];
+                midvertices[3] = vertices[2];
+                DrawPrimitives::drawSolidPoly(midvertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+                midvertices[0] = vertices[3];
+                midvertices[1] = vertices[0];
+            }
+        }
+        if(i == parts-1) {
+            ccDrawColor4F(0.9453125, 0.546875, 0.33984375, 1);
+            b2CircleShape *cshape = (b2CircleShape *) _bodies[i]->GetFixtureList()->GetShape();
+            DrawPrimitives::drawSolidCircle
+            (root + b2ToV(_bodies[i]->GetWorldVector(cshape->m_p)),
+             cshape->m_radius*PTM_RATIO, 360, 12, 1, 1);
+        }
     }
+    
     CHECK_GL_ERROR_DEBUG();
     
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);

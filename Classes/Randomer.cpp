@@ -33,15 +33,15 @@ void Randomer::updateOdds(int item, int newOdds)
     }
 }
 
-void Randomer::rmvItem(int item) {
-    std::vector<int>::iterator it = _item.begin();
-    while(it != _item.end()) {
-        if (*it == item) {
-            _item.erase(it);
-            return;
-        }
-    }
-}
+//void Randomer::rmvItem(int item) {
+//    std::vector<int>::iterator it = _item.begin();
+//    while(it != _item.end()) {
+//        if (*it == item) {
+//            _item.erase(it);
+//            return;
+//        }
+//    }
+//}
 
 int Randomer::getRandomItem()
 {

@@ -31,7 +31,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 10);
-    terrainRdmr->add(ITEM_BUMPS, 20);
+    terrainRdmr->add(ITEM_BUMPS, 200000);
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
@@ -46,7 +46,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     bumpRdmr = new Randomer();
     bumpRdmr->add(ITEM_BUMPS_1, 15);
     bumpRdmr->add(ITEM_BUMPS_2, 6);
-    bumpRdmr->add(ITEM_BUMPS_3, 6);
+    bumpRdmr->add(ITEM_BUMPS_3, 600000);
     
 //    crvRdmr = new Randomer();
 //    crvRdmr->add(ITEM_CURVE_BL, 10);
@@ -118,7 +118,7 @@ void TerrainSprite::initPhysics(b2World *_world)
 //    border.Set(vToB2(bl), vToB2(br));
 //    _body->CreateFixture(&border, 0);
     
-    Vec2 vpos = Vec2(winMidX, winSiz.height);
+    Vec2 vpos = Vec2(winMidX, winSiz.height + winMidX);
     b2CircleShape ball;
     ball.m_p = vToB2(vpos);
     ball.m_radius = winMidX/PTM_RATIO;
@@ -128,6 +128,12 @@ void TerrainSprite::initPhysics(b2World *_world)
         badboss->setup(_world, &ball, RedSprite::_chasing);
         this->addChild(badboss);
     }
+    boss_sound = CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("lame_soundeffect.m4a", true);
+    vpos = Vec2(winMidX, winSiz.height*0.75);
+    b2CircleShape ball2;
+    ball2.m_p = vToB2(vpos);
+    ball2.m_radius = winSiz.height*0.10/PTM_RATIO;
+    createBlob(vpos, &ball2);
     
     to[0] = 1;to[1] = 1;
     spawnTerrain();
@@ -446,7 +452,7 @@ void TerrainSprite::spawnBumps()
             int n = random(2, 6) * random(min_wrinkle, max_wrinkle);
             
             bool isFirst = true;
-//            int old_dx = 0, old_dy = 0;
+            Vec2 lastp;
             for(int i = 0; i < n; i++) {
                 int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
                 int dx = random(winMidX/3, winMidX - narrowest_width/2);
@@ -455,31 +461,32 @@ void TerrainSprite::spawnBumps()
                 
                 if(isFirst) {
                     isFirst = false;
+                    lastp = vertices[0].back();
                     if(boolWithOdds(0.6))
                         createMoverObstacle(Vec2(winMidX, lastY), dx/2.0/PTM_RATIO);
                 } else {
                     Vec2 mp = vertices[0].back();
-                    int length = winMidX - mp.x;
-                    if(length > narrowest_width) {
-                        createFur(mp, length, 0);
-                        createFur(vertices[1].back(), length, 1);
-//                        if(boolWithOdds(0.5)) {
-//                            createFur(mp, length + random(0, length)*0.7, 0);
-//                        } else {
-//                            createFur(vertices[1].back(), length + random(0, length)*0.7, 1);
-//                        }
+                    if((winMidX - mp.x) > narrowest_width*2) {
+                        float diffy = lastp.y - mp.y;
+                        int howmany = diffy / 80;
+                        float k = diffy/(lastp.x - mp.x);
+                        float b = lastp.y - k*lastp.x;
+                        log("diffy: %f; howmany: %d; k: %f, b:%f", diffy, howmany, k, b);
+                        for(int j = 0; j < howmany; j++) {
+                            float y = lastp.y - j*70;
+                            float x = (y - b) / k;
+                            int length = winMidX - x;
+                            log("(%f, %f): %d", x, y, length);
+                            if(length > 100) {
+                                createFur(Vec2(x, y), 0);
+                                createFur(Vec2(winSiz.width - x, y), 1);
+                            }
+                        }
                     }
+                    lastp = mp;
                 }
                 
                 lastY = getLastY();
-//                if(old_dx != 0 && dx < old_dx) {
-//                    Vec2 vpos = Vec2(winMidX, lastY - dy/2);
-//                    b2CircleShape ball;
-//                    ball.m_p = vToB2(vpos);
-//                    ball.m_radius = (winMidX - old_dx)/PTM_RATIO;
-//                    createSlower(vpos, &ball, SlowerSprite::_slow);
-//                }
-//                old_dx = dx; old_dy = dy;
             }
             int dy = random(winMidY/max_wrinkle, winMidY/min_wrinkle);
             vertices[0].push_back(Vec2(0, lastY - dy));
@@ -654,10 +661,10 @@ void TerrainSprite::createMoverObstacle(cocos2d::Vec2 vpos, float radius)
     this->addChild(mover);
     movers.push_back(mover);
 }
-void TerrainSprite::createFur(cocos2d::Vec2 root, int length, int isRight)
+void TerrainSprite::createFur(cocos2d::Vec2 root, int isRight, int length)
 {
     SpriteWithBody *fur = FurSprite::create();
-    ((FurSprite *)fur)->setup(_world, _body, vToB2(root), length, isRight);
+    ((FurSprite *)fur)->setup(_world, _body, vToB2(root), isRight);
     this->addChild(fur);
     furs.push_back(fur);
 }
@@ -815,7 +822,13 @@ void TerrainSprite::update(float nanaY)
     if(badboss != NULL) {
         badboss->update();
         badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-23*pos_score/200));
+        if(badboss->getPosition().y > topY) {
+            CocosDenshion::SimpleAudioEngine::getInstance()->pauseEffect(boss_sound);
+        } else {
+            CocosDenshion::SimpleAudioEngine::getInstance()->resumeEffect(boss_sound);
+        }
         if(badboss->getPosition().y < bottomY - winMidY) {
+            CocosDenshion::SimpleAudioEngine::getInstance()->stopEffect(boss_sound);
             badboss->selfDestruct(_world);
             badboss->removeFromParent();
             badboss = NULL;
@@ -844,6 +857,10 @@ void TerrainSprite::update(float nanaY)
     if(nanaY - vertices[0][0].y - winSiz.height - narrowest_width > 0) {
         gameStatus = GAME_INTERESTING;
     }
+    
+    if(pos_score < 100) {
+        
+    }
 }
 
 void TerrainSprite::spriteCheck(std::vector<SpriteWithBody *> &sprites, float topY)
@@ -871,7 +888,7 @@ void TerrainSprite::spriteCheckAndUpdate(std::vector<SpriteWithBody *> &sprites,
 }
 
 void TerrainSprite::noMorePockets() {
-    terrainRdmr->rmvItem(ITEM_POCKET);
+    terrainRdmr->updateOdds(ITEM_POCKET, 0);
 }
 // Draw
 

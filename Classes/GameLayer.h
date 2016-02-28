@@ -19,6 +19,8 @@
 void changeTexture(Sprite *sp, Texture2D* txture);
 class GameLayer : public cocos2d::Layer
 {
+    std::vector<b2Body *> touchingLst;
+    bool inTouchingLst(b2Body *obj);
     
     float acc_parameter = 0.0234375 * screenSiz.width;
     
