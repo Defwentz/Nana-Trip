@@ -134,7 +134,6 @@ void OverLayer::rankCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEve
 /**
  * call when share button is clicked.
  */
-
 void OverLayer::shareCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
     if (type == Widget::TouchEventType::BEGAN)
     {
@@ -142,13 +141,13 @@ void OverLayer::shareCallback(cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEv
     }
     if (type == Widget::TouchEventType::ENDED) {
         Dictionary *share_content = Dictionary::create();
-        share_content -> setObject(String::create("软软的。嗯。"), "content");
+        share_content -> setObject(String::create(StringUtils::format("软萌软萌的NANO都能消灭这么多的病菌，你还有什么理由不努力！！我获得了%d分，你呢？！", score)), "content");
         share_content -> setObject(String::create(deadScreen.c_str()), "image");
         share_content -> setObject(String::create("Nano Trip"), "title");
         share_content -> setObject(String::create("来自某只X的分享"), "description");
         share_content -> setObject(String::create("http://www.1-xing.com/nanotrip.html"), "url");
         share_content -> setObject(String::createWithFormat("%d", C2DXContentTypeNews), "type");
-        share_content -> setObject(String::create("http://www.1-xing.com"), "siteUrl");
+        share_content -> setObject(String::create("http://www.1-xing.com/nanotrip.html"), "siteUrl");
         share_content -> setObject(String::create("1-xing"), "site");
         share_content -> setObject(String::create("extInfo"), "extInfo");
         

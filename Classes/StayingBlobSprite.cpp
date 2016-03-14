@@ -246,8 +246,8 @@ void StayingBlobSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transfor
 //    }
     
     // draw the body
-    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, blobColor);
-    
+    //DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, blobColor);
+    DrawPrimitives::drawSolidPoly(vertices, NUM_SEGMENTS, Color4F(1, 1, 1, 1));
     _face->setPosition(this->getCenter() + Vec2(-30, -100)*_face->getScale());
     updateEye();
     CHECK_GL_ERROR_DEBUG();

@@ -13,7 +13,7 @@
 #include "SpriteWithBody.h"
 class FurSprite : public SpriteWithBody
 {
-    int parts = 4;
+    int parts = 3;
     int _isRight;
     std::vector<b2Body *> _bodies;
     std::vector<b2DistanceJoint *> _joints;

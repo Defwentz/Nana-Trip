@@ -59,7 +59,6 @@ void InfoLayer::reset() {
 
 void InfoLayer::update()
 {
-    
     if(gameStatus == GAME_PAUSE)return;
     if(pos_score > old_pos_score) {
         old_pos_score = pos_score;
@@ -112,12 +111,3 @@ void InfoLayer::defaultCallback(cocos2d::Ref *pSender) {
 void InfoLayer::anotherPauseCallback(cocos2d::Ref *pSender) {
     pauseCallback(NULL, cocos2d::ui::Widget::TouchEventType::ENDED);
 }
-//void InfoLayer::captureScreenCallback(bool succeed, const std::string &filename) {
-//    if(succeed) {
-//        pauseScreen = filename;
-//        //        auto sp = Sprite::create(filename);
-//        //        Director::getInstance()->getRunningScene()->addChild(sp, 10);
-//        //        sp->setPosition(winMidX, winMidY);
-//        //        sp->setScale(0.25);
-//    }
-//}

@@ -11,7 +11,7 @@
 RedSprite* RedSprite::create()
 {
     RedSprite *sprite = new (std::nothrow) RedSprite();
-    if (sprite && sprite->initWithFile("red.png"))
+    if (sprite && sprite->initWithFile("black.png"))
     {
         sprite->autorelease();
         return sprite;
@@ -28,10 +28,13 @@ RedSprite::RedSprite() {
 }
 
 void RedSprite::setup(b2World *world, b2CircleShape *shape, int type) {
-    this->setScale(shape->m_radius*PTM_RATIO/407.5);
+    this->setScale(shape->m_radius*PTM_RATIO/36.0);
     b2Body *body;
     if(type == _chasing) {
         body = Box2DHelper::getBallWithShape(world, shape, b2_kinematicBody);
+        b2Filter filter = b2Filter();
+        filter.groupIndex = -1;
+        body->GetFixtureList()->SetFilterData(filter);
     } else {
         body = Box2DHelper::getBallWithShape(world, shape, b2_dynamicBody);
     }

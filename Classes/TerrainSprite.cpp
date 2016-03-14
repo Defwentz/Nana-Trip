@@ -31,7 +31,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     // initalize the general terrain randomer
     terrainRdmr = new Randomer();
     terrainRdmr->add(ITEM_TUNNEL, 10);
-    terrainRdmr->add(ITEM_BUMPS, 200000);
+    terrainRdmr->add(ITEM_BUMPS, 20);
     terrainRdmr->add(ITEM_CHESSBOARD, 15);
     terrainRdmr->add(ITEM_BELT, 30);
     terrainRdmr->add(ITEM_METEOR, 15);
@@ -46,7 +46,7 @@ TerrainSprite::TerrainSprite(b2World *world)
     bumpRdmr = new Randomer();
     bumpRdmr->add(ITEM_BUMPS_1, 15);
     bumpRdmr->add(ITEM_BUMPS_2, 6);
-    bumpRdmr->add(ITEM_BUMPS_3, 600000);
+    bumpRdmr->add(ITEM_BUMPS_3, 6);
     
 //    crvRdmr = new Randomer();
 //    crvRdmr->add(ITEM_CURVE_BL, 10);
@@ -586,14 +586,28 @@ void TerrainSprite::spawnCurve()
 
 void TerrainSprite::createDNA(cocos2d::Vec2 vpos)
 {
-    SpriteWithBody *guy = SpriteWithBody::create("gold.png");
-    guy->setPosition(vpos);
-    dnas.push_back(guy);
-    guy->setScale(36/142.0);
-    this->addChild(guy);
-    
     b2Body *body = Box2DHelper::getStaticBall(_world, vToB2(vpos), DNA_B2RADIUS);
-    body->SetUserData(new Entity(UD_DNA));
+    
+    SpriteWithBody *guy;
+    int which = rand_0_1() * 100;
+    if(which < 25) {
+        guy = SpriteWithBody::create("gold.png");
+        guy->setScale(36/142.0);
+        body->SetUserData(new Entity(UD_DNA_10));
+    } else if (which < 50) {
+        guy = SpriteWithBody::create("red.png");
+        guy->setScale(36/407.5);
+        body->SetUserData(new Entity(UD_DNA_5));
+    } else if (which < 50) {
+        guy = SpriteWithBody::create("eyeguy_72.png");
+        body->SetUserData(new Entity(UD_DNA_20));
+    } else {
+        guy = SpriteWithBody::create("greenguy_72.png");
+        body->SetUserData(new Entity(UD_DNA_15));
+    }
+    guy->setPosition(vpos);
+    this->addChild(guy);
+    dnas.push_back(guy);
     guy->_body = body;
 }
 

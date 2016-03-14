@@ -32,8 +32,6 @@ public:
     void defaultCallback(cocos2d::Ref *pSender);
     
     void anotherPauseCallback(cocos2d::Ref *pSender);
-    
-    //void captureScreenCallback(bool, const std::string &);
 };
 
 #endif /* defined(__nanatrip__InfoLayer__) */

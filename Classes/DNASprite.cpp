@@ -22,10 +22,11 @@ void DNASprite::checkDNAs(std::vector<SpriteWithBody *> &sprites, b2World *world
                 auto other_userdata = (Entity *) other->GetUserData();
                 if(other_userdata && other_userdata->type == UD_NANA) {
                     CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("eat_sound.mp3");
-                    eat_score += 10;
+                    eat_score += ud->type;
                     dna++;
                     SpriteWithBody::removeFromVector(sprites, i, world);
                     isNext = true;
+                    makeToast((*i), StringUtils::format("+%d", ud->type));
                     break;
                 }
             }
@@ -33,4 +34,21 @@ void DNASprite::checkDNAs(std::vector<SpriteWithBody *> &sprites, b2World *world
                 ++i;
         }
     }
+}
+
+#include "GameLayer.h"
+void DNASprite::makeToast(SpriteWithBody *tracker, std::string txt) {
+    cocos2d::Label *toastLabel = Label::createWithTTF(txt, "fonts/Marker Felt.ttf", 30);
+    toastLabel->setPosition(winMidX, winMidY*1.5);
+    toastLabel->setColor(Color3B::WHITE);
+    
+    ((GameLayer *)(tracker->getParent()->getParent()))->_infoLayer->addChild(toastLabel);
+    
+    toastLabel->runAction(Sequence::
+                          create(ScaleBy::create(0.1, 1.5, 1.5),
+                                 ScaleBy::create(0.1, 0.66, 0.66),
+                                 CallFunc::create
+                                 (CC_CALLBACK_0(Sprite::removeFromParent,
+                                                toastLabel)),
+                                 NULL));
 }

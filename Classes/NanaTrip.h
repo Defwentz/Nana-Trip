@@ -68,9 +68,12 @@ extern bool vaultDiscovering;
 #define UD_FLOOR 0  // which will actually be NULL
 #define UD_NANA 1
 #define UD_BADGUY 2
-#define UD_DNA 3
+#define UD_DNA_5 5
+#define UD_DNA_10 10
+#define UD_DNA_15 15
+#define UD_DNA_20 20
 #define UD_HAND 4
-#define UD_BADBOSS 5
+#define UD_BADBOSS 9
 #define UD_DESTROYED 99
 
 #define IS_DEBUGGING 0

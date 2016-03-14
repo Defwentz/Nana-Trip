@@ -31,6 +31,9 @@ void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int isRight, 
     float round_edge_radius = hheight;
     b2Vec2 round_edge_p;
     
+    b2Filter filter = b2Filter();
+    filter.groupIndex = -1;
+    
     for(int i = 0; i < parts; i++) {
         b2BodyDef bd;
         bd.gravityScale = 0;
@@ -53,14 +56,16 @@ void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int isRight, 
         hheight = vertices[2].y;
         
         stick.Set(vertices, 4);
-        body->CreateFixture(&stick, 0.2f);   // trying something
+        auto fix = body->CreateFixture(&stick, 0.2f);
+        fix->SetFilterData(filter);
         _bodies.push_back(body);
     }
     
     b2CircleShape round_edge;
     round_edge.m_p = round_edge_p;
     round_edge.m_radius = round_edge_radius;
-    _bodies.back()->CreateFixture(&round_edge, 0.2f);
+    auto fix = _bodies.back()->CreateFixture(&round_edge, 0.2f);
+    fix->SetFilterData(filter);
     
     b2DistanceJointDef jointDef;
     for(int i = 1; i < parts; i++) {
@@ -75,9 +80,10 @@ void FurSprite::setup(b2World *world, b2Body *ground, b2Vec2 root, int isRight, 
         jointDef.Initialize(currentBody, neighborBody,
                             joint_1,
                             joint_1 );
+        jointDef.length = 0.6;
         jointDef.collideConnected = true;
         jointDef.frequencyHz = 4.0f;
-        jointDef.dampingRatio = 0.5f;
+        jointDef.dampingRatio = 1.f;
         
         _joints.push_back((b2DistanceJoint*)(world->CreateJoint(&jointDef)));
 
@@ -140,7 +146,7 @@ void FurSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
             root + b2ToV(_bodies[i]->GetWorldVector(shape->GetVertex(2)))
         };
 
-        DrawPrimitives::drawSolidPoly(vertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+        DrawPrimitives::drawSolidPoly(vertices, 4, Color4F(0.47265625, 0.9296875, 0.89453125, 1));
         
         if(_isRight == 0) {
             if(i == 0) {
@@ -149,7 +155,7 @@ void FurSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
             } else {
                 midvertices[2] = vertices[3];
                 midvertices[3] = vertices[0];
-                DrawPrimitives::drawSolidPoly(midvertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+                DrawPrimitives::drawSolidPoly(midvertices, 4, Color4F(0.47265625, 0.9296875, 0.89453125, 1));
                 midvertices[0] = vertices[1];
                 midvertices[1] = vertices[2];
             }
@@ -160,17 +166,20 @@ void FurSprite::onDraw(const cocos2d::Mat4 &transform, uint32_t transformFlags)
             } else {
                 midvertices[2] = vertices[1];
                 midvertices[3] = vertices[2];
-                DrawPrimitives::drawSolidPoly(midvertices, 4, Color4F(0.9453125, 0.546875, 0.33984375, 1));
+                DrawPrimitives::drawSolidPoly(midvertices, 4, Color4F(0.47265625, 0.9296875, 0.89453125, 1));
                 midvertices[0] = vertices[3];
                 midvertices[1] = vertices[0];
             }
         }
+        ccDrawColor4F(0.47265625, 0.9296875, 0.89453125, 1);
         if(i == parts-1) {
-            ccDrawColor4F(0.9453125, 0.546875, 0.33984375, 1);
             b2CircleShape *cshape = (b2CircleShape *) _bodies[i]->GetFixtureList()->GetShape();
             DrawPrimitives::drawSolidCircle
             (root + b2ToV(_bodies[i]->GetWorldVector(cshape->m_p)),
              cshape->m_radius*PTM_RATIO, 360, 12, 1, 1);
+        } else if (i == 0) {
+            DrawPrimitives::drawSolidCircle
+            (root, 20, 360, 12, 1, 1);
         }
     }
     
