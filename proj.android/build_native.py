@@ -26,7 +26,7 @@ def build(build_mode):
     command = 'cocos compile -p android -s %s -m %s' % (app_android_root, build_mode) 
     if os.system(command) != 0:
         print "renaming JavaOCer.cpp to JavaOCer.mm"
-        os.system("mv ../Classes/JavaOCer.cpp ../Classes/JavaOCer.mm")
+        os.system("mv ../Classes/Util/JavaOCer.cpp ../Classes/Util/JavaOCer.mm")
         print "moving ShareSDK.xml back"
         os.system("mv ShareSDK.xml assets")
         raise Exception("Build dynamic library for project [ " + app_android_root + " ] fails!")
@@ -35,7 +35,7 @@ def build(build_mode):
 if __name__ == '__main__':
 
     print "renaming JavaOCer.mm to JavaOCer.cpp"
-    os.system("mv ../Classes/JavaOCer.mm ../Classes/JavaOCer.cpp")
+    os.system("mv ../Classes/Util/JavaOCer.mm ../Classes/Util/JavaOCer.cpp")
     print "moving ShareSDK.xml to safety, I think"
     os.system("mv assets/ShareSDK.xml ShareSDK.xml")
     
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     build(opts.build_mode)
     
     print "renaming JavaOCer.cpp to JavaOCer.mm"
-    os.system("mv ../Classes/JavaOCer.cpp ../Classes/JavaOCer.mm")
+    os.system("mv ../Classes/Util/JavaOCer.cpp ../Classes/Util/JavaOCer.mm")
     print "moving ShareSDK.xml back"
     os.system("mv ShareSDK.xml assets")
 

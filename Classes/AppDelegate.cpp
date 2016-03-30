@@ -1,20 +1,15 @@
 #include "AppDelegate.h"
-#include "StartLayer.h"
-#include "SplashLayer.h"
-
+#include "Layer/StartLayer.h"
+#include "Layer/SplashLayer.h"
+#include "Util/JavaOCer.hpp"
 #include "../C2DXShareSDK/C2DXShareSDK.h"
 
 USING_NS_CC;
 
 using namespace cn::sharesdk;
 
-AppDelegate::AppDelegate() {
-    
-}
-
-AppDelegate::~AppDelegate() 
-{
-}
+AppDelegate::AppDelegate() {}
+AppDelegate::~AppDelegate() {}
 
 //if you want a different context,just modify the value of glContextAttrs
 //it will takes effect on all platforms
@@ -65,7 +60,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto scene = SplashLayer::createScene();
 #else
     // create a scene. it's an autorelease object
-    //auto scene = GameLayer::createScene();
     auto scene = StartLayer::createScene();
 #endif
     // run

@@ -32,55 +32,55 @@
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
-		D031C06A1C8004D400B4483F /* SplashLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D031C0681C8004D300B4483F /* SplashLayer.cpp */; };
-		D031C06B1C8004D400B4483F /* SplashLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D031C0681C8004D300B4483F /* SplashLayer.cpp */; };
-		D031C0721C80826C00B4483F /* FurSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D031C0701C80826C00B4483F /* FurSprite.cpp */; };
-		D031C0731C80826C00B4483F /* FurSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D031C0701C80826C00B4483F /* FurSprite.cpp */; };
-		D06A0AA61BF4322B008FD35C /* JavaOCer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D06A0AA41BF4322B008FD35C /* JavaOCer.mm */; };
-		D06A0AA71BF4322B008FD35C /* JavaOCer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D06A0AA41BF4322B008FD35C /* JavaOCer.mm */; };
+		D05F03A41CABDE81000E7F5E /* Box2DHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F039A1CABDE81000E7F5E /* Box2DHelper.cpp */; };
+		D05F03A51CABDE81000E7F5E /* Box2DHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F039A1CABDE81000E7F5E /* Box2DHelper.cpp */; };
+		D05F03A61CABDE81000E7F5E /* GLESDebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F039C1CABDE81000E7F5E /* GLESDebugDraw.cpp */; };
+		D05F03A71CABDE81000E7F5E /* GLESDebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F039C1CABDE81000E7F5E /* GLESDebugDraw.cpp */; };
+		D05F03A81CABDE81000E7F5E /* JavaOCer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D05F039F1CABDE81000E7F5E /* JavaOCer.mm */; };
+		D05F03A91CABDE81000E7F5E /* JavaOCer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D05F039F1CABDE81000E7F5E /* JavaOCer.mm */; };
+		D05F03AA1CABDE81000E7F5E /* Randomer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03A01CABDE81000E7F5E /* Randomer.cpp */; };
+		D05F03AB1CABDE81000E7F5E /* Randomer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03A01CABDE81000E7F5E /* Randomer.cpp */; };
+		D05F03AC1CABDE81000E7F5E /* Resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03A21CABDE81000E7F5E /* Resources.cpp */; };
+		D05F03AD1CABDE81000E7F5E /* Resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03A21CABDE81000E7F5E /* Resources.cpp */; };
+		D05F03BF1CABE607000E7F5E /* AboutLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B11CABE607000E7F5E /* AboutLayer.cpp */; };
+		D05F03C01CABE607000E7F5E /* AboutLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B11CABE607000E7F5E /* AboutLayer.cpp */; };
+		D05F03C11CABE607000E7F5E /* GameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B21CABE607000E7F5E /* GameLayer.cpp */; };
+		D05F03C21CABE607000E7F5E /* GameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B21CABE607000E7F5E /* GameLayer.cpp */; };
+		D05F03C31CABE607000E7F5E /* InfoLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B31CABE607000E7F5E /* InfoLayer.cpp */; };
+		D05F03C41CABE607000E7F5E /* InfoLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B31CABE607000E7F5E /* InfoLayer.cpp */; };
+		D05F03C51CABE607000E7F5E /* OverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B51CABE607000E7F5E /* OverLayer.cpp */; };
+		D05F03C61CABE607000E7F5E /* OverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B51CABE607000E7F5E /* OverLayer.cpp */; };
+		D05F03C71CABE607000E7F5E /* PauseLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B61CABE607000E7F5E /* PauseLayer.cpp */; };
+		D05F03C81CABE607000E7F5E /* PauseLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B61CABE607000E7F5E /* PauseLayer.cpp */; };
+		D05F03C91CABE607000E7F5E /* SplashLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B71CABE607000E7F5E /* SplashLayer.cpp */; };
+		D05F03CA1CABE607000E7F5E /* SplashLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B71CABE607000E7F5E /* SplashLayer.cpp */; };
+		D05F03CB1CABE607000E7F5E /* StartLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B91CABE607000E7F5E /* StartLayer.cpp */; };
+		D05F03CC1CABE607000E7F5E /* StartLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03B91CABE607000E7F5E /* StartLayer.cpp */; };
+		D05F03CD1CABE607000E7F5E /* InterestingLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03BB1CABE607000E7F5E /* InterestingLayer.cpp */; };
+		D05F03CE1CABE607000E7F5E /* InterestingLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03BB1CABE607000E7F5E /* InterestingLayer.cpp */; };
+		D05F03E21CABE639000E7F5E /* NanaSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D01CABE639000E7F5E /* NanaSprite.cpp */; };
+		D05F03E31CABE639000E7F5E /* NanaSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D01CABE639000E7F5E /* NanaSprite.cpp */; };
+		D05F03E41CABE639000E7F5E /* DNASprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D11CABE639000E7F5E /* DNASprite.cpp */; };
+		D05F03E51CABE639000E7F5E /* DNASprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D11CABE639000E7F5E /* DNASprite.cpp */; };
+		D05F03E61CABE639000E7F5E /* FurSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D31CABE639000E7F5E /* FurSprite.cpp */; };
+		D05F03E71CABE639000E7F5E /* FurSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D31CABE639000E7F5E /* FurSprite.cpp */; };
+		D05F03E81CABE639000E7F5E /* RedSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D51CABE639000E7F5E /* RedSprite.cpp */; };
+		D05F03E91CABE639000E7F5E /* RedSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D51CABE639000E7F5E /* RedSprite.cpp */; };
+		D05F03EA1CABE639000E7F5E /* StayingBlobSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D61CABE639000E7F5E /* StayingBlobSprite.cpp */; };
+		D05F03EB1CABE639000E7F5E /* StayingBlobSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D61CABE639000E7F5E /* StayingBlobSprite.cpp */; };
+		D05F03EC1CABE639000E7F5E /* TerrainSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D71CABE639000E7F5E /* TerrainSprite.cpp */; };
+		D05F03ED1CABE639000E7F5E /* TerrainSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D71CABE639000E7F5E /* TerrainSprite.cpp */; };
+		D05F03EE1CABE639000E7F5E /* MoverSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D91CABE639000E7F5E /* MoverSprite.cpp */; };
+		D05F03EF1CABE639000E7F5E /* MoverSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03D91CABE639000E7F5E /* MoverSprite.cpp */; };
+		D05F03F01CABE639000E7F5E /* SlowerSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03DD1CABE639000E7F5E /* SlowerSprite.cpp */; };
+		D05F03F11CABE639000E7F5E /* SlowerSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03DD1CABE639000E7F5E /* SlowerSprite.cpp */; };
+		D05F03F21CABE639000E7F5E /* SpriteWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03DF1CABE639000E7F5E /* SpriteWithBody.cpp */; };
+		D05F03F31CABE639000E7F5E /* SpriteWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D05F03DF1CABE639000E7F5E /* SpriteWithBody.cpp */; };
 		D07409F61BF1C7A600D4EFBD /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D07409F51BF1C7A600D4EFBD /* GameKit.framework */; };
 		D07409FD1BF1EC5A00D4EFBD /* ABGameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D07409FC1BF1EC5A00D4EFBD /* ABGameKitHelper.m */; };
 		D07409FE1BF1EC5A00D4EFBD /* ABGameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D07409FC1BF1EC5A00D4EFBD /* ABGameKitHelper.m */; };
-		D0740A011BF2046200D4EFBD /* InterestingLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07409FF1BF2046200D4EFBD /* InterestingLayer.cpp */; };
-		D0740A021BF2046200D4EFBD /* InterestingLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07409FF1BF2046200D4EFBD /* InterestingLayer.cpp */; };
-		D0E78BDB1BECDB0100AC474A /* AboutLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BB51BECDB0000AC474A /* AboutLayer.cpp */; };
-		D0E78BDC1BECDB0100AC474A /* AboutLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BB51BECDB0000AC474A /* AboutLayer.cpp */; };
-		D0E78BDD1BECDB0100AC474A /* Box2DHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BB71BECDB0000AC474A /* Box2DHelper.cpp */; };
-		D0E78BDE1BECDB0100AC474A /* Box2DHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BB71BECDB0000AC474A /* Box2DHelper.cpp */; };
-		D0E78BDF1BECDB0100AC474A /* DNASprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BB91BECDB0000AC474A /* DNASprite.cpp */; };
-		D0E78BE01BECDB0100AC474A /* DNASprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BB91BECDB0000AC474A /* DNASprite.cpp */; };
-		D0E78BE11BECDB0100AC474A /* GameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BBB1BECDB0000AC474A /* GameLayer.cpp */; };
-		D0E78BE21BECDB0100AC474A /* GameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BBB1BECDB0000AC474A /* GameLayer.cpp */; };
-		D0E78BE31BECDB0100AC474A /* GLESDebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BBD1BECDB0100AC474A /* GLESDebugDraw.cpp */; };
-		D0E78BE41BECDB0100AC474A /* GLESDebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BBD1BECDB0100AC474A /* GLESDebugDraw.cpp */; };
-		D0E78BE51BECDB0100AC474A /* InfoLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BBF1BECDB0100AC474A /* InfoLayer.cpp */; };
-		D0E78BE61BECDB0100AC474A /* InfoLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BBF1BECDB0100AC474A /* InfoLayer.cpp */; };
-		D0E78BE71BECDB0100AC474A /* MoverSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC11BECDB0100AC474A /* MoverSprite.cpp */; };
-		D0E78BE81BECDB0100AC474A /* MoverSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC11BECDB0100AC474A /* MoverSprite.cpp */; };
-		D0E78BE91BECDB0100AC474A /* NanaSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC31BECDB0100AC474A /* NanaSprite.cpp */; };
-		D0E78BEA1BECDB0100AC474A /* NanaSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC31BECDB0100AC474A /* NanaSprite.cpp */; };
 		D0E78BEB1BECDB0100AC474A /* NanaTrip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC51BECDB0100AC474A /* NanaTrip.cpp */; };
 		D0E78BEC1BECDB0100AC474A /* NanaTrip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC51BECDB0100AC474A /* NanaTrip.cpp */; };
-		D0E78BED1BECDB0100AC474A /* OverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC71BECDB0100AC474A /* OverLayer.cpp */; };
-		D0E78BEE1BECDB0100AC474A /* OverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC71BECDB0100AC474A /* OverLayer.cpp */; };
-		D0E78BEF1BECDB0100AC474A /* PauseLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC91BECDB0100AC474A /* PauseLayer.cpp */; };
-		D0E78BF01BECDB0100AC474A /* PauseLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BC91BECDB0100AC474A /* PauseLayer.cpp */; };
-		D0E78BF11BECDB0100AC474A /* Randomer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BCB1BECDB0100AC474A /* Randomer.cpp */; };
-		D0E78BF21BECDB0100AC474A /* Randomer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BCB1BECDB0100AC474A /* Randomer.cpp */; };
-		D0E78BF31BECDB0100AC474A /* RedSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BCD1BECDB0100AC474A /* RedSprite.cpp */; };
-		D0E78BF41BECDB0100AC474A /* RedSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BCD1BECDB0100AC474A /* RedSprite.cpp */; };
-		D0E78BF51BECDB0100AC474A /* Resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BCF1BECDB0100AC474A /* Resources.cpp */; };
-		D0E78BF61BECDB0100AC474A /* Resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BCF1BECDB0100AC474A /* Resources.cpp */; };
-		D0E78BF71BECDB0100AC474A /* SlowerSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD11BECDB0100AC474A /* SlowerSprite.cpp */; };
-		D0E78BF81BECDB0100AC474A /* SlowerSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD11BECDB0100AC474A /* SlowerSprite.cpp */; };
-		D0E78BF91BECDB0100AC474A /* SpriteWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD31BECDB0100AC474A /* SpriteWithBody.cpp */; };
-		D0E78BFA1BECDB0100AC474A /* SpriteWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD31BECDB0100AC474A /* SpriteWithBody.cpp */; };
-		D0E78BFB1BECDB0100AC474A /* StartLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD51BECDB0100AC474A /* StartLayer.cpp */; };
-		D0E78BFC1BECDB0100AC474A /* StartLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD51BECDB0100AC474A /* StartLayer.cpp */; };
-		D0E78BFD1BECDB0100AC474A /* StayingBlobSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD71BECDB0100AC474A /* StayingBlobSprite.cpp */; };
-		D0E78BFE1BECDB0100AC474A /* StayingBlobSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD71BECDB0100AC474A /* StayingBlobSprite.cpp */; };
-		D0E78BFF1BECDB0100AC474A /* TerrainSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD91BECDB0100AC474A /* TerrainSprite.cpp */; };
-		D0E78C001BECDB0100AC474A /* TerrainSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78BD91BECDB0100AC474A /* TerrainSprite.cpp */; };
 		D0E78C151BECDB7200AC474A /* CCJSONConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78C071BECDB7200AC474A /* CCJSONConverter.cpp */; };
 		D0E78C161BECDB7200AC474A /* CCJSONConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0E78C071BECDB7200AC474A /* CCJSONConverter.cpp */; };
 		D0E78C171BECDB7200AC474A /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = D0E78C0B1BECDB7200AC474A /* cJSON.c */; };
@@ -242,55 +242,55 @@
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		D031C0681C8004D300B4483F /* SplashLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SplashLayer.cpp; sourceTree = "<group>"; };
-		D031C0691C8004D300B4483F /* SplashLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashLayer.h; sourceTree = "<group>"; };
-		D031C0701C80826C00B4483F /* FurSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FurSprite.cpp; sourceTree = "<group>"; };
-		D031C0711C80826C00B4483F /* FurSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FurSprite.h; sourceTree = "<group>"; };
-		D06A0AA41BF4322B008FD35C /* JavaOCer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JavaOCer.mm; sourceTree = "<group>"; };
-		D06A0AA51BF4322B008FD35C /* JavaOCer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JavaOCer.hpp; sourceTree = "<group>"; };
+		D05F039A1CABDE81000E7F5E /* Box2DHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box2DHelper.cpp; sourceTree = "<group>"; };
+		D05F039B1CABDE81000E7F5E /* Box2DHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DHelper.h; sourceTree = "<group>"; };
+		D05F039C1CABDE81000E7F5E /* GLESDebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLESDebugDraw.cpp; sourceTree = "<group>"; };
+		D05F039D1CABDE81000E7F5E /* GLESDebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESDebugDraw.h; sourceTree = "<group>"; };
+		D05F039E1CABDE81000E7F5E /* JavaOCer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JavaOCer.hpp; sourceTree = "<group>"; };
+		D05F039F1CABDE81000E7F5E /* JavaOCer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JavaOCer.mm; sourceTree = "<group>"; };
+		D05F03A01CABDE81000E7F5E /* Randomer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Randomer.cpp; sourceTree = "<group>"; };
+		D05F03A11CABDE81000E7F5E /* Randomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Randomer.h; sourceTree = "<group>"; };
+		D05F03A21CABDE81000E7F5E /* Resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Resources.cpp; sourceTree = "<group>"; };
+		D05F03A31CABDE81000E7F5E /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resources.h; sourceTree = "<group>"; };
+		D05F03AF1CABE607000E7F5E /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameLayer.h; path = Layer/GameLayer.h; sourceTree = "<group>"; };
+		D05F03B01CABE607000E7F5E /* StartLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StartLayer.h; path = Layer/StartLayer.h; sourceTree = "<group>"; };
+		D05F03B11CABE607000E7F5E /* AboutLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AboutLayer.cpp; path = Layer/AboutLayer.cpp; sourceTree = "<group>"; };
+		D05F03B21CABE607000E7F5E /* GameLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLayer.cpp; path = Layer/GameLayer.cpp; sourceTree = "<group>"; };
+		D05F03B31CABE607000E7F5E /* InfoLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InfoLayer.cpp; path = Layer/InfoLayer.cpp; sourceTree = "<group>"; };
+		D05F03B41CABE607000E7F5E /* InfoLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfoLayer.h; path = Layer/InfoLayer.h; sourceTree = "<group>"; };
+		D05F03B51CABE607000E7F5E /* OverLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OverLayer.cpp; path = Layer/OverLayer.cpp; sourceTree = "<group>"; };
+		D05F03B61CABE607000E7F5E /* PauseLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PauseLayer.cpp; path = Layer/PauseLayer.cpp; sourceTree = "<group>"; };
+		D05F03B71CABE607000E7F5E /* SplashLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SplashLayer.cpp; path = Layer/SplashLayer.cpp; sourceTree = "<group>"; };
+		D05F03B81CABE607000E7F5E /* SplashLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SplashLayer.h; path = Layer/SplashLayer.h; sourceTree = "<group>"; };
+		D05F03B91CABE607000E7F5E /* StartLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StartLayer.cpp; path = Layer/StartLayer.cpp; sourceTree = "<group>"; };
+		D05F03BA1CABE607000E7F5E /* AboutLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutLayer.h; path = Layer/AboutLayer.h; sourceTree = "<group>"; };
+		D05F03BB1CABE607000E7F5E /* InterestingLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterestingLayer.cpp; path = Layer/InterestingLayer.cpp; sourceTree = "<group>"; };
+		D05F03BC1CABE607000E7F5E /* InterestingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterestingLayer.h; path = Layer/InterestingLayer.h; sourceTree = "<group>"; };
+		D05F03BD1CABE607000E7F5E /* OverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OverLayer.h; path = Layer/OverLayer.h; sourceTree = "<group>"; };
+		D05F03BE1CABE607000E7F5E /* PauseLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PauseLayer.h; path = Layer/PauseLayer.h; sourceTree = "<group>"; };
+		D05F03D01CABE639000E7F5E /* NanaSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NanaSprite.cpp; path = Sprite/NanaSprite.cpp; sourceTree = "<group>"; };
+		D05F03D11CABE639000E7F5E /* DNASprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNASprite.cpp; path = Sprite/DNASprite.cpp; sourceTree = "<group>"; };
+		D05F03D21CABE639000E7F5E /* DNASprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNASprite.h; path = Sprite/DNASprite.h; sourceTree = "<group>"; };
+		D05F03D31CABE639000E7F5E /* FurSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FurSprite.cpp; path = Sprite/FurSprite.cpp; sourceTree = "<group>"; };
+		D05F03D41CABE639000E7F5E /* FurSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FurSprite.h; path = Sprite/FurSprite.h; sourceTree = "<group>"; };
+		D05F03D51CABE639000E7F5E /* RedSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RedSprite.cpp; path = Sprite/RedSprite.cpp; sourceTree = "<group>"; };
+		D05F03D61CABE639000E7F5E /* StayingBlobSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StayingBlobSprite.cpp; path = Sprite/StayingBlobSprite.cpp; sourceTree = "<group>"; };
+		D05F03D71CABE639000E7F5E /* TerrainSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TerrainSprite.cpp; path = Sprite/TerrainSprite.cpp; sourceTree = "<group>"; };
+		D05F03D81CABE639000E7F5E /* TerrainSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TerrainSprite.h; path = Sprite/TerrainSprite.h; sourceTree = "<group>"; };
+		D05F03D91CABE639000E7F5E /* MoverSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoverSprite.cpp; path = Sprite/MoverSprite.cpp; sourceTree = "<group>"; };
+		D05F03DA1CABE639000E7F5E /* MoverSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoverSprite.h; path = Sprite/MoverSprite.h; sourceTree = "<group>"; };
+		D05F03DB1CABE639000E7F5E /* NanaSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NanaSprite.h; path = Sprite/NanaSprite.h; sourceTree = "<group>"; };
+		D05F03DC1CABE639000E7F5E /* RedSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RedSprite.h; path = Sprite/RedSprite.h; sourceTree = "<group>"; };
+		D05F03DD1CABE639000E7F5E /* SlowerSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SlowerSprite.cpp; path = Sprite/SlowerSprite.cpp; sourceTree = "<group>"; };
+		D05F03DE1CABE639000E7F5E /* SlowerSprite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SlowerSprite.hpp; path = Sprite/SlowerSprite.hpp; sourceTree = "<group>"; };
+		D05F03DF1CABE639000E7F5E /* SpriteWithBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteWithBody.cpp; path = Sprite/SpriteWithBody.cpp; sourceTree = "<group>"; };
+		D05F03E01CABE639000E7F5E /* SpriteWithBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpriteWithBody.h; path = Sprite/SpriteWithBody.h; sourceTree = "<group>"; };
+		D05F03E11CABE639000E7F5E /* StayingBlobSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StayingBlobSprite.h; path = Sprite/StayingBlobSprite.h; sourceTree = "<group>"; };
 		D07409F51BF1C7A600D4EFBD /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.1.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 		D07409FB1BF1EC5A00D4EFBD /* ABGameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ABGameKitHelper.h; path = ios/ABGameKitHelper.h; sourceTree = SOURCE_ROOT; };
 		D07409FC1BF1EC5A00D4EFBD /* ABGameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ABGameKitHelper.m; path = ios/ABGameKitHelper.m; sourceTree = SOURCE_ROOT; };
-		D07409FF1BF2046200D4EFBD /* InterestingLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InterestingLayer.cpp; sourceTree = "<group>"; };
-		D0740A001BF2046200D4EFBD /* InterestingLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterestingLayer.h; sourceTree = "<group>"; };
-		D0E78BB51BECDB0000AC474A /* AboutLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AboutLayer.cpp; sourceTree = "<group>"; };
-		D0E78BB61BECDB0000AC474A /* AboutLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutLayer.h; sourceTree = "<group>"; };
-		D0E78BB71BECDB0000AC474A /* Box2DHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box2DHelper.cpp; sourceTree = "<group>"; };
-		D0E78BB81BECDB0000AC474A /* Box2DHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2DHelper.h; sourceTree = "<group>"; };
-		D0E78BB91BECDB0000AC474A /* DNASprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DNASprite.cpp; sourceTree = "<group>"; };
-		D0E78BBA1BECDB0000AC474A /* DNASprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNASprite.h; sourceTree = "<group>"; };
-		D0E78BBB1BECDB0000AC474A /* GameLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameLayer.cpp; sourceTree = "<group>"; };
-		D0E78BBC1BECDB0100AC474A /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
-		D0E78BBD1BECDB0100AC474A /* GLESDebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLESDebugDraw.cpp; sourceTree = "<group>"; };
-		D0E78BBE1BECDB0100AC474A /* GLESDebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESDebugDraw.h; sourceTree = "<group>"; };
-		D0E78BBF1BECDB0100AC474A /* InfoLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InfoLayer.cpp; sourceTree = "<group>"; };
-		D0E78BC01BECDB0100AC474A /* InfoLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoLayer.h; sourceTree = "<group>"; };
-		D0E78BC11BECDB0100AC474A /* MoverSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoverSprite.cpp; sourceTree = "<group>"; };
-		D0E78BC21BECDB0100AC474A /* MoverSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoverSprite.h; sourceTree = "<group>"; };
-		D0E78BC31BECDB0100AC474A /* NanaSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NanaSprite.cpp; sourceTree = "<group>"; };
-		D0E78BC41BECDB0100AC474A /* NanaSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NanaSprite.h; sourceTree = "<group>"; };
 		D0E78BC51BECDB0100AC474A /* NanaTrip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NanaTrip.cpp; sourceTree = "<group>"; };
 		D0E78BC61BECDB0100AC474A /* NanaTrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NanaTrip.h; sourceTree = "<group>"; };
-		D0E78BC71BECDB0100AC474A /* OverLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverLayer.cpp; sourceTree = "<group>"; };
-		D0E78BC81BECDB0100AC474A /* OverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverLayer.h; sourceTree = "<group>"; };
-		D0E78BC91BECDB0100AC474A /* PauseLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseLayer.cpp; sourceTree = "<group>"; };
-		D0E78BCA1BECDB0100AC474A /* PauseLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseLayer.h; sourceTree = "<group>"; };
-		D0E78BCB1BECDB0100AC474A /* Randomer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Randomer.cpp; sourceTree = "<group>"; };
-		D0E78BCC1BECDB0100AC474A /* Randomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Randomer.h; sourceTree = "<group>"; };
-		D0E78BCD1BECDB0100AC474A /* RedSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RedSprite.cpp; sourceTree = "<group>"; };
-		D0E78BCE1BECDB0100AC474A /* RedSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedSprite.h; sourceTree = "<group>"; };
-		D0E78BCF1BECDB0100AC474A /* Resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Resources.cpp; sourceTree = "<group>"; };
-		D0E78BD01BECDB0100AC474A /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resources.h; sourceTree = "<group>"; };
-		D0E78BD11BECDB0100AC474A /* SlowerSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SlowerSprite.cpp; sourceTree = "<group>"; };
-		D0E78BD21BECDB0100AC474A /* SlowerSprite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlowerSprite.hpp; sourceTree = "<group>"; };
-		D0E78BD31BECDB0100AC474A /* SpriteWithBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteWithBody.cpp; sourceTree = "<group>"; };
-		D0E78BD41BECDB0100AC474A /* SpriteWithBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteWithBody.h; sourceTree = "<group>"; };
-		D0E78BD51BECDB0100AC474A /* StartLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartLayer.cpp; sourceTree = "<group>"; };
-		D0E78BD61BECDB0100AC474A /* StartLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartLayer.h; sourceTree = "<group>"; };
-		D0E78BD71BECDB0100AC474A /* StayingBlobSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StayingBlobSprite.cpp; sourceTree = "<group>"; };
-		D0E78BD81BECDB0100AC474A /* StayingBlobSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StayingBlobSprite.h; sourceTree = "<group>"; };
-		D0E78BD91BECDB0100AC474A /* TerrainSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainSprite.cpp; sourceTree = "<group>"; };
-		D0E78BDA1BECDB0100AC474A /* TerrainSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainSprite.h; sourceTree = "<group>"; };
 		D0E78C071BECDB7200AC474A /* CCJSONConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCJSONConverter.cpp; sourceTree = "<group>"; };
 		D0E78C081BECDB7200AC474A /* CCJSONConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCJSONConverter.h; sourceTree = "<group>"; };
 		D0E78C091BECDB7200AC474A /* CCJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCJSONData.h; sourceTree = "<group>"; };
@@ -590,9 +590,9 @@
 			children = (
 				D0E78BC51BECDB0100AC474A /* NanaTrip.cpp */,
 				D0E78BC61BECDB0100AC474A /* NanaTrip.h */,
-				D0E78C011BECDB0400AC474A /* Util */,
-				D0E78C021BECDB2D00AC474A /* Layer */,
-				D0E78C031BECDB5A00AC474A /* Sprite */,
+				D05F03AE1CABE5F4000E7F5E /* Layer */,
+				D05F03CF1CABE628000E7F5E /* Sprite */,
+				D05F03991CABDE81000E7F5E /* Util */,
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
 			);
@@ -636,67 +636,67 @@
 			name = "mac-libs";
 			sourceTree = "<group>";
 		};
-		D0E78C011BECDB0400AC474A /* Util */ = {
+		D05F03991CABDE81000E7F5E /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				D0E78BB71BECDB0000AC474A /* Box2DHelper.cpp */,
-				D0E78BB81BECDB0000AC474A /* Box2DHelper.h */,
-				D0E78BBD1BECDB0100AC474A /* GLESDebugDraw.cpp */,
-				D0E78BBE1BECDB0100AC474A /* GLESDebugDraw.h */,
-				D0E78BCB1BECDB0100AC474A /* Randomer.cpp */,
-				D0E78BCC1BECDB0100AC474A /* Randomer.h */,
-				D0E78BCF1BECDB0100AC474A /* Resources.cpp */,
-				D0E78BD01BECDB0100AC474A /* Resources.h */,
-				D06A0AA41BF4322B008FD35C /* JavaOCer.mm */,
-				D06A0AA51BF4322B008FD35C /* JavaOCer.hpp */,
+				D05F039B1CABDE81000E7F5E /* Box2DHelper.h */,
+				D05F039A1CABDE81000E7F5E /* Box2DHelper.cpp */,
+				D05F039D1CABDE81000E7F5E /* GLESDebugDraw.h */,
+				D05F039C1CABDE81000E7F5E /* GLESDebugDraw.cpp */,
+				D05F039E1CABDE81000E7F5E /* JavaOCer.hpp */,
+				D05F039F1CABDE81000E7F5E /* JavaOCer.mm */,
+				D05F03A11CABDE81000E7F5E /* Randomer.h */,
+				D05F03A01CABDE81000E7F5E /* Randomer.cpp */,
+				D05F03A31CABDE81000E7F5E /* Resources.h */,
+				D05F03A21CABDE81000E7F5E /* Resources.cpp */,
 			);
-			name = Util;
+			path = Util;
 			sourceTree = "<group>";
 		};
-		D0E78C021BECDB2D00AC474A /* Layer */ = {
+		D05F03AE1CABE5F4000E7F5E /* Layer */ = {
 			isa = PBXGroup;
 			children = (
-				D031C0681C8004D300B4483F /* SplashLayer.cpp */,
-				D031C0691C8004D300B4483F /* SplashLayer.h */,
-				D0E78BD51BECDB0100AC474A /* StartLayer.cpp */,
-				D0E78BD61BECDB0100AC474A /* StartLayer.h */,
-				D0E78BB51BECDB0000AC474A /* AboutLayer.cpp */,
-				D0E78BB61BECDB0000AC474A /* AboutLayer.h */,
-				D0E78BBB1BECDB0000AC474A /* GameLayer.cpp */,
-				D0E78BBC1BECDB0100AC474A /* GameLayer.h */,
-				D0E78BBF1BECDB0100AC474A /* InfoLayer.cpp */,
-				D0E78BC01BECDB0100AC474A /* InfoLayer.h */,
-				D0E78BC91BECDB0100AC474A /* PauseLayer.cpp */,
-				D0E78BCA1BECDB0100AC474A /* PauseLayer.h */,
-				D0E78BC71BECDB0100AC474A /* OverLayer.cpp */,
-				D0E78BC81BECDB0100AC474A /* OverLayer.h */,
-				D07409FF1BF2046200D4EFBD /* InterestingLayer.cpp */,
-				D0740A001BF2046200D4EFBD /* InterestingLayer.h */,
+				D05F03B81CABE607000E7F5E /* SplashLayer.h */,
+				D05F03B71CABE607000E7F5E /* SplashLayer.cpp */,
+				D05F03B01CABE607000E7F5E /* StartLayer.h */,
+				D05F03B91CABE607000E7F5E /* StartLayer.cpp */,
+				D05F03BA1CABE607000E7F5E /* AboutLayer.h */,
+				D05F03B11CABE607000E7F5E /* AboutLayer.cpp */,
+				D05F03BE1CABE607000E7F5E /* PauseLayer.h */,
+				D05F03B61CABE607000E7F5E /* PauseLayer.cpp */,
+				D05F03AF1CABE607000E7F5E /* GameLayer.h */,
+				D05F03B21CABE607000E7F5E /* GameLayer.cpp */,
+				D05F03B41CABE607000E7F5E /* InfoLayer.h */,
+				D05F03B31CABE607000E7F5E /* InfoLayer.cpp */,
+				D05F03BC1CABE607000E7F5E /* InterestingLayer.h */,
+				D05F03BB1CABE607000E7F5E /* InterestingLayer.cpp */,
+				D05F03BD1CABE607000E7F5E /* OverLayer.h */,
+				D05F03B51CABE607000E7F5E /* OverLayer.cpp */,
 			);
 			name = Layer;
 			sourceTree = "<group>";
 		};
-		D0E78C031BECDB5A00AC474A /* Sprite */ = {
+		D05F03CF1CABE628000E7F5E /* Sprite */ = {
 			isa = PBXGroup;
 			children = (
-				D0E78BD91BECDB0100AC474A /* TerrainSprite.cpp */,
-				D0E78BDA1BECDB0100AC474A /* TerrainSprite.h */,
-				D0E78BC31BECDB0100AC474A /* NanaSprite.cpp */,
-				D0E78BC41BECDB0100AC474A /* NanaSprite.h */,
-				D0E78BD31BECDB0100AC474A /* SpriteWithBody.cpp */,
-				D0E78BD41BECDB0100AC474A /* SpriteWithBody.h */,
-				D0E78BD71BECDB0100AC474A /* StayingBlobSprite.cpp */,
-				D0E78BD81BECDB0100AC474A /* StayingBlobSprite.h */,
-				D0E78BC11BECDB0100AC474A /* MoverSprite.cpp */,
-				D0E78BC21BECDB0100AC474A /* MoverSprite.h */,
-				D0E78BCD1BECDB0100AC474A /* RedSprite.cpp */,
-				D0E78BCE1BECDB0100AC474A /* RedSprite.h */,
-				D0E78BD11BECDB0100AC474A /* SlowerSprite.cpp */,
-				D0E78BD21BECDB0100AC474A /* SlowerSprite.hpp */,
-				D0E78BB91BECDB0000AC474A /* DNASprite.cpp */,
-				D0E78BBA1BECDB0000AC474A /* DNASprite.h */,
-				D031C0701C80826C00B4483F /* FurSprite.cpp */,
-				D031C0711C80826C00B4483F /* FurSprite.h */,
+				D05F03D81CABE639000E7F5E /* TerrainSprite.h */,
+				D05F03D71CABE639000E7F5E /* TerrainSprite.cpp */,
+				D05F03DB1CABE639000E7F5E /* NanaSprite.h */,
+				D05F03D01CABE639000E7F5E /* NanaSprite.cpp */,
+				D05F03D21CABE639000E7F5E /* DNASprite.h */,
+				D05F03D11CABE639000E7F5E /* DNASprite.cpp */,
+				D05F03D41CABE639000E7F5E /* FurSprite.h */,
+				D05F03D31CABE639000E7F5E /* FurSprite.cpp */,
+				D05F03E11CABE639000E7F5E /* StayingBlobSprite.h */,
+				D05F03D61CABE639000E7F5E /* StayingBlobSprite.cpp */,
+				D05F03DA1CABE639000E7F5E /* MoverSprite.h */,
+				D05F03D91CABE639000E7F5E /* MoverSprite.cpp */,
+				D05F03DC1CABE639000E7F5E /* RedSprite.h */,
+				D05F03D51CABE639000E7F5E /* RedSprite.cpp */,
+				D05F03DE1CABE639000E7F5E /* SlowerSprite.hpp */,
+				D05F03DD1CABE639000E7F5E /* SlowerSprite.cpp */,
+				D05F03E01CABE639000E7F5E /* SpriteWithBody.h */,
+				D05F03DF1CABE639000E7F5E /* SpriteWithBody.cpp */,
 			);
 			name = Sprite;
 			sourceTree = "<group>";
@@ -1041,38 +1041,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0E78CDB1BECDBB000AC474A /* RootViewController.mm in Sources */,
-				D0E78BDF1BECDB0100AC474A /* DNASprite.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
-				D0E78BE71BECDB0100AC474A /* MoverSprite.cpp in Sources */,
-				D0E78BF51BECDB0100AC474A /* Resources.cpp in Sources */,
-				D031C0721C80826C00B4483F /* FurSprite.cpp in Sources */,
-				D06A0AA61BF4322B008FD35C /* JavaOCer.mm in Sources */,
+				D05F03F21CABE639000E7F5E /* SpriteWithBody.cpp in Sources */,
+				D05F03E61CABE639000E7F5E /* FurSprite.cpp in Sources */,
+				D05F03E41CABE639000E7F5E /* DNASprite.cpp in Sources */,
+				D05F03C31CABE607000E7F5E /* InfoLayer.cpp in Sources */,
+				D05F03C71CABE607000E7F5E /* PauseLayer.cpp in Sources */,
 				D0E78C151BECDB7200AC474A /* CCJSONConverter.cpp in Sources */,
-				D0740A011BF2046200D4EFBD /* InterestingLayer.cpp in Sources */,
-				D031C06A1C8004D400B4483F /* SplashLayer.cpp in Sources */,
-				D0E78BFB1BECDB0100AC474A /* StartLayer.cpp in Sources */,
-				D0E78BDD1BECDB0100AC474A /* Box2DHelper.cpp in Sources */,
-				D0E78BE91BECDB0100AC474A /* NanaSprite.cpp in Sources */,
-				D0E78BF31BECDB0100AC474A /* RedSprite.cpp in Sources */,
-				D0E78BF71BECDB0100AC474A /* SlowerSprite.cpp in Sources */,
+				D05F03EA1CABE639000E7F5E /* StayingBlobSprite.cpp in Sources */,
+				D05F03EC1CABE639000E7F5E /* TerrainSprite.cpp in Sources */,
+				D05F03CB1CABE607000E7F5E /* StartLayer.cpp in Sources */,
 				D0E78C1B1BECDB7200AC474A /* C2DXShareSDK.cpp in Sources */,
+				D05F03AC1CABDE81000E7F5E /* Resources.cpp in Sources */,
+				D05F03A81CABDE81000E7F5E /* JavaOCer.mm in Sources */,
+				D05F03EE1CABE639000E7F5E /* MoverSprite.cpp in Sources */,
 				D0E78C1D1BECDB7200AC474A /* C2DXiOSShareSDK.mm in Sources */,
+				D05F03AA1CABDE81000E7F5E /* Randomer.cpp in Sources */,
 				D0E78C191BECDB7200AC474A /* ShareSDKUtils.cpp in Sources */,
-				D0E78BF91BECDB0100AC474A /* SpriteWithBody.cpp in Sources */,
-				D0E78BF11BECDB0100AC474A /* Randomer.cpp in Sources */,
+				D05F03C91CABE607000E7F5E /* SplashLayer.cpp in Sources */,
+				D05F03CD1CABE607000E7F5E /* InterestingLayer.cpp in Sources */,
 				D0E78C171BECDB7200AC474A /* cJSON.c in Sources */,
+				D05F03F01CABE639000E7F5E /* SlowerSprite.cpp in Sources */,
+				D05F03BF1CABE607000E7F5E /* AboutLayer.cpp in Sources */,
 				D0E78CD91BECDBB000AC474A /* main.m in Sources */,
-				D0E78BEF1BECDB0100AC474A /* PauseLayer.cpp in Sources */,
-				D0E78BDB1BECDB0100AC474A /* AboutLayer.cpp in Sources */,
-				D0E78BE11BECDB0100AC474A /* GameLayer.cpp in Sources */,
+				D05F03E21CABE639000E7F5E /* NanaSprite.cpp in Sources */,
 				D07409FD1BF1EC5A00D4EFBD /* ABGameKitHelper.m in Sources */,
-				D0E78BFD1BECDB0100AC474A /* StayingBlobSprite.cpp in Sources */,
-				D0E78BED1BECDB0100AC474A /* OverLayer.cpp in Sources */,
 				D0E78CB11BECDBB000AC474A /* AppController.mm in Sources */,
-				D0E78BE51BECDB0100AC474A /* InfoLayer.cpp in Sources */,
-				D0E78BE31BECDB0100AC474A /* GLESDebugDraw.cpp in Sources */,
+				D05F03C11CABE607000E7F5E /* GameLayer.cpp in Sources */,
+				D05F03A41CABDE81000E7F5E /* Box2DHelper.cpp in Sources */,
+				D05F03E81CABE639000E7F5E /* RedSprite.cpp in Sources */,
+				D05F03A61CABDE81000E7F5E /* GLESDebugDraw.cpp in Sources */,
+				D05F03C51CABE607000E7F5E /* OverLayer.cpp in Sources */,
 				D0E78BEB1BECDB0100AC474A /* NanaTrip.cpp in Sources */,
-				D0E78BFF1BECDB0100AC474A /* TerrainSprite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1080,40 +1080,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D05F03EF1CABE639000E7F5E /* MoverSprite.cpp in Sources */,
+				D05F03A71CABDE81000E7F5E /* GLESDebugDraw.cpp in Sources */,
+				D05F03A51CABDE81000E7F5E /* Box2DHelper.cpp in Sources */,
 				D0E78C1A1BECDB7200AC474A /* ShareSDKUtils.cpp in Sources */,
-				D0E78BE41BECDB0100AC474A /* GLESDebugDraw.cpp in Sources */,
-				D0E78BDC1BECDB0100AC474A /* AboutLayer.cpp in Sources */,
-				D0E78BFC1BECDB0100AC474A /* StartLayer.cpp in Sources */,
-				D0E78BFA1BECDB0100AC474A /* SpriteWithBody.cpp in Sources */,
-				D0E78BEA1BECDB0100AC474A /* NanaSprite.cpp in Sources */,
-				D0E78BF21BECDB0100AC474A /* Randomer.cpp in Sources */,
-				D0E78BF81BECDB0100AC474A /* SlowerSprite.cpp in Sources */,
-				D06A0AA71BF4322B008FD35C /* JavaOCer.mm in Sources */,
+				D05F03C21CABE607000E7F5E /* GameLayer.cpp in Sources */,
+				D05F03E31CABE639000E7F5E /* NanaSprite.cpp in Sources */,
+				D05F03E91CABE639000E7F5E /* RedSprite.cpp in Sources */,
+				D05F03ED1CABE639000E7F5E /* TerrainSprite.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
-				D0E78C001BECDB0100AC474A /* TerrainSprite.cpp in Sources */,
+				D05F03CA1CABE607000E7F5E /* SplashLayer.cpp in Sources */,
+				D05F03C41CABE607000E7F5E /* InfoLayer.cpp in Sources */,
+				D05F03CC1CABE607000E7F5E /* StartLayer.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
-				D0E78BE81BECDB0100AC474A /* MoverSprite.cpp in Sources */,
-				D0E78BF41BECDB0100AC474A /* RedSprite.cpp in Sources */,
+				D05F03C61CABE607000E7F5E /* OverLayer.cpp in Sources */,
+				D05F03AD1CABDE81000E7F5E /* Resources.cpp in Sources */,
+				D05F03F11CABE639000E7F5E /* SlowerSprite.cpp in Sources */,
 				D0E78C1E1BECDB7200AC474A /* C2DXiOSShareSDK.mm in Sources */,
 				D0E78C161BECDB7200AC474A /* CCJSONConverter.cpp in Sources */,
-				D0E78BFE1BECDB0100AC474A /* StayingBlobSprite.cpp in Sources */,
 				D0E78C1C1BECDB7200AC474A /* C2DXShareSDK.cpp in Sources */,
-				D0E78BE01BECDB0100AC474A /* DNASprite.cpp in Sources */,
-				D0E78BF61BECDB0100AC474A /* Resources.cpp in Sources */,
-				D0E78BEE1BECDB0100AC474A /* OverLayer.cpp in Sources */,
-				D0E78BDE1BECDB0100AC474A /* Box2DHelper.cpp in Sources */,
 				D0E78CDC1BECDBB000AC474A /* RootViewController.mm in Sources */,
 				D07409FE1BF1EC5A00D4EFBD /* ABGameKitHelper.m in Sources */,
-				D031C06B1C8004D400B4483F /* SplashLayer.cpp in Sources */,
 				D0E78BEC1BECDB0100AC474A /* NanaTrip.cpp in Sources */,
-				D031C0731C80826C00B4483F /* FurSprite.cpp in Sources */,
+				D05F03AB1CABDE81000E7F5E /* Randomer.cpp in Sources */,
+				D05F03C81CABE607000E7F5E /* PauseLayer.cpp in Sources */,
+				D05F03EB1CABE639000E7F5E /* StayingBlobSprite.cpp in Sources */,
 				D0E78C181BECDB7200AC474A /* cJSON.c in Sources */,
-				D0E78BF01BECDB0100AC474A /* PauseLayer.cpp in Sources */,
 				D0E78CB21BECDBB000AC474A /* AppController.mm in Sources */,
-				D0E78BE21BECDB0100AC474A /* GameLayer.cpp in Sources */,
+				D05F03C01CABE607000E7F5E /* AboutLayer.cpp in Sources */,
+				D05F03A91CABDE81000E7F5E /* JavaOCer.mm in Sources */,
+				D05F03CE1CABE607000E7F5E /* InterestingLayer.cpp in Sources */,
+				D05F03E51CABE639000E7F5E /* DNASprite.cpp in Sources */,
+				D05F03E71CABE639000E7F5E /* FurSprite.cpp in Sources */,
+				D05F03F31CABE639000E7F5E /* SpriteWithBody.cpp in Sources */,
 				D0E78CDA1BECDBB000AC474A /* main.m in Sources */,
-				D0740A021BF2046200D4EFBD /* InterestingLayer.cpp in Sources */,
-				D0E78BE61BECDB0100AC474A /* InfoLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1170,6 +1170,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/ShareSDK/Extend/WeChatSDK",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
@@ -1177,8 +1178,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.cocos.nanatrip;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
-				VALID_ARCHS = "arm64 armv7";
+				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END) $(SRCROOT)/../Classes";
+				USE_HEADERMAP = YES;
+				VALID_ARCHS = "armv7 arm64";
 			};
 			name = Debug;
 		};
@@ -1218,6 +1220,7 @@
 					"$(PROJECT_DIR)/ShareSDK/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/ShareSDK/Extend/WeChatSDK",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
@@ -1225,8 +1228,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.cocos.nanatrip;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END)";
-				VALID_ARCHS = "arm64 armv7";
+				USER_HEADER_SEARCH_PATHS = "$(_COCOS_HEADER_IOS_BEGIN) $(_COCOS_HEADER_IOS_END) $(SRCROOT)/../Classes";
+				USE_HEADERMAP = YES;
+				VALID_ARCHS = "armv7 arm64";
 			};
 			name = Release;
 		};

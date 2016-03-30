@@ -446,6 +446,7 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/lame_soundeffect.m4a \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/loading \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/maoboli.png \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/menu_music.m4a \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/nana_face_2.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/nana_face_3.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/assets/res/nana_face_4.png \

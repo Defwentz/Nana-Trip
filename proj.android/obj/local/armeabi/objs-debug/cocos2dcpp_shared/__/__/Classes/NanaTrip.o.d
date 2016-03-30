@@ -358,7 +358,7 @@ obj/local/armeabi/objs-debug/cocos2dcpp_shared/__/__/Classes/NanaTrip.o: \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/cocos/3d/prebuilt-mk/../../deprecated/CCString.h \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/cocos/3d/prebuilt-mk/../../deprecated/CCNotificationCenter.h \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/cocos/3d/prebuilt-mk/../../deprecated/CCDeprecated.h \
- jni/../../Classes/Box2DHelper.h \
+ jni/../../Classes/Util/Box2DHelper.h \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/external/flatbuffers/prebuilt-mk/../../Box2D/Box2D.h \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/external/flatbuffers/prebuilt-mk/../../Box2D/Common/b2Settings.h \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/external/flatbuffers/prebuilt-mk/../../Box2D/Common/b2Draw.h \
@@ -495,8 +495,8 @@ obj/local/armeabi/objs-debug/cocos2dcpp_shared/__/__/Classes/NanaTrip.o: \
  jni/../../Classes/../C2DXShareSDK/C2DXShareSDK.h \
  /Users/macbookair/Developer/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream \
  jni/../../Classes/../C2DXShareSDK/C2DXShareSDKTypeDef.h \
- jni/../../Classes/Randomer.h jni/../../Classes/JavaOCer.hpp \
- jni/../../Classes/Resources.h \
+ jni/../../Classes/Util/Randomer.h jni/../../Classes/Util/JavaOCer.hpp \
+ jni/../../Classes/Util/Resources.h \
  /Applications/Cocos/frameworks/cocos2d-x-3.6/cocos/3d/prebuilt-mk/../../base/CCUserDefault.h
 
 jni/../../Classes/NanaTrip.h:
@@ -1217,7 +1217,7 @@ jni/../../Classes/NanaTrip.h:
 
 /Applications/Cocos/frameworks/cocos2d-x-3.6/cocos/3d/prebuilt-mk/../../deprecated/CCDeprecated.h:
 
-jni/../../Classes/Box2DHelper.h:
+jni/../../Classes/Util/Box2DHelper.h:
 
 /Applications/Cocos/frameworks/cocos2d-x-3.6/external/flatbuffers/prebuilt-mk/../../Box2D/Box2D.h:
 
@@ -1491,10 +1491,10 @@ jni/../../Classes/../C2DXShareSDK/C2DXShareSDK.h:
 
 jni/../../Classes/../C2DXShareSDK/C2DXShareSDKTypeDef.h:
 
-jni/../../Classes/Randomer.h:
+jni/../../Classes/Util/Randomer.h:
 
-jni/../../Classes/JavaOCer.hpp:
+jni/../../Classes/Util/JavaOCer.hpp:
 
-jni/../../Classes/Resources.h:
+jni/../../Classes/Util/Resources.h:
 
 /Applications/Cocos/frameworks/cocos2d-x-3.6/cocos/3d/prebuilt-mk/../../base/CCUserDefault.h:

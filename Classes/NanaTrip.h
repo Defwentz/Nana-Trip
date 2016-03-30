@@ -35,15 +35,15 @@
 #define nanatrip_NanaTrip_h
 
 #include "cocos2d.h"
-#include "Box2DHelper.h"
+#include "Util/Box2DHelper.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include <SimpleAudioEngine.h>
 #include "../C2DXShareSDK/C2DXShareSDK.h"
-#include "Randomer.h"
-#include "JavaOCer.hpp"
+#include "Util/Randomer.h"
+#include "Util/JavaOCer.hpp"
 
-#include "Resources.h"
+#include "Util/Resources.h"
 #include <base/CCUserDefault.h>
 
 #define PTM_RATIO 32
