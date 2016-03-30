@@ -131,7 +131,7 @@ void PauseLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *e
 void PauseLayer::switchMusic(bool on) {
     if(on) {
         if(isFirst && !CocosDenshion::SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying()) {
-            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
+            CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("menu_music.m4a", true);
             isFirst = false;
         } else {
             CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();

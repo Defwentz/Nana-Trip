@@ -24,9 +24,9 @@ void DNASprite::checkDNAs(std::vector<SpriteWithBody *> &sprites, b2World *world
                     CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("eat_sound.mp3");
                     eat_score += ud->type;
                     dna++;
+                    makeToast((*i), StringUtils::format("+%d", ud->type));
                     SpriteWithBody::removeFromVector(sprites, i, world);
                     isNext = true;
-                    makeToast((*i), StringUtils::format("+%d", ud->type));
                     break;
                 }
             }
@@ -38,7 +38,7 @@ void DNASprite::checkDNAs(std::vector<SpriteWithBody *> &sprites, b2World *world
 
 #include "GameLayer.h"
 void DNASprite::makeToast(SpriteWithBody *tracker, std::string txt) {
-    cocos2d::Label *toastLabel = Label::createWithTTF(txt, "fonts/Marker Felt.ttf", 30);
+    cocos2d::Label *toastLabel = Label::createWithTTF(txt, "fonts/Marker Felt.ttf", 45);
     toastLabel->setPosition(winMidX, winMidY*1.5);
     toastLabel->setColor(Color3B::WHITE);
     

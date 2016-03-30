@@ -1,0 +1,18 @@
+# view AndroidManifest.xml #generated:65
+-keep class cn.bmob.v3.update.UpdateDialogActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:20
+-keep class com.baidu.mobads.AppActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:37
+-keep class com.mob.tools.MobUIShell { <init>(...); }
+
+# view AndroidManifest.xml #generated:51
+-keep class org.cocos.nanatrip.wxapi.WXEntryActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:24
+-keep class org.cocos2dx.mz.AppActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:11
+-keep class xx.jnitst.mz.xApplication { <init>(...); }
+
