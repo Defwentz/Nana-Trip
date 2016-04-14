@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/build/intermediates/res/merged/androidTest/debug/color/common_signin_btn_text_dark.xml",
+        "source": "/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/res/color/common_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/build/intermediates/res/merged/androidTest/debug/color/common_signin_btn_text_light.xml",
+        "source": "/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/res/color/common_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/build/intermediates/res/merged/androidTest/debug/color/abc_search_url_text_holo.xml",
+        "source": "/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/color/abc_search_url_text_holo.xml"
+    }
+]

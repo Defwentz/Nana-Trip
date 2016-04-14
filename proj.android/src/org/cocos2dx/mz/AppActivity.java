@@ -26,20 +26,35 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.mz;
 
+import java.util.List;
+
 import org.cocos.nanatrip.R;
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 import org.cocos2dx.plugin.PluginWrapper;
 
 import xx.jnitst.mz.xApplication;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import cn.sharesdk.ShareSDKUtils;
 
@@ -59,8 +74,10 @@ public class AppActivity extends Cocos2dxActivity {
 	private static void log(String content) {
 		Log.e(LOGTAG, content);
 	}
+	private static final String HIGHEST_SCORE_OBJECT_ID = "highest_score_object_id";
 	// 实例
 	private static AppActivity app = null;
+	private static SimpleData sdata = null;
 	
 	// 魅族thing
 	//public static MzGameBarPlatform mzGameBarPlatform;
@@ -70,6 +87,7 @@ public class AppActivity extends Cocos2dxActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    app = this;
+	    sdata = new SimpleData(app);
 	    
 	    // 屏幕常亮
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, 
@@ -81,7 +99,7 @@ public class AppActivity extends Cocos2dxActivity {
 	    
 	    // 初始化 Bmob SDK
         // 使用时请将第二个参数Application ID替换成你在Bmob服务器端创建的Application ID
-	    // Bmob.initialize(this, "159c81a8e531f5e39bf6ba0eb751ee0c");
+	     Bmob.initialize(this, "159c81a8e531f5e39bf6ba0eb751ee0c");
 	    // 查看更新
 	    // BmobUpdateAgent.update(this);
 	    
@@ -109,66 +127,66 @@ public class AppActivity extends Cocos2dxActivity {
 		 //dialogHandler.sendEmptyMessage(0);
 	 }
 	 // Ads
-	 private static InterstitialAd interAd = null;
-	 public static void loadBaiduAd() {
-		 log("loadBaiduAd");
-		 app.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				 interAd = new InterstitialAd(app, "2321557");
-				 interAd.setListener(new InterstitialAdListener () {
-
-					@Override
-					public void onAdClick(InterstitialAd arg0) {
-						log("ad click");
-					}
-
-					@Override
-					public void onAdDismissed() {
-						log("ad dismissed");
-						//interAd.loadAd();
-					}
-
-					@Override
-					public void onAdFailed(String arg0) {
-						log("ad failed");
-					}
-
-					@Override
-					public void onAdPresent() {
-						log("ad present");
-					}
-
-					@Override
-					public void onAdReady() {
-						log("ad ready");
-					}
-					 
-				 });
-				 interAd.loadAd();
-			}
-			 
-		 });
-	 }
-	 public static void showBaiduAd() {
-		 log("showBaiduAd");
-		 app.runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					 if(interAd != null) {
-						 if(interAd.isAdReady()) {
-							 log("ad ready and show");
-							 interAd.showAd(app);
-						 } else {
-							 log("ad not ready need load");
-							 interAd.loadAd();
-						 }
-					 }
-				}
-		 });
-	 }
+//	 private static InterstitialAd interAd = null;
+//	 public static void loadBaiduAd() {
+//		 log("loadBaiduAd");
+//		 app.runOnUiThread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				 interAd = new InterstitialAd(app, "2321557");
+//				 interAd.setListener(new InterstitialAdListener () {
+//
+//					@Override
+//					public void onAdClick(InterstitialAd arg0) {
+//						log("ad click");
+//					}
+//
+//					@Override
+//					public void onAdDismissed() {
+//						log("ad dismissed");
+//						//interAd.loadAd();
+//					}
+//
+//					@Override
+//					public void onAdFailed(String arg0) {
+//						log("ad failed");
+//					}
+//
+//					@Override
+//					public void onAdPresent() {
+//						log("ad present");
+//					}
+//
+//					@Override
+//					public void onAdReady() {
+//						log("ad ready");
+//					}
+//					 
+//				 });
+//				 interAd.loadAd();
+//			}
+//			 
+//		 });
+//	 }
+//	 public static void showBaiduAd() {
+//		 log("showBaiduAd");
+//		 app.runOnUiThread(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					 if(interAd != null) {
+//						 if(interAd.isAdReady()) {
+//							 log("ad ready and show");
+//							 interAd.showAd(app);
+//						 } else {
+//							 log("ad not ready need load");
+//							 interAd.loadAd();
+//						 }
+//					 }
+//				}
+//		 });
+//	 }
 	 public static void meizuLogin() {
 		 log("meizu login");
 		// 调用登录接口。注意,该方法必须在应用的主线程中调用。 
@@ -202,6 +220,102 @@ public class AppActivity extends Cocos2dxActivity {
 //			 MzGameCenterPlatform.logout(AppActivity.getContext());
 //		 }
 	 }
+	 public static boolean isNetworkAvailable(Context context) {   
+	        ConnectivityManager cm = (ConnectivityManager) context   
+	                .getSystemService(Context.CONNECTIVITY_SERVICE);   
+	        if (cm == null) {   
+	        	return false;
+	        } else {
+	        	return cm.getActiveNetworkInfo().isAvailable();
+	        }
+	 }
+	 public static void nameExist(final String name, final int score) {
+		 BmobQuery<HighestScore> query = new BmobQuery<HighestScore>();
+		 query.addWhereEqualTo("playerName", name);
+		 query.findObjects(app, new FindListener<HighestScore> () {
+			@Override
+			public void onError(int code, String msg) {
+				log("find error: " + msg);
+			}
+			@Override
+			public void onSuccess(List<HighestScore> objects) {
+				log("find succeed: "+objects.size()+"条数据。");
+				if(objects.size() == 0) {
+			 		makeToast("这名儿不错。");
+			 		playerName = name;
+			 		reportScore(score);
+				} else {
+			 		makeToast("别介, 换个名儿的。");
+			 		showSetName(score);
+				}
+			}
+			 
+		 });
+	 }
+	 public static void showSetName(final int score) {
+		 app.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					 final EditText inputServer = new EditText(app);
+					 AlertDialog.Builder builder = new AlertDialog.Builder(app);
+					 builder.setTitle("来个名儿吧").setIcon(android.R.drawable.ic_dialog_info)
+					 		.setView(inputServer)
+					        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+								 public void onClick(DialogInterface dialog, int which) {
+									 	makeToast("不取名儿不给存最高分。");
+									 	showSetName(score);
+							     	}
+							 });
+					 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+						 public void onClick(DialogInterface dialog, int which) {
+							 	String name = inputServer.getText().toString();
+							 	nameExist(name, score);
+					     	}
+					 });
+					 builder.show();
+				}
+		 });
+	 }
+	 
+	 private static String playerName = null;
+	 public static void reportScore(final int score) {
+		 if(!isNetworkAvailable(app)) return;
+		 
+		 String objectId = sdata.getString(HIGHEST_SCORE_OBJECT_ID);
+		 if(objectId == ""){
+			 if(playerName == null) {
+				 showSetName(score);
+			 }
+			 final HighestScore hScore = new HighestScore();
+			 hScore.setPlayerName(playerName);
+			 hScore.setScore(score);
+			 hScore.save(app, new SaveListener() {
+				@Override
+				public void onFailure(int code, String msg) {
+					log("save fail " + msg);
+				}
+				@Override
+				public void onSuccess() {
+					log("save succeed, object id: " + hScore.getObjectId());
+					sdata.putString(HIGHEST_SCORE_OBJECT_ID, hScore.getObjectId());
+				}
+				 
+			 });
+		 } else {
+			 HighestScore hScore = new HighestScore();
+			 hScore.setScore(score);
+			 hScore.update(app, objectId, new UpdateListener() {
+				@Override
+				public void onFailure(int code, String msg) {
+					log("update fail: " + msg);
+				}
+				@Override
+				public void onSuccess() {
+					log("update succeed");
+				}
+			 });
+		 }
+	 }
 	 
 	 public static void makeToast(final String x) {
 		 log("make toast: " + x);
@@ -213,6 +327,7 @@ public class AppActivity extends Cocos2dxActivity {
 			}
 		 });
 	 }
+	 
 	@Override
 	protected void onDestroy() {
 		ShareSDKUtils.stopSDK();
@@ -233,5 +348,4 @@ public class AppActivity extends Cocos2dxActivity {
 	    // 调用 onActivityPause
 	    //mzGameBarPlatform.onActivityPause();
 	}
-	    
 }

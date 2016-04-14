@@ -29,7 +29,7 @@ bool StartLayer::init()
     {
         return false;
     }
-    
+
     auto rootNode = CSLoader::createNode("start/start.csb");
     addChild(rootNode);
     
@@ -42,7 +42,7 @@ bool StartLayer::init()
     
     //switchMusic(db->getBoolForKey(key_music_status.c_str(), false));
     //CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic("BGMusic01.mp3");
-    switchMusic(db->getBoolForKey(key_music_status.c_str(), false));
+    switchMusic(db->getBoolForKey(key_music_status.c_str(), true));
     
     startBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::startCallback, this));
 //    storeBtn->addTouchEventListener(CC_CALLBACK_2(StartLayer::storeCallback, this));
@@ -71,14 +71,6 @@ void StartLayer::startCallback(Ref* sender, Widget::TouchEventType type)
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
 }
-//void StartLayer::storeCallback(Ref* sender, Widget::TouchEventType type)
-//{
-//    if (type == Widget::TouchEventType::ENDED)
-//    {
-//        //Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
-//        //CCDirector::getInstance()->replaceScene(GameLayer::createScene());
-//    }
-//}
 void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
 {
     if (type == Widget::TouchEventType::BEGAN)
@@ -91,17 +83,6 @@ void StartLayer::aboutCallback(Ref* sender, Widget::TouchEventType type)
         Director::getInstance()->replaceScene(AboutLayer::createScene());
     }
 }
-//void StartLayer::settingCallback(Ref* sender, Widget::TouchEventType type)
-//{
-//    if (type == Widget::TouchEventType::ENDED)
-//    {
-//        if(settingOn) {
-//            musicBtn->setVisible(false);
-//        } else {
-//            musicBtn->setVisible(true);
-//        }
-//    }
-//}
 void StartLayer::switchMusic(bool on) {
     if(on) {
         if(isFirst && !CocosDenshion::SimpleAudioEngine::getInstance()->isBackgroundMusicPlaying()) {
@@ -110,10 +91,12 @@ void StartLayer::switchMusic(bool on) {
         } else {
             CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
         }
+        CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(1);
         buttonSwitch(musicOffBtn, false);
         buttonSwitch(musicOnBtn, true);
     } else {
         CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(0);
         buttonSwitch(musicOnBtn, false);
         buttonSwitch(musicOffBtn, true);
     }

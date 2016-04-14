@@ -28,6 +28,7 @@ bool OverLayer::init()
         return false;
     }
 
+    CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
     auto rootNode = CSLoader::createNode("over/over.csb");
     addChild(rootNode);
     
@@ -46,9 +47,8 @@ bool OverLayer::init()
     if(bestScore < score) {
         bestScore = score;
         db->setIntegerForKey(key_best_score.c_str(), score);
-        
-        JavaOCer::reportScore4Leaderboard(bestScore, "nana_leaderboard");
     }
+    JavaOCer::reportScore4Leaderboard(bestScore, "nana_leaderboard");
     db->flush();
 //    int rating;
 //    if(bestScore < score) {

@@ -21,8 +21,8 @@ Scene* GameLayer::createScene()
     
     int playTime = db->getIntegerForKey(key_play_time.c_str(), 0);
     if(playTime == 0) {
-        auto suggestionSprite = Sprite::create("draw.png");
-        Texture2D* shktexture = Director::getInstance()->getTextureCache()->addImage("shake.png");
+        auto suggestionSprite = Sprite::create("shake.png");
+        Texture2D* drwtexture = Director::getInstance()->getTextureCache()->addImage("draw.png");
         suggestionSprite->setPosition(winMidX, winSiz.height/3);
         scene->addChild(suggestionSprite, 6);
         suggestionSprite->runAction(Sequence::
@@ -31,7 +31,7 @@ Scene* GameLayer::createScene()
                                            CallFunc::create
                                            (std::bind(changeTexture,
                                                       suggestionSprite,
-                                                      shktexture)),
+                                                      drwtexture)),
                                            FadeIn::create(1),
                                            FadeOut::create(1),
                                            CallFunc::create
@@ -63,8 +63,6 @@ GameLayer *GameLayer::create(InfoLayer *infoLayer)
 
 GameLayer::GameLayer()
 {
-    //gameStatus = GAME_PAUSE;
-    //CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("BGMusic01.mp3", true);
     initListeners();
     initBG();
     initPhysics();
@@ -224,12 +222,9 @@ void GameLayer::update(float dt)
         JavaOCer::loadInterAd();
         this->unscheduleUpdate();
         Device::setAccelerometerEnabled(false);
-        //CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
         utils::captureScreen(CC_CALLBACK_2(GameLayer::captureScreenCallback, this), "dead.png");
-        //scheduleOnce(schedule_selector(GameLayer::gameOver), 0.2f);
         return;
     } else if(gameStatus == GAME_INTERESTING) {
-        //Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         this->unscheduleUpdate();
         this->getParent()->addChild(InterestingLayer::create(), ZORDER_OVERLAYER);
     }
@@ -253,7 +248,7 @@ void GameLayer::update(float dt)
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("discover_vault.mp3");
         vaultDiscovering = false;
         JavaOCer::reportAchievement(100.f, "nana_discover_vault");
-        JavaOCer::showAchievementNotification("发现避难所", "发现了隐藏的避难所, 可以躲过大红了!", "nana_discover_vault");
+        JavaOCer::showAchievementNotification("发现避难所", "发现了隐藏的避难所, 可以躲过大黑了!", "nana_discover_vault");
         _terrain->noMorePockets();
     }
     
@@ -276,8 +271,10 @@ void GameLayer::update(float dt)
         for(b2ContactEdge *ce = _nana->_bodies[i]->GetContactList(); ce; ce = ce->next) {
             b2Body *other = ce->other;
             auto other_userdata = (Entity *) other->GetUserData();
-            if(!other_userdata || (ce->contact->IsTouching() &&
-                                   other_userdata->type != UD_NANA)) {
+//            if(!other_userdata || (ce->contact->IsTouching() &&
+//                                   other_userdata->type != UD_NANA)) {
+            if(other_userdata && ce->contact->IsTouching() &&
+                                    other_userdata->type == UD_FLOOR) {
                 if(!inTouchingLst(other)) {
                     CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("touch_sound.mp3");
                     touchingLst.push_back(other);

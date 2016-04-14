@@ -90,6 +90,7 @@ void TerrainSprite::initPhysics(b2World *_world)
     bd.position.SetZero();
     bd.type = b2_staticBody;
     _body = _world->CreateBody(&bd);
+    _body->SetUserData(new Entity(UD_FLOOR));
     
     // Define the ground box shape.
     b2EdgeShape border;
@@ -129,6 +130,7 @@ void TerrainSprite::initPhysics(b2World *_world)
         this->addChild(badboss);
     }
     boss_sound = CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("lame_soundeffect.m4a", true);
+    log("play boss_sound: %d", boss_sound);
     vpos = Vec2(winMidX, winSiz.height*0.75);
     b2CircleShape ball2;
     ball2.m_p = vToB2(vpos);
@@ -833,15 +835,19 @@ void TerrainSprite::update(float nanaY)
     spriteCheck(obstacles, topY);
     DNASprite::checkDNAs(dnas, _world, topY);
     
+    
     if(badboss != NULL) {
         badboss->update();
         badboss->_body->SetLinearVelocity(b2Vec2(0, -6) + b2Vec2(0,-23*pos_score/200));
         if(badboss->getPosition().y > topY) {
+            log("pause boss_sound");
             CocosDenshion::SimpleAudioEngine::getInstance()->pauseEffect(boss_sound);
         } else {
+            log("resume boss_sound");
             CocosDenshion::SimpleAudioEngine::getInstance()->resumeEffect(boss_sound);
         }
         if(badboss->getPosition().y < bottomY - winMidY) {
+            log("stop boss_sound");
             CocosDenshion::SimpleAudioEngine::getInstance()->stopEffect(boss_sound);
             badboss->selfDestruct(_world);
             badboss->removeFromParent();

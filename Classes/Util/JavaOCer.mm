@@ -27,18 +27,18 @@ void JavaOCer::leavingStartLayer() {
 }
 
 void JavaOCer::loadInterAd() {
-    JniMethodInfo t;
-    if(getJavaMethod(t, "loadBaiduAd", "()V")) {
-        t.env->CallStaticVoidMethod(t.classID, t.methodID);
-        t.env->DeleteLocalRef(t.classID);
-    }
+//    JniMethodInfo t;
+//    if(getJavaMethod(t, "loadBaiduAd", "()V")) {
+//        t.env->CallStaticVoidMethod(t.classID, t.methodID);
+//        t.env->DeleteLocalRef(t.classID);
+//    }
 }
 void JavaOCer::showInterAd() {
-    JniMethodInfo t;
-    if(getJavaMethod(t, "showBaiduAd", "()V")) {
-        t.env->CallStaticVoidMethod(t.classID, t.methodID);
-        t.env->DeleteLocalRef(t.classID);
-    }
+//    JniMethodInfo t;
+//    if(getJavaMethod(t, "showBaiduAd", "()V")) {
+//        t.env->CallStaticVoidMethod(t.classID, t.methodID);
+//        t.env->DeleteLocalRef(t.classID);
+//    }
 }
 
 void JavaOCer::init() {
@@ -62,7 +62,14 @@ bool JavaOCer::showMsg(char *msg) {
 }
 
 void JavaOCer::reportScore4Leaderboard(int score, char *leaderboardId) {
-    showMsg("嗯。。假装已经在网上记录了最高分");
+    JniMethodInfo mi;
+    bool isHave = getJavaMethod(mi, "reportScore", "(I)V");
+    if (!isHave) {
+        return;
+    }
+    mi.env->CallStaticVoidMethod(mi.classID, mi.methodID, score);
+    mi.env->DeleteLocalRef(mi.classID);
+    return;
 }
 
 void JavaOCer::showLeaderboard(char *leaderboardId) {

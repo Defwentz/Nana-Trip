@@ -220,6 +220,8 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/skyblue_share_platform_list_item.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/bmob_common_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/bmob_update_string.xml \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/gamehelper_strings.xml \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/integers.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/oks_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/ssdk_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/strings.xml \

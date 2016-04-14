@@ -38,7 +38,7 @@ void DNASprite::checkDNAs(std::vector<SpriteWithBody *> &sprites, b2World *world
 }
 
 void DNASprite::makeToast(SpriteWithBody *tracker, std::string txt) {
-    cocos2d::Label *toastLabel = Label::createWithTTF(txt, "fonts/Marker Felt.ttf", 45);
+    cocos2d::Label *toastLabel = Label::createWithTTF(txt, "fonts/Marker Felt.ttf", 90);
     toastLabel->setPosition(winMidX, winMidY*1.5);
     toastLabel->setColor(Color3B::WHITE);
     

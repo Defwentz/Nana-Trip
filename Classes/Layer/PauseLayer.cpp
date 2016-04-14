@@ -15,27 +15,14 @@ USING_NS_CC;
 using namespace cocostudio::timeline;
 using namespace cocos2d::ui;
 
-//Scene* PauseLayer::createScene()
-//{
-//    auto scene = Scene::create();
-//    auto layer = PauseLayer::create();
-//    scene->addChild(layer);
-//    return scene;
-//}
-
 bool PauseLayer::init()
 {
     if ( !Layer::init() )
     {
         return false;
     }
-    
     auto rootNode = CSLoader::createNode("another_pause/NewPauseLayer.csb");
     addChild(rootNode);
-    
-//    Sprite* bgSprite = dynamic_cast<Sprite*>(rootNode->getChildByName("bg"));
-//    Texture2D* texture = Director::getInstance()->getTextureCache()->addImage(pauseScreen);
-//    bgSprite->setTexture(texture);
     
     Text* scoreTxt = dynamic_cast<Text*>(rootNode->getChildByName("Text_score"));
     scoreTxt->setString(StringUtils::format("%d", score));
@@ -97,6 +84,7 @@ void PauseLayer::anotherCallback(Ref *sender, Widget::TouchEventType type) {
         // I don't know what to do. Do I reset it? Do simply don't care about it?
         // The answer is, I simply don't care.
         // Director::getInstance()->popScene();
+        CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
         Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
         Director::getInstance()->replaceScene(GameLayer::createScene());
     }
@@ -110,6 +98,7 @@ void PauseLayer::backCallback(Ref* sender, Widget::TouchEventType type)
     if (type == Widget::TouchEventType::ENDED)
     {
         //Director::getInstance()->popScene();
+        CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
         _eventDispatcher->removeEventListener(keyListener);
         Director::getInstance()->replaceScene(StartLayer::createScene());
     }
@@ -136,10 +125,12 @@ void PauseLayer::switchMusic(bool on) {
         } else {
             CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
         }
+        CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(1);
         buttonSwitch(musicOffBtn, false);
         buttonSwitch(musicOnBtn, true);
     } else {
         CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+        CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(0);
         buttonSwitch(musicOnBtn, false);
         buttonSwitch(musicOffBtn, true);
     }

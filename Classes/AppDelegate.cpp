@@ -74,6 +74,7 @@ void AppDelegate::applicationDidEnterBackground() {
         NotificationCenter::getInstance()->postNotification("another_pause");
     // if you use SimpleAudioEngine, it must be pause
     CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+    CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(0);
 }
 
 // this function will be called when the app is active again
@@ -82,6 +83,7 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+    CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(1);
 }
 
 // 初始化平台配置

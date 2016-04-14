@@ -65,7 +65,7 @@ extern bool vaultDiscovering;
 #define MIN_COL 3
 
 //  User Data
-#define UD_FLOOR 0  // which will actually be NULL
+#define UD_FLOOR 0
 #define UD_NANA 1
 #define UD_BADGUY 2
 #define UD_DNA_5 5

@@ -69,6 +69,7 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$attr.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$drawable.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$id.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$integer.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$layout.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$string.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R.class \
@@ -157,11 +158,16 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/lib/GameControllerDelegate$ControllerEventListener.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/lib/GameControllerDelegate.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/lib/GameControllerUtils.class \
-/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$1$1.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$1.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$2$1.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$2$2.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$2.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$3.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$4.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$5.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/HighestScore.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/SimpleData.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/xx/jnitst/mz/xApplication.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/dexedLibs/ShareSDK-Wechat-Moments-2.6.3-d8e7a2d9326e127ea67240662ab297a4.jar \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/dexedLibs/ShareSDK-Wechat-2.6.3-fa579612be68470816c344238df85fac.jar \

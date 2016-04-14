@@ -14,6 +14,13 @@
         <!-- Tell Cocos2dxActivity the name of our .so -->
         <meta-data android:name="android.app.lib_name"
 	              android:value="cocos2dcpp" />
+        
+        <!-- Google Play -->
+        <meta-data android:name="com.google.android.gms.games.APP_ID"
+					android:value="@string/app_id" />
+        <meta-data android:name="com.google.android.gms.version"
+       				android:value="@integer/google_play_services_version"/>
+        
         <!-- Baidu Ad -->
 		<meta-data android:name="BaiduMobAd_APP_ID" 
 		    	android:value="eeb6824d" />
@@ -42,7 +49,7 @@
         </activity>
         	<!-- QQ -->
         <intent-filter>
-			 <data android:scheme="tencent100371282" />
+			 <data android:scheme="tencent1104880728" />
 			 <action android:name="android.intent.action.VIEW" />
 			 <category android:name="android.intent.category.BROWSABLE" />
 			 <category android:name="android.intent.category.DEFAULT" />
@@ -78,14 +85,12 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.WAKE_LOCK" /> 
-	<uses-permission android:name="android.permission.GET_TASKS"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_LOGS"/>
 </manifest> 
