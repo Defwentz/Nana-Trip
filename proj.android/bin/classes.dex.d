@@ -67,6 +67,7 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/com/chukong/cocosplay/client/CocosPlayClient.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/BuildConfig.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$attr.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$dimen.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$drawable.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$id.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos/nanatrip/R$integer.class \
@@ -167,6 +168,7 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity$5.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/AppActivity.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/HighestScore.class \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/LeaderBoardActivity.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/org/cocos2dx/mz/SimpleData.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/classes/xx/jnitst/mz/xApplication.class \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/dexedLibs/ShareSDK-Wechat-Moments-2.6.3-d8e7a2d9326e127ea67240662ab297a4.jar \

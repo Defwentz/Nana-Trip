@@ -12,6 +12,7 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/bmob_update_dialog_bg.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/bmob_update_wifi_disable.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/classic_platform_corners_bg.xml \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/new_bg.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/skyblue_platform_list_item.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/skyblue_platform_list_item_selected.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable/skyblue_platform_list_selector.xml \
@@ -211,7 +212,9 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable-xhdpi/title_back.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable-xhdpi/title_shadow.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/drawable-xhdpi/white_point.png \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/activity_leaderboard.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/bmob_update_dialog.xml \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/list_leaderboard.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/skyblue_editpage.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/skyblue_editpage_at_layout.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/skyblue_editpage_inc_image_layout.xml \
@@ -220,12 +223,14 @@
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/layout/skyblue_share_platform_list_item.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/bmob_common_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/bmob_update_string.xml \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/dimens.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/gamehelper_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/integers.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/oks_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/ssdk_strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/res/values/strings.xml \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/res/drawable/bmob_update_wifi_disable.png \
+/Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/res/drawable/new_bg.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/res/drawable-hdpi/bmob_update_btn_check_off_focused_holo_light.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/res/drawable-hdpi/bmob_update_btn_check_off_holo_light.png \
 /Users/macbookair/Developer/project/nanotripHlper/NanoTrip/nanatrip/proj.android/bin/res/drawable-hdpi/bmob_update_btn_check_off_pressed_holo_light.png \

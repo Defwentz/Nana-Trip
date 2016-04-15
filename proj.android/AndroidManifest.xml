@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.cocos.nanatrip"
-      android:versionCode="1"
-      android:versionName="1.0"
+      android:versionCode="3"
+      android:versionName="1.03"
       android:installLocation="auto">
 
     <uses-sdk android:minSdkVersion="9"/>
@@ -73,6 +73,8 @@
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
               android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+        <activity android:name="org.cocos2dx.mz.LeaderBoardActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
         
         
     </application>

@@ -74,10 +74,10 @@ public class AppActivity extends Cocos2dxActivity {
 	private static void log(String content) {
 		Log.e(LOGTAG, content);
 	}
-	private static final String HIGHEST_SCORE_OBJECT_ID = "highest_score_object_id";
+	public static final String HIGHEST_SCORE_OBJECT_ID = "highest_score_object_id";
 	// 实例
 	private static AppActivity app = null;
-	private static SimpleData sdata = null;
+	public static SimpleData sdata = null;
 	
 	// 魅族thing
 	//public static MzGameBarPlatform mzGameBarPlatform;
@@ -278,7 +278,9 @@ public class AppActivity extends Cocos2dxActivity {
 	 }
 	 
 	 private static String playerName = null;
+	 public static int mscore = 0;
 	 public static void reportScore(final int score) {
+		 mscore = score;
 		 if(!isNetworkAvailable(app)) return;
 		 
 		 String objectId = sdata.getString(HIGHEST_SCORE_OBJECT_ID);
@@ -315,6 +317,9 @@ public class AppActivity extends Cocos2dxActivity {
 				}
 			 });
 		 }
+	 }
+	 public static void showLeaderboard() {
+		 app.startActivity(new Intent(app, LeaderBoardActivity.class));
 	 }
 	 
 	 public static void makeToast(final String x) {
