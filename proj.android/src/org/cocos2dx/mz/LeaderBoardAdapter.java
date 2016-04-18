@@ -107,7 +107,7 @@ public class LeaderBoardAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View v) {
 					requestUpdate();
-					//convertView.setClickable(false);
+					v.setClickable(false);
 				}
 				
 			});

@@ -26,6 +26,7 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.mz;
 
+import java.io.File;
 import java.util.List;
 
 import org.cocos.nanatrip.R;
@@ -100,6 +101,10 @@ public class AppActivity extends Cocos2dxActivity {
 	    // 初始化 Bmob SDK
         // 使用时请将第二个参数Application ID替换成你在Bmob服务器端创建的Application ID
 	     Bmob.initialize(this, "159c81a8e531f5e39bf6ba0eb751ee0c");
+	     
+	     BmobUpdateAgent.update(this);
+	     long target_size = new File("sdcard/nanatrip.apk").length();
+	     log("size: "+target_size);
 	    // 查看更新
 	    // BmobUpdateAgent.update(this);
 	    
@@ -223,11 +228,15 @@ public class AppActivity extends Cocos2dxActivity {
 	 public static boolean isNetworkAvailable(Context context) {   
 	        ConnectivityManager cm = (ConnectivityManager) context   
 	                .getSystemService(Context.CONNECTIVITY_SERVICE);   
-	        if (cm == null) {   
-	        	return false;
-	        } else {
-	        	return cm.getActiveNetworkInfo().isAvailable();
+	        if (cm != null) {   
+	        	NetworkInfo ni = cm.getActiveNetworkInfo();
+	        	if(ni != null && ni.isConnected()) {
+	        		if(ni.getState() == NetworkInfo.State.CONNECTED) {
+	        			return true;
+	        		}
+	        	}
 	        }
+	        return false;
 	 }
 	 public static void nameExist(final String name, final int score) {
 		 BmobQuery<HighestScore> query = new BmobQuery<HighestScore>();

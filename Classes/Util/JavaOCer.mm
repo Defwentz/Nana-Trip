@@ -73,7 +73,11 @@ void JavaOCer::reportScore4Leaderboard(int score, char *leaderboardId) {
 }
 
 void JavaOCer::showLeaderboard(char *leaderboardId) {
-    showMsg("先放着。。不着急");
+    JniMethodInfo t;
+    if(getJavaMethod(t, "showLeaderboard", "()V")) {
+        t.env->CallStaticVoidMethod(t.classID, t.methodID);
+        t.env->DeleteLocalRef(t.classID);
+    }
 }
 
 void JavaOCer::reportAchievement(float progress, char *achievementId) {
